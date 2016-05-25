@@ -1,11 +1,6 @@
 {
-  "name": "Project",
+  "name": "TutorialApp",
   "mapping": [
-    {
-      "alias": "sales",
-      "dataSetId": "",
-      "fields": []
-    }
   ],
   "version": "0.0.1",
   "size": {
