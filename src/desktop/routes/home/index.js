@@ -11,7 +11,7 @@ ngModule.config(homeConfig);
 function homeConfig($stateProvider) {
   $stateProvider.state('home', {
     url: '/',
-    template: '<home></home>'
+    template: '<product-table-container></product-table-container>'
   });
 }
 
