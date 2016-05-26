@@ -1,1 +1,2 @@
-<product-table products="$ctrl.products"></product-table>
+<product-table products="$ctrl.products" ng-hide="$ctrl.loading"></product-table>
+<div class="loading" ng-hide="!$ctrl.loading">Loading...</div>

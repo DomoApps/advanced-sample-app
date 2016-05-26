@@ -16,10 +16,12 @@ module.exports = ngModule => {
     ctrl.$onInit = $onInit;
 
     ctrl.products = [];
+    ctrl.loading = true;
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
+      ctrl.loading = false;
       ctrl.products = [
         { name: 'product1', price: 1000 },
         { name: 'product2', price: 2000 },
