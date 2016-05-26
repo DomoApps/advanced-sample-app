@@ -1,2 +1,3 @@
-<product-table products="$ctrl.products" ng-hide="$ctrl.loading"></product-table>
+<filter-checkbox ng-hide="$ctrl.loading" on-update="$ctrl.onCheckboxUpdate(hideOutOfStock)"></filter-checkbox>
+<product-table products="$ctrl.filteredProducts" ng-hide="$ctrl.loading"></product-table>
 <div class="loading" ng-hide="!$ctrl.loading">Loading...</div>
