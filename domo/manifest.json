@@ -1,10 +1,33 @@
 {
   "name": "TutorialApp",
   "mapping": [
+    {
+      "alias": "products",
+      "dataSetId": "7a1422c7-fb48-4684-9afb-9e3639d377e4",
+      "fields": [
+        {
+          "alias": "category",
+          "columnName": "Product Category"
+        },
+        {
+          "alias": "name",
+          "columnName": "Product Name"
+        },
+        {
+          "alias": "price",
+          "columnName": "Price"
+        },
+        {
+          "alias": "inStock",
+          "columnName": "In Stock"
+        }
+      ]
+    }
   ],
   "version": "0.0.1",
   "size": {
     "width": 5,
     "height": 3
-  }
+  },
+  "id": "e1be8eb1-588c-49fa-894f-b39af5630ea2"
 }

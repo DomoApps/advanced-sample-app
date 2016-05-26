@@ -10,7 +10,7 @@ module.exports = ngModule => {
     }
   });
 
-  function productTableContainerCtrl() {
+  function productTableContainerCtrl(productsProvider) {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
@@ -21,17 +21,17 @@ module.exports = ngModule => {
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
-      ctrl.loading = false;
-      ctrl.products = [
-        { name: 'product1', price: 1000 },
-        { name: 'product2', price: 2000 },
-        { name: 'product3', price: 40 }
-      ];
+      productsProvider.getProducts().then(data => {
+        ctrl.products = data;
+        ctrl.loading = false;
+      }, error => {
+        console.log(error);
+      });
     }
   }
 
   // inject dependencies here
-  productTableContainerCtrl.$inject = [];
+  productTableContainerCtrl.$inject = ['productsProvider'];
 
   if (ON_TEST) {
     require('./product-table-container.component.spec.js')(ngModule);
