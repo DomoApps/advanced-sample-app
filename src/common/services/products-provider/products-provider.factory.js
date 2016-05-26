@@ -27,6 +27,10 @@ module.exports = ngModule => {
       const deferred = $q.defer();
       // get copy of products
       domo.get(buildQuery()).then(data => {
+        // transform some annoying stringy server stuff
+        for (let i = 0; i < data.length; i++) {
+          data[i].inStock = (data[i].inStock === 'true' ? true : false);
+        }
         products = data;
         deferred.resolve(data);
       }, error => {
