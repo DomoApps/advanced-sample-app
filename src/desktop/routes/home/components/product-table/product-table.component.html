@@ -4,7 +4,7 @@
     <span class="heading">Price</span>
   </div>
   <div class="product-table-body">
-    <product-row ng-repeat="product in $ctrl.products" name="product.name" price="product.price">
+    <product-row ng-repeat="product in $ctrl.products" name="product.name" price="product.price" ng-class="product.inStock === 'true' ? 'in-stock' : 'out-of-stock'">
     </product-row>
   </div>
 </div>
