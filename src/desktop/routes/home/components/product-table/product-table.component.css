@@ -1,3 +1,16 @@
 .product-table {
-  > .item { /* ... */ }
+  & .product-table-heading {
+    display: flex;
+    > .heading {
+      flex: 1;
+    }
+  }
+  & .product-table-body {
+    > product-row {
+      display: flex;
+    }
+    & td {
+      flex: 1;
+    }
+  }
 }

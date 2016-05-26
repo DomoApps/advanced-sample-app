@@ -1,4 +1,10 @@
 <div class="product-table">
-  Product-table
-  <product-row></product-row>
+  <div class="product-table-heading">
+    <span class="heading">Name</span>
+    <span class="heading">Price</span>
+  </div>
+  <div class="product-table-body">
+    <product-row ng-repeat="product in $ctrl.products" name="product.name" price="product.price">
+    </product-row>
+  </div>
 </div>

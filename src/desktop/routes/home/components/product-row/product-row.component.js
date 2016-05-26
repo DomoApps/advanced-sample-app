@@ -6,6 +6,8 @@ module.exports = ngModule => {
     controller: productRowCtrl,
     bindings: {
       // Inputs should use < and @ bindings.
+      name: '<',
+      price: '<'
       // Outputs should use & bindings.
     }
   });
