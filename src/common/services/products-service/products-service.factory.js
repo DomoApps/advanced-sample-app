@@ -2,7 +2,7 @@ const Query = require('@domoinc/query');
 const domo = require('ryuu.js');
 
 module.exports = ngModule => {
-  function productsProvider($q) {
+  function productsService($q) {
     // Private variables
     let products = undefined;
     // Public API here
@@ -49,11 +49,11 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  productsProvider.$inject = ['$q'];
+  productsService.$inject = ['$q'];
 
-  ngModule.factory('productsProvider', productsProvider);
+  ngModule.factory('productsService', productsService);
 
   if (ON_TEST) {
-    require('./products-provider.factory.spec.js')(ngModule);
+    require('./products-service.factory.spec.js')(ngModule);
   }
 };

@@ -10,7 +10,7 @@ module.exports = ngModule => {
     }
   });
 
-  function productTableContainerCtrl(productsProvider) {
+  function productTableContainerCtrl(productsService) {
     const ctrl = this;
     // private
     let _hideOutOfStock = false;
@@ -25,6 +25,7 @@ module.exports = ngModule => {
     ctrl.filteredProducts = [];
     ctrl.loading = true;
 
+    // mutating methods
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
@@ -32,29 +33,23 @@ module.exports = ngModule => {
     }
 
     function onCheckboxUpdate(newValue) {
-      handleInputChange('hideOutOfStock', newValue);
-    }
-
-    function onSearchTextUpdate(newValue) {
-      handleInputChange('searchText', newValue);
-    }
-
-    function handleInputChange(changeType, newValue) {
-      if (changeType === 'searchText') {
-        _searchText = newValue;
-      }
-      if (changeType === 'hideOutOfStock') {
-        _hideOutOfStock = newValue;
-      }
+      _hideOutOfStock = newValue;
       if (!ctrl.loading) {
         ctrl.filteredProducts = filterProducts(_fullProducts, _hideOutOfStock, _searchText);
       }
     }
 
-    // refreshes the stored product list from the provider
+    function onSearchTextUpdate(newValue) {
+      _searchText = newValue;
+      if (!ctrl.loading) {
+        ctrl.filteredProducts = filterProducts(_fullProducts, _hideOutOfStock, _searchText);
+      }
+    }
+
+    // refreshes the stored product list from the service
     // warning, mutates this objects state!
     function refreshProducts() {
-      productsProvider.getProducts().then(data => {
+      productsService.getProducts().then(data => {
         _fullProducts = data;
         ctrl.filteredProducts = filterProducts(_fullProducts, _hideOutOfStock, _searchText);
         ctrl.loading = false;
@@ -63,6 +58,7 @@ module.exports = ngModule => {
       });
     }
 
+    // helper (functional) functions
     function filterProducts(products, hideOutOfStock, searchText) {
       // bypass first filter if we are not supposed to filter stock
       let toReturn = products;
@@ -82,7 +78,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  productTableContainerCtrl.$inject = ['productsProvider'];
+  productTableContainerCtrl.$inject = ['productsService'];
 
   if (ON_TEST) {
     require('./product-table-container.component.spec.js')(ngModule);
