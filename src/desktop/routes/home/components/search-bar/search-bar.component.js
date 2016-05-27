@@ -7,6 +7,7 @@ module.exports = ngModule => {
     bindings: {
       // Inputs should use < and @ bindings.
       // Outputs should use & bindings.
+      onTextChange: '&'
     }
   });
 
@@ -14,10 +15,17 @@ module.exports = ngModule => {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
+    ctrl.searchText = '';
+    ctrl.onInput = onInput;
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
+    }
+
+    function onInput() {
+      // propagate text to parent
+      ctrl.onTextChange({ newSearchText: ctrl.searchText });
     }
   }
 

@@ -15,10 +15,12 @@ module.exports = ngModule => {
     // private
     let _hideOutOfStock = false;
     let _fullProducts = [];
+    let _searchText = '';
 
     // public
     ctrl.$onInit = $onInit;
     ctrl.onCheckboxUpdate = onCheckboxUpdate;
+    ctrl.onSearchTextUpdate = onSearchTextUpdate;
 
     ctrl.filteredProducts = [];
     ctrl.loading = true;
@@ -30,10 +32,22 @@ module.exports = ngModule => {
     }
 
     function onCheckboxUpdate(newValue) {
-      _hideOutOfStock = newValue;
-      // if our products are loaded, apply the filter
+      handleInputChange('hideOutOfStock', newValue);
+    }
+
+    function onSearchTextUpdate(newValue) {
+      handleInputChange('searchText', newValue);
+    }
+
+    function handleInputChange(changeType, newValue) {
+      if (changeType === 'searchText') {
+        _searchText = newValue;
+      }
+      if (changeType === 'hideOutOfStock') {
+        _hideOutOfStock = newValue;
+      }
       if (!ctrl.loading) {
-        ctrl.filteredProducts = filterProducts(_fullProducts, _hideOutOfStock);
+        ctrl.filteredProducts = filterProducts(_fullProducts, _hideOutOfStock, _searchText);
       }
     }
 
@@ -42,23 +56,28 @@ module.exports = ngModule => {
     function refreshProducts() {
       productsProvider.getProducts().then(data => {
         _fullProducts = data;
-        ctrl.filteredProducts = filterProducts(_fullProducts, _hideOutOfStock);
+        ctrl.filteredProducts = filterProducts(_fullProducts, _hideOutOfStock, _searchText);
         ctrl.loading = false;
       }, error => {
         console.log(error);
       });
     }
 
-    // filter the products based on whether or not they are out of stock
-    function filterProducts(products, hideOutOfStock) {
-      // bypass filter if we are not supposed to filter
-      if (!hideOutOfStock) {
-        return products;
+    function filterProducts(products, hideOutOfStock, searchText) {
+      // bypass first filter if we are not supposed to filter stock
+      let toReturn = products;
+      if (hideOutOfStock) {
+        toReturn = toReturn.filter(product => {
+          return product.inStock;
+        });
       }
-      // else, return a filtered array
-      return products.filter(product => {
-        return product.inStock;
-      });
+      if (searchText !== '') {
+        const lowerCaseSearchText = searchText.toLowerCase();
+        toReturn = toReturn.filter(product => {
+          return (product.name.toLowerCase().indexOf(lowerCaseSearchText) !== -1);
+        });
+      }
+      return toReturn;
     }
   }
 
