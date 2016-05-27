@@ -10,7 +10,7 @@ module.exports = ngModule => {
     }
   });
 
-  function productTableContainerCtrl(productsService) {
+  function productTableContainerCtrl(productsService, $state) {
     const ctrl = this;
     // private
     let _hideOutOfStock = false;
@@ -21,6 +21,7 @@ module.exports = ngModule => {
     ctrl.$onInit = $onInit;
     ctrl.onCheckboxUpdate = onCheckboxUpdate;
     ctrl.onSearchTextUpdate = onSearchTextUpdate;
+    ctrl.goToPage = goToPage;
 
     ctrl.filteredProducts = [];
     ctrl.loading = true;
@@ -44,6 +45,10 @@ module.exports = ngModule => {
       if (!ctrl.loading) {
         ctrl.filteredProducts = filterProducts(_fullProducts, _hideOutOfStock, _searchText);
       }
+    }
+
+    function goToPage(page) {
+      $state.go(page);
     }
 
     // refreshes the stored product list from the service
@@ -78,7 +83,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  productTableContainerCtrl.$inject = ['productsService'];
+  productTableContainerCtrl.$inject = ['productsService', '$state'];
 
   if (ON_TEST) {
     require('./product-table-container.component.spec.js')(ngModule);
