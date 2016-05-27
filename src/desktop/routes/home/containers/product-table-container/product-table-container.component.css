@@ -1,3 +1,12 @@
 .product-table-container {
-  > .item { /* ... */ }
+}
+
+.product-table-container-header {
+  display: flex;
+  > filter-checkbox {
+    flex: 1;
+  }
+  > search-bar {
+    flex: 3;
+  }
 }

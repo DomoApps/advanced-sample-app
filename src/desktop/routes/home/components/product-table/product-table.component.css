@@ -1,16 +1,28 @@
 .product-table {
+
   & .product-table-heading {
     display: flex;
+
     > .heading {
       flex: 1;
     }
+
   }
+
   & .product-table-body {
+
     > product-row {
       display: flex;
+
+      &.out-of-stock {
+        color: red;
+      }
+
     }
+
     & td {
       flex: 1;
     }
+
   }
 }
