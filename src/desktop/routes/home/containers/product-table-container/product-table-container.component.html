@@ -1,3 +1,8 @@
-<filter-checkbox ng-hide="$ctrl.loading" on-update="$ctrl.onCheckboxUpdate(hideOutOfStock)"></filter-checkbox>
-<product-table products="$ctrl.filteredProducts" ng-hide="$ctrl.loading"></product-table>
-<div class="loading" ng-hide="!$ctrl.loading">Loading...</div>
+<div class="product-table-container">
+  <div class="product-table-container-header">
+    <filter-checkbox ng-hide="$ctrl.loading" on-update="$ctrl.onCheckboxUpdate(hideOutOfStock)"></filter-checkbox>
+    <search-bar ng-hide="$ctrl.loading"></search-bar>
+  </div>
+  <product-table products="$ctrl.filteredProducts" ng-hide="$ctrl.loading"></product-table>
+  <div class="loading" ng-hide="!$ctrl.loading">Loading...</div>
+</div>
