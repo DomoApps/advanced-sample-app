@@ -20,13 +20,11 @@ module.exports = ngModule => {
     //// Functions ////
     // returns info on the total no of transactions, total products sold, and total income
     function getTotals() {
-      const deferred = $q.defer();
-
       if (typeof _totals !== 'undefined') {
-        deferred.resolve(_totals);
-        return deferred.promise; // early return to avoid wrapping the rest in an "else"
+        return $q.resolve(_totals);
       }
 
+      const deferred = $q.defer();
       const query = _queryBuilder.select(['category', 'quantity', 'price', 'name']).
         groupBy('category', { price: 'sum', quantity: 'sum', name: 'count' });
 

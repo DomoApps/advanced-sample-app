@@ -16,9 +16,7 @@ module.exports = ngModule => {
 
     function getCachedProducts() {
       if (typeof products !== 'undefined') {
-        return $q(resolve => {
-          resolve(products);
-        });
+        return $q.resolve(products);
       }
       return getProducts();
     }
