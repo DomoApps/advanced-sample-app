@@ -42,6 +42,7 @@
     "css-loader": "^0.23.0",
     "cssnano": "^3.4.0",
     "cz-conventional-changelog": "^1.1.5",
+    "da-bits": "git+ssh://git@git.empdev.domo.com:AppTeam6-Lib/da-bits.git",
     "eslint": "^1.10.3",
     "eslint-config-airbnb": "^2.0.0",
     "eslint-friendly-formatter": "^1.2.2",
