@@ -47,7 +47,7 @@ module.exports = ngModule => {
     }
 
     // refreshes the stored product list from the service
-    // warning, mutates this objects state!
+    // warning, mutates this object's state!
     function refreshProducts() {
       productsService.getProducts().then(data => {
         _fullProducts = data;

@@ -10,7 +10,7 @@ module.exports = ngModule => {
     }
   });
 
-  function transactionsContainerCtrl(transactionsAnalyticsService) {
+  function transactionsContainerCtrl(transactionsAnalyticsService, $q) {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
@@ -22,19 +22,21 @@ module.exports = ngModule => {
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
-      transactionsAnalyticsService.getTotals().then(totals => {
-        ctrl.loading = false;
-        ctrl.transactionCount = totals.transactionCount;
-        ctrl.productsSold = totals.productsSold;
-        ctrl.income = totals.income;
-      });
-      transactionsAnalyticsService.getTopSellingItem();
+      $q.all([transactionsAnalyticsService.getTotals(),
+        transactionsAnalyticsService.getTopSellingItem()]).then(data => {
+          ctrl.loading = false;
+          ctrl.transactionCount = data[0].transactionCount;
+          ctrl.productsSold = data[0].productsSold;
+          ctrl.income = data[0].income;
+        }, error => {
+          console.log(error);
+        });
       //transactionsAnalyticsService.getTopGrossingItem();
     }
   }
 
   // inject dependencies here
-  transactionsContainerCtrl.$inject = ['transactionsAnalyticsService'];
+  transactionsContainerCtrl.$inject = ['transactionsAnalyticsService', '$q'];
 
   if (ON_TEST) {
     require('./transactions-container.component.spec.js')(ngModule);
