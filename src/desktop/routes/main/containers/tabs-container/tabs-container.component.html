@@ -1,0 +1,12 @@
+<button ng-click="$ctrl.goToPage('products')">Products</button>
+<button ng-click="$ctrl.goToPage('transactions')">Transactions</button>
+<da-controlpanel da-drawer-anchor="controlpanelAnchor">
+  <da-controlpanel-navigation>
+  </da-controlpanel-navigation>
+  <da-controlpanel-separator></da-controlpanel-separator>
+  <da-controlpanel-filters>
+  </da-controlpanel-filters>
+</da-controlpanel>
+<div da-controlpanel-load>
+  <div ui-view></div>
+</div>

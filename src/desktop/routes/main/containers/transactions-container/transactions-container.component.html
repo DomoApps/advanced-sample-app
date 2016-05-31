@@ -1,0 +1,8 @@
+<div class="transactions-container">
+  <div class="loading" ng-hide="!$ctrl.loading">Loading...</div>
+  <div class="transactions-info" ng-hide="$ctrl.loading">
+    <p>{{ $ctrl.transactionCount }} total transactions</p>
+    <p>{{ $ctrl.productsSold }} products sold</p>
+    <p>{{ $ctrl.income | currency : "$" }} in total income</p>
+  </div>
+</div>

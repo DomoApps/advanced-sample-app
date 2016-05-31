@@ -19,18 +19,8 @@
 </head>
 <body ng-cloak ng-app="da.desktop">
   <div id="appContainer">
-    <da-controlpanel da-drawer-anchor="controlpanelAnchor">
-      <da-controlpanel-navigation>
-        Navigation
-      </da-controlpanel-navigation>
-      <da-controlpanel-separator></da-controlpanel-separator>
-      <da-controlpanel-filters>
-        Filters
-      </da-controlpanel-filters>
-    </da-controlpanel>
-    <div da-controlpanel-load>
-      <div ui-view></div>
-    </div>
+    <tabs-container>
+    </tabs-container>
   </div>
   {% if (o.htmlWebpackPlugin.options.dev) { %}<script src="/webpack-dev-server.js"></script>{% } %}
   <!-- {%= o.htmlWebpackPlugin.options.pkg.name + ' v' + o.htmlWebpackPlugin.options.pkg.version + ' built on ' + new Date() %} -->
