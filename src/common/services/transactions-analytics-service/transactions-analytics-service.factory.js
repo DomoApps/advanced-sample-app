@@ -7,6 +7,7 @@ module.exports = ngModule => {
     const _queryBuilder = new Query();
     const _dataset = 'transactions';
     let _totals = undefined;
+    let _topSelling = undefined;
 
     // Public API here
     const service = {
@@ -50,17 +51,23 @@ module.exports = ngModule => {
     }
 
     // todo: return all top selling?
-    function getTopSellingItem(date) {
-      const queryBuilder = new Query();
-      const query = queryBuilder.select(['name', 'price', 'quantity']).orderBy('quantity', 'desc').limit(10);
+    function getTopSellingItem() {
+      if (typeof _topSelling !== 'undefined') {
+        return $q.resolve(_topSelling);
+      }
 
-      domo.get(query.query('transactions')).then(data => {
-        console.log(data);
+      const deferred = $q.defer();
+      const query = _queryBuilder.select(['name', 'price', 'quantity']).
+        orderBy('quantity', 'desc').limit(10);
+
+      _queryDb(query).then(data => {
+        _topSelling = data;
+        deferred.resolve(data);
+      }, error => {
+        deferred.reject(error);
       });
 
-      if (date) {
-        return;
-      }
+      return deferred.promise;
     }
 
      /*function getTopGrossingItem(date) {
