@@ -15,17 +15,23 @@ module.exports = ngModule => {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
-    ctrl.hideOutOfStock = false;
     ctrl.onCheckboxClick = onCheckboxClick;
+    ctrl.checkbox = false; // dummy model to make domobits happy
+    ctrl.console = logToConsole;
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
     }
 
-    function onCheckboxClick() {
+    function onCheckboxClick(checked) {
       // push the update to our parent
-      ctrl.onUpdate({ hideOutOfStock: ctrl.hideOutOfStock });
+      console.log(checked);
+      ctrl.onUpdate({ hideOutOfStock: checked });
+    }
+
+    function logToConsole(words) {
+      console.log(words);
     }
   }
 

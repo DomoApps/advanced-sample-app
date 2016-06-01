@@ -1,3 +1,15 @@
-.tabs-container {
-  > .item { /* ... */ }
+db-tabs.header-tabs:before {
+  left: 0px;
+  right: 0px;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.header db-tabs db-tabs-highlight {
+  height: 2px;
+  background-color: #7b8184;
+}
+
+tabs-container {
+  height: 100%;
+  width: 100%;
 }

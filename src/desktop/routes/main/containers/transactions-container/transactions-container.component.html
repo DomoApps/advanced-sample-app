@@ -1,6 +1,5 @@
-<div class="transactions-container">
-  <div class="loading" ng-hide="!$ctrl.loading">Loading...</div>
-  <div class="transactions-info" ng-hide="$ctrl.loading">
+<div class="transactions-container" style="height: 100%;">
+  <div da-loading-mask="{{ $ctrl.loading }}" class="transactions-info" style="height: 688px; width: 1115px;">
     <p>{{ $ctrl.transactionCount }} total transactions</p>
     <p>{{ $ctrl.productsSold }} products sold</p>
     <p>{{ $ctrl.income | currency : "$" }} in total income</p>

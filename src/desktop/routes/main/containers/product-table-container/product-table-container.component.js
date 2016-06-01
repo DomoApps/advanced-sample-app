@@ -23,7 +23,7 @@ module.exports = ngModule => {
     ctrl.onSearchTextUpdate = onSearchTextUpdate;
 
     ctrl.filteredProducts = [];
-    ctrl.loading = true;
+    ctrl.loading = true; // we want the data to fade in nicely!
 
     // mutating methods
     function $onInit() {

@@ -1,18 +1,20 @@
-<button ng-click="$ctrl.goToPage('products')">Products</button>
-<button ng-click="$ctrl.goToPage('transactions')">Transactions</button>
-<da-controlpanel>
-  <da-controlpanel-navigation>
-    Navigation
-  </da-controlpanel-navigation>
-  <da-controlpanel-separator></da-controlpanel-separator>
+<da-controlpanel style="height: 728px; /* todo: better layout! */">
   <da-controlpanel-filters>
     Filters
   </da-controlpanel-filters>
-  <da-controlpanel-fullscreen></da-controlpanel-fullscreen>
-  <da-controlpanel-bottomline>
-    Bottom line
-  </da-controlpanel-bottomline>
 </da-controlpanel>
-<div da-controlpanel-load>
-  <div ui-view></div>
+<div da-controlpanel-load style="position: relative; left: 50px; height: 100%; width: 1115px;">
+  <div class="header" style="position: relative; width: 100%;">
+    <db-tabs
+      active-tab="$ctrl.selectedTab"
+      class="db-tabs header-tabs"
+      style="width: 100%;"
+      on-active-tab-change="$ctrl.onSelectedTab(tab)">
+      <db-tab name="products" style="color: #7b8184;" ng-click="$ctrl.goToPage('products');">Products Inventory</db-tab>
+      <db-tab name="transactions" style="color: #7b8184;" ng-click="$ctrl.goToPage('transactions')">Transactions</db-tab>
+    </db-tabs>
+  </div>
+  <div da-view-transition="" style="height: 688px; width: 1115px;">
+    <div ui-view style="height: 688px; width: 1115px;"></div>
+  </div>
 </div>

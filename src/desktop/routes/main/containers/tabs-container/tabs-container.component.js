@@ -15,12 +15,14 @@ module.exports = ngModule => {
 
     ctrl.$onInit = $onInit;
     ctrl.goToPage = goToPage;
+    ctrl.selectedTab = 'products';
 
     $state.go('products');
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
+      // TODO: setup tabs based on routing
     }
 
     function goToPage(page) {
