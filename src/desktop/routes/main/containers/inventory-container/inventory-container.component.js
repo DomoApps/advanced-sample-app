@@ -10,30 +10,22 @@ module.exports = ngModule => {
     }
   });
 
-  function inventoryContainerCtrl(productsService) {
+  function inventoryContainerCtrl(productsService, _) {
     const ctrl = this;
     // private
     let _hideOutOfStock = false;
-    let _fullProducts = [];
+    let _inStockProducts = [];
     let _searchText = '';
 
     // public
     ctrl.$onInit = $onInit;
     ctrl.onCheckboxUpdate = onCheckboxUpdate;
     ctrl.onSearchTextUpdate = onSearchTextUpdate;
+    ctrl.stockProduct = stockProduct;
+    ctrl.outOfStockProducts = []; // exposing this for our product stocker
 
-    ctrl.filteredProducts = [];
+    ctrl.tableFilteredProducts = [];
     ctrl.loading = true; // we want the data to fade in nicely!
-
-    ctrl.productTableHeight = '400px'; // normally we don't put presentation in the app logic, but da-table forced our hand!
-    ctrl.productTableWidth = '1115px';
-    ctrl.outOfStockTableHeight = '400px';
-    ctrl.outOfStockTableWidth = '1115px';
-
-    ctrl.productColumns = [{ name: 'Product Name' }, { name: 'Price' }, { name: '# In Stock' }];
-    ctrl.productRows = [];
-    ctrl.outOfStockColumns = [{ name: 'Products Out of Stock' }];
-    ctrl.outOfStockRows = [];
 
     // yeah, this is ridiculous, but da-table forced our hand. Again.
     ctrl.doNothing = () => { return; };
@@ -48,26 +40,44 @@ module.exports = ngModule => {
     function onCheckboxUpdate(newValue) {
       _hideOutOfStock = newValue;
       if (!ctrl.loading) {
-        ctrl.filteredProducts = filterProducts(_fullProducts, _hideOutOfStock, _searchText);
-        ctrl.productRows = generateRows(ctrl.filteredProducts);
+        ctrl.tableFilteredProducts = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText);
       }
     }
 
     function onSearchTextUpdate(newValue) {
       _searchText = newValue;
       if (!ctrl.loading) {
-        ctrl.filteredProducts = filterProducts(_fullProducts, _hideOutOfStock, _searchText);
-        ctrl.productRows = generateRows(ctrl.filteredProducts);
+        ctrl.tableFilteredProducts = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText);
       }
+    }
+
+    function stockProduct(product) {
+      // remove the product from out of stock and add it to in stock
+      const i = ctrl.outOfStockProducts.indexOf(product);
+      if (i === -1) {
+        console.log('We asked to restock a product that is not out of stock!');
+        return;
+      }
+      ctrl.outOfStockProducts.splice(i, 1);
+      console.log(product);
+      product.inStock = true;
+      _inStockProducts.push(product);
+      ctrl.tableFilteredProducts = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText);
     }
 
     // refreshes the stored product list from the service
     // warning, mutates this object's state!
     function refreshProducts() {
       productsService.getProducts().then(data => {
-        _fullProducts = data;
-        ctrl.filteredProducts = filterProducts(_fullProducts, _hideOutOfStock, _searchText);
-        ctrl.productRows = generateRows(ctrl.filteredProducts);
+        // get the in stock and out of stock products
+        const partitioned = _.partition(data, product => {
+          return product.inStock;
+        });
+        _inStockProducts = partitioned[0];
+        ctrl.outOfStockProducts = partitioned[1];
+        console.log(ctrl.outOfStockProducts);
+        console.log(ctrl.outOfStockProducts);
+        ctrl.tableFilteredProducts = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText);
         ctrl.loading = false;
       }, error => {
         console.log(error);
@@ -91,22 +101,10 @@ module.exports = ngModule => {
       }
       return toReturn;
     }
-
-    function generateRows(products) {
-      const toReturn = [];
-      for (let i = 0; i < products.length; i++) {
-        toReturn.push({ cells: {
-          'Product Name': { value: products[i].name, displayValue: products[i].name },
-          'Price': { value: products[i].price, displayValue: products[i].price },
-          '# In Stock': { value: products[i].inStock, displayValue: products[i].inStock }
-        } });
-      }
-      return toReturn;
-    }
   }
 
   // inject dependencies here
-  inventoryContainerCtrl.$inject = ['productsService'];
+  inventoryContainerCtrl.$inject = ['productsService', '_'];
 
   if (ON_TEST) {
     require('./inventory-container.component.spec.js')(ngModule);

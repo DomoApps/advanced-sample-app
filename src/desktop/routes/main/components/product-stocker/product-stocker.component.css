@@ -1,0 +1,17 @@
+.animate-out.ng-leave {
+  animation: .2s leave_animation;
+}
+
+.animate-in.ng-enter {
+  animation: .2s enter_animation;
+}
+
+@keyframes leave_animation {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes enter_animation {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

@@ -1,11 +1,19 @@
 <div da-loading-mask="{{ $ctrl.loading }}" style="height: 100%;" class="product-table-container">
-  <div class="product-table-container-header" style="height: 60px; background-color: #f7f7f7; border-bottom: 1px solid #e3e3e3;">
+  <div class="product-table-container-header" style="height: 59px; background-color: #f7f7f7; border-bottom: 1px solid #e3e3e3;">
     <h2 style="text-align: center; padding-top: 8px; margin-top: 0;">What Are We Selling?</h2>
   </div>
-  <filter-checkbox ng-hide="$ctrl.loading" on-update="$ctrl.onCheckboxUpdate(hideOutOfStock)"></filter-checkbox>
-  <search-bar ng-hide="$ctrl.loading" on-text-change="$ctrl.onSearchTextUpdate(newSearchText)"></search-bar>
-  <product-table products="$ctrl.filteredProducts"></product-table>
-  <!-- todo: make sure data binding is correct on filteredProducts -->
-  <!-- todo: SO MANY ERRORS -->
+  <div style="display: flex; height: 730px;">
+    <div style="flex: 1; padding: 20px 20px 0 20px;">
+      <div style="height: 60px; display: flex;">
+        <filter-checkbox ng-hide="$ctrl.loading" style="flex: 1" on-update="$ctrl.onCheckboxUpdate(hideOutOfStock)"></filter-checkbox>
+        <search-bar ng-hide="$ctrl.loading" style="flex: 1; text-align: center;" on-text-change="$ctrl.onSearchTextUpdate(newSearchText)"></search-bar>
+      </div>
+      <div style="height: 650px;">
+        <product-table products="$ctrl.tableFilteredProducts" style=""></product-table>
+        <!-- todo: make sure data binding is correct on filteredProducts -->
+        <!-- todo: SO MANY ERRORS -->
+      </div>
+    </div>
+    <product-stocker products-out-of-stock="$ctrl.outOfStockProducts" style="flex: 1; padding: 20px;" stock-product="$ctrl.stockProduct(product)"></product-stocker>
   </div>
 </div>
