@@ -12,7 +12,7 @@ function mainConfig($stateProvider) {
   // IS DESTROYING THE DOM THE BEST WAY TO DO THIS?
   $stateProvider.state('products', {
     url: '/',
-    template: '<product-table-container></product-table-container>',
+    template: '<inventory-container></inventory-container>',
     order: 1
   }).state('transactions', {
     url: '/transactions',

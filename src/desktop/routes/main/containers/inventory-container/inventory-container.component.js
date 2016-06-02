@@ -1,16 +1,16 @@
 module.exports = ngModule => {
-  require('./product-table-container.component.css');
+  require('./inventory-container.component.css');
 
-  ngModule.component('productTableContainer', {
-    template: require('./product-table-container.component.html'),
-    controller: productTableContainerCtrl,
+  ngModule.component('inventoryContainer', {
+    template: require('./inventory-container.component.html'),
+    controller: inventoryContainerCtrl,
     bindings: {
       // Inputs should use < and @ bindings.
       // Outputs should use & bindings.
     }
   });
 
-  function productTableContainerCtrl(productsService) {
+  function inventoryContainerCtrl(productsService) {
     const ctrl = this;
     // private
     let _hideOutOfStock = false;
@@ -106,9 +106,9 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  productTableContainerCtrl.$inject = ['productsService'];
+  inventoryContainerCtrl.$inject = ['productsService'];
 
   if (ON_TEST) {
-    require('./product-table-container.component.spec.js')(ngModule);
+    require('./inventory-container.component.spec.js')(ngModule);
   }
 };
