@@ -9,7 +9,5 @@ body {
 #appContainer {
   width: 1165px;
   height: 728px;
-  border-width: 5px;
-  border-color: gray;
   font-family: "Open Sans", "Helvetica Neue", Arial, Helvetica, sans-serif;
 }

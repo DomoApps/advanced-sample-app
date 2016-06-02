@@ -1,10 +1,20 @@
 <div class="product-table">
-  <div class="product-table-heading">
-    <span class="heading">Name</span>
-    <span class="heading">Price</span>
-  </div>
-  <div class="product-table-body">
-    <product-row ng-repeat="product in $ctrl.products" name="product.name" price="product.price" ng-class="product.inStock ? 'in-stock' : 'out-of-stock'">
-    </product-row>
-  </div>
+  <table>
+    <thead>
+      <tr>
+        <th ng-repeat="label in ['Name', 'Price', 'Category']">
+          <div class="header-label background">{{ label }}</div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="product in $ctrl.products" ng-class="product.inStock ? 'in-stock' : 'out-of-stock'">
+        <td ng-repeat="cellKey in ['name', 'price', 'category']">
+          <div class="cell-container">
+            <span class="display-text">{{ product[cellKey] }}</span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>

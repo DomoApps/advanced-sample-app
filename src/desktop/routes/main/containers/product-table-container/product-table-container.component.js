@@ -25,6 +25,19 @@ module.exports = ngModule => {
     ctrl.filteredProducts = [];
     ctrl.loading = true; // we want the data to fade in nicely!
 
+    ctrl.productTableHeight = '400px'; // normally we don't put presentation in the app logic, but da-table forced our hand!
+    ctrl.productTableWidth = '1115px';
+    ctrl.outOfStockTableHeight = '400px';
+    ctrl.outOfStockTableWidth = '1115px';
+
+    ctrl.productColumns = [{ name: 'Product Name' }, { name: 'Price' }, { name: '# In Stock' }];
+    ctrl.productRows = [];
+    ctrl.outOfStockColumns = [{ name: 'Products Out of Stock' }];
+    ctrl.outOfStockRows = [];
+
+    // yeah, this is ridiculous, but da-table forced our hand. Again.
+    ctrl.doNothing = () => { return; };
+
     // mutating methods
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
@@ -36,6 +49,7 @@ module.exports = ngModule => {
       _hideOutOfStock = newValue;
       if (!ctrl.loading) {
         ctrl.filteredProducts = filterProducts(_fullProducts, _hideOutOfStock, _searchText);
+        ctrl.productRows = generateRows(ctrl.filteredProducts);
       }
     }
 
@@ -43,6 +57,7 @@ module.exports = ngModule => {
       _searchText = newValue;
       if (!ctrl.loading) {
         ctrl.filteredProducts = filterProducts(_fullProducts, _hideOutOfStock, _searchText);
+        ctrl.productRows = generateRows(ctrl.filteredProducts);
       }
     }
 
@@ -52,6 +67,7 @@ module.exports = ngModule => {
       productsService.getProducts().then(data => {
         _fullProducts = data;
         ctrl.filteredProducts = filterProducts(_fullProducts, _hideOutOfStock, _searchText);
+        ctrl.productRows = generateRows(ctrl.filteredProducts);
         ctrl.loading = false;
       }, error => {
         console.log(error);
@@ -72,6 +88,18 @@ module.exports = ngModule => {
         toReturn = toReturn.filter(product => {
           return (product.name.toLowerCase().indexOf(lowerCaseSearchText) !== -1);
         });
+      }
+      return toReturn;
+    }
+
+    function generateRows(products) {
+      const toReturn = [];
+      for (let i = 0; i < products.length; i++) {
+        toReturn.push({ cells: {
+          'Product Name': { value: products[i].name, displayValue: products[i].name },
+          'Price': { value: products[i].price, displayValue: products[i].price },
+          '# In Stock': { value: products[i].inStock, displayValue: products[i].inStock }
+        } });
       }
       return toReturn;
     }
