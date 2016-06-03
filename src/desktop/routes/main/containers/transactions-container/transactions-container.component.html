@@ -1,7 +1,17 @@
-<div class="transactions-container" style="height: 100%;">
-  <div da-loading-mask="{{ $ctrl.loading }}" class="transactions-info" style="height: 688px; width: 1115px;">
-    <p>{{ $ctrl.transactionCount }} total transactions</p>
-    <p>{{ $ctrl.productsSold }} products sold</p>
-    <p>{{ $ctrl.income | currency : "$" }} in total income</p>
+<div da-loading-mask="{{ $ctrl.loading }}" class="transactions-info" style="height: 100%;">
+  <div style="height: 59px; background-color: #f7f7f7; border-bottom: 1px solid #e3e3e3;">
+    <h2 style="text-align: center; padding-top: 8px; margin-top: 0;">How Much Are We Selling?</h2>
+  </div>
+  <div style="display: flex; height: 730px;">
+    <div id="vis" style="flex: 1; padding: 20px 20px 0 20px;">
+    </div>
+    <div style="flex: 1; padding: 20px 20px 0 20px; text-align: right;">
+      <label style="color: #7b8184; text-transform: uppercase;">Total Income</label>
+      <h1>{{ $ctrl.income | currency : "$" }} </h1>
+      <label style="color: #7b8184; text-transform: uppercase;">Products Sold</label>
+      <h1>{{ $ctrl.productsSold }}</h1>
+      <label style="color: #7b8184; text-transform: uppercase;">Total Transactions</label>
+      <h1>{{ $ctrl.transactionCount }}</h1>
+    </div>
   </div>
 </div>
