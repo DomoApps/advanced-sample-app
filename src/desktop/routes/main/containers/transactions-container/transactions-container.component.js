@@ -2,6 +2,7 @@ module.exports = ngModule => {
   // todo: ask andrew if there are better ways
   require('./transactions-container.component.css');
   const d3 = require('d3');
+  const SummaryNumber = require('@domoinc/summary-number');
   require('@domoinc/multi-line');
 
   ngModule.component('transactionsContainer', {
@@ -22,60 +23,48 @@ module.exports = ngModule => {
     ctrl.productsSold = undefined;
     ctrl.income = undefined;
 
+    const summary = new SummaryNumber();
+
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
       $q.all([transactionsAnalyticsService.getTotals()/*,
         transactionsAnalyticsService.getTopSellingItem()*/]).then(data => {
           ctrl.loading = false;
-          ctrl.transactionCount = data[0].transactionCount;
-          ctrl.productsSold = data[0].productsSold;
-          ctrl.income = data[0].income;
+          ctrl.transactionCount = summary.summaryNumber(data[0].transactionCount);
+          ctrl.productsSold = summary.summaryNumber(data[0].productsSold);
+          ctrl.income = summary.summaryNumber(data[0].income);
+          console.log(data[0].income);
         }, error => {
           console.log('error retrieving db results!');
           console.log(error);
         });
 
-      transactionsAnalyticsService.getSalesAmountPerMonth().then(data => {
-        const salesChart = d3.select('#vis')
-          .append('svg')
-          .attr('height', 500)
-          .attr('width', 517.5)
-          .chart('MultiLine')
-          .c({
-            height: 500,
-            width: 517.5,
-            showGradients: true
-          });
-        salesChart.draw(formatSalesData(data));
-      });
+      $q.all([transactionsAnalyticsService.getGrossProfitPerMonth(),
+        transactionsAnalyticsService.getItemsSoldPerMonth()]).then(data => {
+          console.log(data);
+          const salesChart = d3.select('#vis')
+            .append('svg')
+            .attr('height', 600)
+            .attr('width', 517.5)
+            .chart('MultiLine')
+            .c({
+              height: 500,
+              width: 517.5,
+              showGradients: true
+            });
+          salesChart.draw(formatSalesData(data));
+        });
       //transactionsAnalyticsService.getTopGrossingItem();
     }
 
     function formatSalesData(salesData) {
       const toReturn = [];
-      const fixedData = [];
-      for (let i = 0; i < salesData.length; i++) {
-        // todo: remove this patch!
-        const toAdd = salesData[i];
-        console.log(toAdd);
-        let added = false;
-        for (let q = 0; q < fixedData.length; q++) {
-          console.log(toAdd.CalendarMonth, fixedData[q].CalendarMonth);
-          if (toAdd.CalendarMonth === fixedData[q].CalendarMonth) {
-            fixedData[q].total += toAdd.total;
-            console.log('found a match!', fixedData[q], toAdd);
-            added = true;
-            break;
-          }
-        }
-        if (!added) {
-          fixedData.push(toAdd);
-        }
+      for (let i = 0; i < salesData[0].length; i++) {
+        toReturn.push([salesData[0][i].CalendarMonth, salesData[0][i].total, 'Sales']);
       }
-      console.log(fixedData);
-      for (let i = 0; i < fixedData.length; i++) {
-        toReturn.push([fixedData[i].CalendarMonth, fixedData[i].total, 'Sales']);
+      for (let i = 0; i < salesData[1].length; i++) {
+        toReturn.push([salesData[1][i].CalendarMonth, salesData[1][i].quantity, 'Quantity']);
       }
       return toReturn;
     }

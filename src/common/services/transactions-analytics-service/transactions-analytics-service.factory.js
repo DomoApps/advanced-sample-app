@@ -4,16 +4,17 @@ const domo = require('ryuu.js');
 module.exports = ngModule => {
   function transactionsAnalyticsService($q) {
     // Private variables
-    const _queryBuilder = new Query();
     const _dataset = 'transactions';
     let _totals = undefined;
     let _topSelling = undefined;
-    let _salesPerMonth = undefined;
+    let _grossProfitPerMonth = undefined;
+    let _itemsSoldPerMonth = undefined;
 
     // Public API here
     const service = {
       getTotals,
-      getSalesAmountPerMonth,
+      getGrossProfitPerMonth,
+      getItemsSoldPerMonth,
       getTopSellingItem/*,
       getTopGrossingItem*/
     };
@@ -28,8 +29,8 @@ module.exports = ngModule => {
       }
 
       const deferred = $q.defer();
-      const query = _queryBuilder.select(['category', 'quantity', 'price', 'name']).
-        groupBy('category', { price: 'sum', quantity: 'sum', name: 'count' });
+      const query = (new Query()).select(['category', 'quantity', 'total', 'name']).
+        groupBy('category', { total: 'sum', quantity: 'sum', name: 'count' });
 
       _queryDb(query).then(data => {
         let transactionCount = 0;
@@ -38,7 +39,7 @@ module.exports = ngModule => {
         for (let i = 0; i < data.length; i++) {
           transactionCount += data[i].name; //confusing, I know...
           productsSold += data[i].quantity;
-          income += data[i].price;
+          income += data[i].total;
         }
         _totals = {
           transactionCount,
@@ -59,7 +60,7 @@ module.exports = ngModule => {
       }
 
       const deferred = $q.defer();
-      const query = _queryBuilder.select(['name', 'price', 'quantity']).
+      const query = (new Query()).select(['name', 'price', 'quantity']).
         orderBy('quantity', 'desc').limit(10);
 
       _queryDb(query).then(data => {
@@ -72,16 +73,35 @@ module.exports = ngModule => {
       return deferred.promise;
     }
 
-    function getSalesAmountPerMonth() {
-      if (typeof _salesPerMonth !== 'undefined') {
-        return $q.resolve(_salesPerMonth);
+    function getGrossProfitPerMonth() {
+      if (typeof _grossProfitPerMonth !== 'undefined') {
+        return $q.resolve(_grossProfitPerMonth);
       }
 
       const deferred = $q.defer();
-      const query = _queryBuilder.select(['date', 'total']).dateGrain('date', 'month');
+      const query = (new Query()).select(['date', 'total']).dateGrain('date', 'month');
 
       _queryDb(query).then(data => {
-        _salesPerMonth = data;
+        _grossProfitPerMonth = data;
+        deferred.resolve(data);
+      }, error => {
+        deferred.reject(error);
+      });
+
+      return deferred.promise;
+    }
+
+    function getItemsSoldPerMonth() {
+      if (typeof _itemsSoldPerMonth !== 'undefined') {
+        return $q.resolve(_itemsSoldPerMonth);
+      }
+
+      const deferred = $q.defer();
+      // todo: memory leak issues?
+      const query = (new Query()).select(['date', 'quantity']).dateGrain('date', 'month');
+
+      _queryDb(query).then(data => {
+        _itemsSoldPerMonth = data;
         deferred.resolve(data);
       }, error => {
         deferred.reject(error);
