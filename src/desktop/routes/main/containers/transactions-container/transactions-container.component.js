@@ -1,5 +1,6 @@
 module.exports = ngModule => {
   // todo: ask andrew if there are better ways
+  // todo: split into components
   require('./transactions-container.component.css');
   const d3 = require('d3');
   //const SummaryNumber = require('@domoinc/summary-number');
@@ -114,29 +115,26 @@ module.exports = ngModule => {
         });
       // todo: switch
       pill.draw(lineChartData);
-
       const circle = d3.select(id + ' .iconCircle').node();
-      // create a parent g
+      addPillText(circle, displayTotal, 'large');
+      addPillText(circle, label, 'small');
+    }
+
+    function addPillText(circle, text, textType) {
       d3.select(circle.parentNode)
         .insert('g', () => { return circle; })
         .append(() => { return circle; });
       const circleBBox = circle.getBBox();
+      const fontSize = (textType === 'small' ? '12' : '23');
+      const xloc = circleBBox.x + (circleBBox.width / 2);
+      const yloc = circleBBox.y + ((circleBBox.height / 3) * (textType === 'small' ? 2 : 1));
       d3.select(circle.parentNode)
         .append('text')
-        .attr('transform', 'translate(' + (circleBBox.x + (circleBBox.width / 2))
-          + ',' + (circleBBox.y + (circleBBox.height / 3)) + ')')
+        .attr('transform', 'translate(' + xloc + ',' + yloc + ')')
         .attr('text-anchor', 'middle')
         .attr('dy', '.35em')
-        .attr('font-size', '23')
-        .text(displayTotal);
-      d3.select(circle.parentNode)
-        .append('text')
-        .attr('transform', 'translate(' + (circleBBox.x + (circleBBox.width / 2))
-          + ',' + (circleBBox.y + ((circleBBox.height / 3) * 2)) + ')')
-        .attr('text-anchor', 'middle')
-        .attr('dy', '.35em')
-        .attr('font-size', '12')
-        .text(label);
+        .attr('font-size', fontSize)
+        .text(text);
     }
   }
 
