@@ -9,13 +9,15 @@ module.exports = ngModule => {
     let _topSelling = undefined;
     let _grossProfitPerMonth = undefined;
     let _itemsSoldPerMonth = undefined;
+    let _transactionCountPerMonth = undefined;
 
     // Public API here
     const service = {
       getTotals,
       getGrossProfitPerMonth,
       getItemsSoldPerMonth,
-      getTopSellingItem/*,
+      getTopSellingItem,
+      getTransactionCountPerMonth/*,
       getTopGrossingItem*/
     };
 
@@ -83,6 +85,7 @@ module.exports = ngModule => {
 
       _queryDb(query).then(data => {
         _grossProfitPerMonth = data;
+        console.log(data);
         deferred.resolve(data);
       }, error => {
         deferred.reject(error);
@@ -102,6 +105,24 @@ module.exports = ngModule => {
 
       _queryDb(query).then(data => {
         _itemsSoldPerMonth = data;
+        deferred.resolve(data);
+      }, error => {
+        deferred.reject(error);
+      });
+
+      return deferred.promise;
+    }
+
+    function getTransactionCountPerMonth() {
+      if (typeof _transactionCountPerMonth !== 'undefined') {
+        return $q.resolve(_transactionCountPerMonth);
+      }
+
+      const deferred = $q.defer();
+      const query = (new Query()).select(['date', 'quantity']).dateGrain('date', 'month', { quantity: 'count' });
+
+      _queryDb(query).then(data => {
+        _transactionCountPerMonth = data;
         deferred.resolve(data);
       }, error => {
         deferred.reject(error);

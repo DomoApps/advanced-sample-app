@@ -16,7 +16,7 @@
       <tr ng-repeat="product in $ctrl.products" ng-class="product.inStock ? 'in-stock' : 'out-of-stock'">
         <td ng-repeat="cellKey in ['name', 'price', 'category']">
           <div class="cell-container">
-            <span class="display-text">{{ product[cellKey] }}</span>
+            <span class="display-text" ng-style="cellKey === 'price' ? { 'text-align': 'right' } : {}">{{ cellKey === 'price' ? (product[cellKey] | currency) : product[cellKey] }}</span>
           </div>
         </td>
       </tr>

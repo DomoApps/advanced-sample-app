@@ -5,13 +5,36 @@
   <div style="display: flex; height: 730px;">
     <div id="vis" style="flex: 1; padding: 20px 20px 0 20px;">
     </div>
+    <!--
     <div style="flex: 1; padding: 20px 20px 0 20px; text-align: right;">
+      <svg id="stats">
+        <g id="DomoCAStatsCenterIconDomo">
+          <rect id="chartBounds" x="50" y="50" style="fill:#CACCCC;fill-opacity:0;" width="400" height="400"/>
+          <g id="ChangeMe">
+            <g>
+              <ellipse style="fill:#F7F8F8;stroke:#9ACBEC;stroke-width:0.8022;stroke-miterlimit:10;" cx="250" cy="250" rx="44" ry="44"/>
+            </g>
+            <ellipse style="fill:#9ACBEC;" cx="250" cy="250" rx="40.48" ry="40.541"/>
+            <g>
+              <text transform="matrix(0.9987 0 0 1 237.7842 254.142)" style="fill:#FFFFFF; font-family:'OpenSans'; font-size:10.4832;">ICON</text>
+            </g>
+          </g>
+        </g>
+      </svg>
+      -->
+      <svg style="flex: 1; width: 317.5px;">
+        <g id="totalIncomePill" ng-click="$ctrl.onPillClick('totalIncomePill')"></g>
+        <g id="productsSoldPill" transform="translate(0,121)" ng-click="$ctrl.onPillClick('productsSoldPill')"></g>
+        <g id="transactionPill" transform="translate(0,242)" ng-click="$ctrl.onPillClick('transactionPill')"></g>
+      </svg>
+      <!--
       <label style="color: #7b8184; text-transform: uppercase;">Total Income</label>
       <h1>${{ $ctrl.income }} </h1>
       <label style="color: #7b8184; text-transform: uppercase;">Products Sold</label>
       <h1>{{ $ctrl.productsSold }}</h1>
       <label style="color: #7b8184; text-transform: uppercase;">Total Transactions</label>
       <h1>{{ $ctrl.transactionCount }}</h1>
+      -->
     </div>
   </div>
 </div>
