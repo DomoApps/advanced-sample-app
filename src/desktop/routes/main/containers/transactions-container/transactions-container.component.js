@@ -31,6 +31,7 @@ module.exports = ngModule => {
     ctrl.incomeLineChartData = undefined;
     ctrl.salesChart = undefined;
     ctrl.widgetData = undefined;
+    ctrl.activePill = 'totalIncomePill';
 
     // const summary = new SummaryNumber();
 
@@ -91,6 +92,7 @@ module.exports = ngModule => {
       };
       if (typeof chartRedraws[pill] !== 'undefined') {
         chartRedraws[pill]();
+        ctrl.activePill = pill;
       } else {
         console.log('Missing one of the chart redraw functions!');
       }

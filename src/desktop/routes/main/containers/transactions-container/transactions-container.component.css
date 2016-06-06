@@ -1,3 +1,11 @@
-.transactions-container {
-  > .item { /* ... */ }
+svg.pills > g {
+  opacity: .4;
+  cursor: pointer;
+  transition: opacity .25s ease-in-out;
+  &.active {
+    opacity: 1;
+  }
+  &:hover {
+    opacity: 1;
+  }
 }
