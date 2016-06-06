@@ -10,7 +10,7 @@ module.exports = ngModule => {
     }
   });
 
-  function tabsContainerCtrl($state) {
+  function tabsContainerCtrl($state, daFilters, productsService) {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
@@ -23,15 +23,30 @@ module.exports = ngModule => {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
       // TODO: setup tabs based on routing
+      productsService.getProductCategories().then(categories => {
+        categories.unshift('All');
+        daFilters.initFilters(categories.map(category => {
+          return {
+            Id: 'category',
+            FieldName: 'category',
+            FilterName: 'Product Category',
+            FieldValues: category,
+            DataType: 'string',
+            InputType: 'Single Select',
+            ColumnName: 'category'
+          };
+        }), {});
+      });
     }
 
     function goToPage(page) {
+      ctrl.selectedTab = page;
       $state.go(page);
     }
   }
 
   // inject dependencies here
-  tabsContainerCtrl.$inject = ['$state', 'transactionsAnalyticsService'];
+  tabsContainerCtrl.$inject = ['$state', 'daFilters', 'productsService'];
 
   if (ON_TEST) {
     require('./tabs-container.component.spec.js')(ngModule);

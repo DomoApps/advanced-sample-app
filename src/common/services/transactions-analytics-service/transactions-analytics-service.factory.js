@@ -1,5 +1,6 @@
 const Query = require('@domoinc/query');
 const domo = require('ryuu.js');
+// todo: YOU DON'T NEED Q.DEFER. Just return!
 
 module.exports = ngModule => {
   function transactionsAnalyticsService($q) {

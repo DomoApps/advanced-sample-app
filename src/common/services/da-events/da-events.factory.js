@@ -3,6 +3,7 @@ module.exports = ngModule => {
     // central place for documenting app events
     const _eventRegistry = {
       'app:loaded': 'This event is fired when the appFrame as finished loading.',
+      'daFilters:update': 'This even is fired when the filters get updated'
     };
 
     // Create promise to reolve when appFrame has finished animating
