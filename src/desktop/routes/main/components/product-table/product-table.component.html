@@ -1,0 +1,25 @@
+<div class="product-table" style="position: relative; width: 517.5px; height: 650px;">
+  <table style="table-layout: fixed;">
+    <colgroup>
+      <col span="1" style="width: 172.5px;">
+      <col span="1" style="width: 172.5px;">
+      <col span="1" style="width: 172.5px;">
+    </colgroup>
+    <thead>
+      <tr style="width: 517.5px;">
+        <th ng-repeat="label in ['Name', 'Price', 'Category']">
+          <div class="header-label background">{{ label }}</div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="product in $ctrl.products" ng-class="product.inStock ? 'in-stock' : 'out-of-stock'">
+        <td ng-repeat="cellKey in ['name', 'price', 'category']">
+          <div class="cell-container">
+            <span class="display-text" ng-style="cellKey === 'price' ? { 'text-align': 'right' } : {}">{{ cellKey === 'price' ? (product[cellKey] | currency) : product[cellKey] }}</span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

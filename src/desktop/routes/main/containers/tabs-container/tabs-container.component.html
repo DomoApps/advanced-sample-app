@@ -1,0 +1,20 @@
+<da-controlpanel style="height: 830px; z-index: 100; /* todo: better layout! */">
+  <da-controlpanel-filters>
+    <da-filters filter-data="daBits.filters.filterData"></da-filters>
+  </da-controlpanel-filters>
+</da-controlpanel>
+<div da-controlpanel-load style="position: relative; left: 50px; height: 100%; width: 1115px;">
+  <div class="header" style="position: relative; width: 100%;">
+    <db-tabs
+      active-tab="$ctrl.selectedTab"
+      class="db-tabs header-tabs"
+      style="width: 100%;"
+      on-active-tab-change="$ctrl.onSelectedTab(tab)">
+      <db-tab name="products" style="color: #7b8184;" ng-click="$ctrl.goToPage('products');">Products Inventory</db-tab>
+      <db-tab name="transactions" style="color: #7b8184;" ng-click="$ctrl.goToPage('transactions')">Transactions</db-tab>
+    </db-tabs>
+  </div>
+  <div da-view-transition="" style="height: 790px; width: 1115px;">
+    <div ui-view style="height: 790px; width: 1115px;"></div>
+  </div>
+</div>

@@ -22,6 +22,36 @@
           "columnName": "In Stock"
         }
       ]
+    },
+    {
+      "alias": "transactions",
+      "dataSetId": "e46eca50-0547-4684-81b0-eeca3317e106",
+      "fields": [
+        {
+          "alias": "date",
+          "columnName": "Transaction Date"
+        },
+        {
+          "alias": "category",
+          "columnName": "Product Category"
+        },
+        {
+          "alias": "name",
+          "columnName": "Product Name"
+        },
+        {
+          "alias": "price",
+          "columnName": "Price"
+        },
+        {
+          "alias": "quantity",
+          "columnName": "Product Quantity"
+        },
+        {
+          "alias": "total",
+          "columnName": "Transaction Total"
+        }
+      ]
     }
   ],
   "version": "0.0.1",

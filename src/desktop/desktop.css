@@ -1,5 +1,13 @@
+@import '../../node_modules/domo-bits/dist/domo-bits.css';
 @import '../common/styles/variables.css';
 
 body {
-  color: $domo-blue;
+  color: #3B3E3F;
+}
+
+/* todo: modular css? */
+#appContainer {
+  width: 1165px;
+  height: 830px;
+  font-family: "Open Sans", "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
