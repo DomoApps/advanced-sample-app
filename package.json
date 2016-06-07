@@ -76,6 +76,7 @@
     "lcov-filter": "0.1.1",
     "lodash.kebabcase": "^3.1.1",
     "mocha": "^2.3.4",
+    "moment": "^2.13.0",
     "ng-annotate-webpack-plugin": "^0.1.2",
     "npm": "^3.5.2",
     "phantomjs-prebuilt": "^2.1.7",

@@ -25,7 +25,20 @@ module.exports = ngModule => {
       // TODO: setup tabs based on routing
       productsService.getProductCategories().then(categories => {
         categories.unshift('All');
-        daFilters.initFilters(categories.map(category => {
+        /*
+        const dateFilters = (['month', 'week', 'quarter']).map(dateGrain => {
+          return {
+            Id: 'dateGrain',
+            FieldName: 'dateGrain',
+            FilterName: 'Group By',
+            FieldValues: dateGrain,
+            DataType: 'string',
+            InputType: 'Single Select',
+            ColumnName: 'dateGrain'
+          };
+        });
+        */
+        const categoryFilters = categories.map(category => {
           return {
             Id: 'category',
             FieldName: 'category',
@@ -35,7 +48,19 @@ module.exports = ngModule => {
             InputType: 'Single Select',
             ColumnName: 'category'
           };
-        }), {});
+        });
+        /*
+        const betweenDateFilters = {
+          Id: 'betweenDates',
+          FieldName: 'date',
+          FilterName: 'Date',
+          DataType: 'string',
+          FieldValues: '',
+          InputType: 'betweendatepicker',
+          ColumnName: 'date'
+        };
+        */
+        daFilters.initFilters(categoryFilters, {});
       });
     }
 

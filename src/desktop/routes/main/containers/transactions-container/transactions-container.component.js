@@ -3,12 +3,9 @@ module.exports = ngModule => {
   // todo: split into components
   require('./transactions-container.component.css');
   const d3 = require('d3');
-  //const SummaryNumber = require('@domoinc/summary-number');
   require('@domoinc/multi-line-chart');
-  require('@domoinc/ca-stats-center-icon');
   require('@domoinc/ca-icon-trends-with-text');
   require('@domoinc/ca-stats-circle');
-  require('@domoinc/single-line-text');
   const SummaryNumber = require('@domoinc/summary-number');
 
   ngModule.component('transactionsContainer', {
@@ -25,10 +22,15 @@ module.exports = ngModule => {
 
     const _listeners = [];
     let _categoryFilter = undefined;
+    let _grainFilter = undefined;
+    let _dateRangeFilter = undefined;
 
+    // todo: split into private vars
     ctrl.$onInit = $onInit;
     ctrl.$onDestroy = $onDestroy;
     ctrl.onPillClick = onPillClick;
+    ctrl.granularityDropdownSelect = granularityDropdownSelect;
+    ctrl.dateRangeDropdownSelect = dateRangeDropdownSelect;
     ctrl.loading = true;
     ctrl.transactionCountLineChartData = undefined;
     ctrl.productsSoldLineChartData = undefined;
@@ -40,13 +42,52 @@ module.exports = ngModule => {
     ctrl.widgetData = undefined;
     ctrl.activePill = 'totalIncomePill';
     ctrl.pills = [];
+    ctrl.granularityDropdownItems = [
+      {
+        name: 'Month',
+        value: 'month'
+      },
+      {
+        name: 'Week',
+        value: 'week'
+      },
+      {
+        name: 'Quarter',
+        value: 'quarter'
+      }
+    ];
+    ctrl.granularityDropdownSelectedItem = ctrl.granularityDropdownItems[0];
+    ctrl.dateRangeDropdownItems = [
+      {
+        // todo: set to be null?
+        name: 'All Time',
+        value: 'all'
+      },
+      {
+        name: 'Last Year',
+        value: 'year'
+      },
+      {
+        name: 'This Quarter Last Year',
+        value: 'quarter'
+      },
+      {
+        name: 'Custom',
+        value: 'custom'
+      }
+    ];
+    ctrl.dateRangeDropdownSelectedItem = ctrl.dateRangeDropdownItems[0];
 
-    // const summary = new SummaryNumber();
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
-      refreshData(_categoryFilter).then(() => {
+      daFilters.getSelectedOptions().then(options => {
+        _categoryFilter = (options[0].selections[0] === 'All' ? undefined : [options[0].selections[0]]);
+        _grainFilter = ctrl.granularityDropdownSelectedItem.value;
+        _dateRangeFilter = ctrl.dateRangeDropdownSelectedItem.value;
+        return refreshData(_categoryFilter, _grainFilter, _dateRangeFilter);
+      }).then(() => {
         ctrl.loading = false;
         // draw sales chart
 
@@ -64,27 +105,9 @@ module.exports = ngModule => {
         console.log('error retrieving db results!');
         console.log(error);
       });
+      console.log('da events', daEvents);
 
-      _listeners.push(daEvents.on('daFilters:update', () => {
-        ctrl.loading = true;
-        daFilters.getSelectedOptions().then(options => {
-          // check to make sure it's not the 'all' category
-          // todo: set this as an application constant?
-          console.log('filters! triggered: ', options[0].selections[0]);
-          _categoryFilter = (options[0].selections[0] === 'All' ? undefined : [options[0].selections[0]]);
-            // redraw all the charts
-          refreshData(_categoryFilter).then(() => {
-            const summaryNumber = new SummaryNumber();
-            ctrl.loading = false;
-            onPillClick(ctrl.activePill);
-            drawPill(ctrl.pills[0], ctrl.incomeLineChartData, '$' + summaryNumber.summaryNumber(ctrl.totalIncome), 'Total Income');
-            drawPill(ctrl.pills[1], ctrl.productsSoldLineChartData, summaryNumber.summaryNumber(ctrl.productsSold), 'Products Sold');
-            drawPill(ctrl.pills[2], ctrl.transactionCountLineChartData, summaryNumber.summaryNumber(ctrl.transactionCount), 'Transactions');
-          }, error => {
-            console.error(error);
-          });
-        });
-      }));
+      _listeners.push(daEvents.on('daFilters:update', onFilterUpdate));
     }
 
     function $onDestroy() {
@@ -93,15 +116,39 @@ module.exports = ngModule => {
       });
     }
 
-    function refreshData(filter) {
-      console.log('filters! refreshing data: ', filter);
-      return $q.all([transactionsAnalyticsService.getTotals(filter),
-        transactionsAnalyticsService.getGrossProfitPerMonth(filter),
-        transactionsAnalyticsService.getItemsSoldPerMonth(filter),
-        transactionsAnalyticsService.getTransactionCountPerMonth(filter)]).then(data => {
+    function onFilterUpdate() {
+      ctrl.loading = true;
+      daFilters.getSelectedOptions().then(options => {
+        // check to make sure it's not the 'all' category
+        // todo: set this as an application constant?
+        console.log('filters! triggered: ', options);
+        _categoryFilter = (options[0].selections[0] === 'All' ? undefined : [options[0].selections[0]]);
+        _grainFilter = ctrl.granularityDropdownSelectedItem.value;
+        _dateRangeFilter = ctrl.dateRangeDropdownSelectedItem.value;
+          // redraw all the charts
+        refreshData(_categoryFilter, _grainFilter, _dateRangeFilter).then(() => {
+          const summaryNumber = new SummaryNumber();
+          ctrl.loading = false;
+          onPillClick(ctrl.activePill);
+          drawPill(ctrl.pills[0], ctrl.incomeLineChartData, '$' + summaryNumber.summaryNumber(ctrl.totalIncome), 'Total Income');
+          drawPill(ctrl.pills[1], ctrl.productsSoldLineChartData, summaryNumber.summaryNumber(ctrl.productsSold), 'Products Sold');
+          drawPill(ctrl.pills[2], ctrl.transactionCountLineChartData, summaryNumber.summaryNumber(ctrl.transactionCount), 'Transactions');
+        }, error => {
+          console.error(error);
+        });
+      });
+    }
+
+    function refreshData(categoryFilter, grainFilter, dateRangeFilter) {
+      const formattedRangeFilter = dateRangeFilter === 'all' ? undefined : dateRangeFilter;
+      return $q.all([transactionsAnalyticsService.getTotals(categoryFilter, formattedRangeFilter),
+        transactionsAnalyticsService.getGrossProfitPerX(grainFilter, categoryFilter, formattedRangeFilter),
+        transactionsAnalyticsService.getItemsSoldPerX(grainFilter, categoryFilter, formattedRangeFilter),
+        transactionsAnalyticsService.getTransactionCountPerX(grainFilter, categoryFilter, formattedRangeFilter)]).then(data => {
           ctrl.productsSoldLineChartData = formatDataForLineChart('Products Sold', data[2], 'quantity');
           ctrl.incomeLineChartData = formatDataForLineChart('Income', data[1], 'total');
           ctrl.transactionCountLineChartData = formatDataForLineChart('Transactions', data[3], 'quantity');
+          console.log(ctrl);
           ctrl.totalIncome = data[0].income;
           ctrl.productsSold = data[0].productsSold;
           ctrl.transactionCount = data[0].transactionCount;
@@ -129,6 +176,16 @@ module.exports = ngModule => {
       }
     }
 
+    function granularityDropdownSelect(item) {
+      ctrl.granularityDropdownSelectedItem = item;
+      onFilterUpdate();
+    }
+
+    function dateRangeDropdownSelect(item) {
+      ctrl.dateRangeDropdownSelectedItem = item;
+      onFilterUpdate();
+    }
+
     function createSalesChart(d3Object) {
       return d3Object.insert('svg')
         .attr('height', 650)
@@ -143,6 +200,9 @@ module.exports = ngModule => {
           xAddAxis: { name: 'Show', value: true },
           xAddGridlines: { name: 'Show', value: true },
           yAddZeroline: { name: 'Hide', value: false }
+        }).a('X Axis', line => {
+          // override default accessor, it doesn't accept "quarter" values (ex "2015 Q1")
+          return line[0];
         });
     }
 
@@ -151,7 +211,7 @@ module.exports = ngModule => {
         console.log('row', row);
         console.log('title', title);
         console.log('columnName', columnName);
-        return [row.CalendarMonth, row[columnName], title];
+        return [row.date, row[columnName], title];
       });
     }
 
