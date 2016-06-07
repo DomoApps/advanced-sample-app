@@ -6,11 +6,7 @@ module.exports = ngModule => {
   function transactionsAnalyticsService($q) {
     // Private variables
     const _dataset = 'transactions';
-    let _totals = undefined;
     let _topSelling = undefined;
-    let _grossProfitPerMonth = undefined;
-    let _itemsSoldPerMonth = undefined;
-    let _transactionCountPerMonth = undefined;
 
     // Public API here
     const service = {
@@ -26,14 +22,14 @@ module.exports = ngModule => {
 
     //// Functions ////
     // returns info on the total no of transactions, total products sold, and total income
-    function getTotals() {
-      if (typeof _totals !== 'undefined') {
-        return $q.resolve(_totals);
-      }
-
+    function getTotals(categoryFilters) {
       const deferred = $q.defer();
-      const query = (new Query()).select(['category', 'quantity', 'total', 'name']).
-        groupBy('category', { total: 'sum', quantity: 'sum', name: 'count' });
+      const query = (new Query()).select(['category', 'quantity', 'total', 'name']);
+      console.log('filters!', categoryFilters);
+      if (typeof categoryFilters !== 'undefined' && categoryFilters.length > 0) {
+        query.where('category').in(categoryFilters);
+      }
+      query.groupBy('category', { total: 'sum', quantity: 'sum', name: 'count' });
 
       _queryDb(query).then(data => {
         let transactionCount = 0;
@@ -44,12 +40,7 @@ module.exports = ngModule => {
           productsSold += data[i].quantity;
           income += data[i].total;
         }
-        _totals = {
-          transactionCount,
-          productsSold,
-          income
-        };
-        deferred.resolve(_totals);
+        deferred.resolve({ transactionCount, productsSold, income });
       }, error => {
         deferred.reject(error);
       });
@@ -76,16 +67,15 @@ module.exports = ngModule => {
       return deferred.promise;
     }
 
-    function getGrossProfitPerMonth() {
-      if (typeof _grossProfitPerMonth !== 'undefined') {
-        return $q.resolve(_grossProfitPerMonth);
-      }
-
+    function getGrossProfitPerMonth(categoryFilters) {
       const deferred = $q.defer();
-      const query = (new Query()).select(['date', 'total']).dateGrain('date', 'month');
+      const query = (new Query()).select(['date', 'total']);
+      if (typeof categoryFilters !== 'undefined' && categoryFilters.length > 0) {
+        query.where('category').in(categoryFilters);
+      }
+      query.dateGrain('date', 'month');
 
       _queryDb(query).then(data => {
-        _grossProfitPerMonth = data;
         console.log(data);
         deferred.resolve(data);
       }, error => {
@@ -95,17 +85,16 @@ module.exports = ngModule => {
       return deferred.promise;
     }
 
-    function getItemsSoldPerMonth() {
-      if (typeof _itemsSoldPerMonth !== 'undefined') {
-        return $q.resolve(_itemsSoldPerMonth);
-      }
-
+    function getItemsSoldPerMonth(categoryFilters) {
       const deferred = $q.defer();
       // todo: memory leak issues?
-      const query = (new Query()).select(['date', 'quantity']).dateGrain('date', 'month');
+      const query = (new Query()).select(['date', 'quantity']);
+      if (typeof categoryFilters !== 'undefined' && categoryFilters.length > 0) {
+        query.where('category').in(categoryFilters);
+      }
+      query.dateGrain('date', 'month');
 
       _queryDb(query).then(data => {
-        _itemsSoldPerMonth = data;
         deferred.resolve(data);
       }, error => {
         deferred.reject(error);
@@ -114,16 +103,15 @@ module.exports = ngModule => {
       return deferred.promise;
     }
 
-    function getTransactionCountPerMonth() {
-      if (typeof _transactionCountPerMonth !== 'undefined') {
-        return $q.resolve(_transactionCountPerMonth);
-      }
-
+    function getTransactionCountPerMonth(categoryFilters) {
       const deferred = $q.defer();
-      const query = (new Query()).select(['date', 'quantity']).dateGrain('date', 'month', { quantity: 'count' });
+      const query = (new Query()).select(['date', 'quantity']);
+      if (typeof categoryFilters !== 'undefined' && categoryFilters.length > 0) {
+        query.where('category').in(categoryFilters);
+      }
+      query.dateGrain('date', 'month', { quantity: 'count' });
 
       _queryDb(query).then(data => {
-        _transactionCountPerMonth = data;
         deferred.resolve(data);
       }, error => {
         deferred.reject(error);
