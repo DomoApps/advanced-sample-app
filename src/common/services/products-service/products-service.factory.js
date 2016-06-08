@@ -1,11 +1,18 @@
+// require domo REST query library
 const Query = require('@domoinc/query');
+// require domo.js
 const domo = require('ryuu.js');
 
+/**
+ * productsService: interface for domo backend
+ * @method getProducts
+ * @method getProductCategories
+ */
 module.exports = ngModule => {
   function productsService($q) {
     // Private variables
-    let products = undefined;
-    let productsPromise = undefined;
+    let _products = undefined;
+    let _productsPromise = undefined;
     // Public API here
     const service = {
       getProducts,
@@ -16,27 +23,41 @@ module.exports = ngModule => {
 
     //// Functions ////
 
+    /**
+     * returns a list of products from the server.
+     * Will cache queries and thus only makes one request per instantiation
+     * of the service.
+     *
+     * @return {promise}  Promise returning an array of format [{category, name, price, inStock}, {...}, ...]
+     */
     function getProducts() {
       // 3 possiblities: never before requested, in progress, and already received
       // are they already being requested?
-      if (typeof productsPromise !== 'undefined') {
-        return productsPromise;
+
+      if (typeof _productsPromise !== 'undefined') {
+        return _productsPromise;
       }
-      if (typeof products !== 'undefined') {
-        return $q.resolve(products);
+
+      if (typeof _products !== 'undefined') {
+        return $q.resolve(_products);
       }
-      // get copy of products
-      productsPromise = domo.get(buildQuery()).then(data => {
-        // transform some annoying stringy server stuff
+
+      // store productsPromise in case a parallel request comes in, that way the data is requested only once
+      _productsPromise = domo.get((new Query()).select(['category', 'name', 'price', 'inStock']).query('products')).then(data => {
+        // transform inStock because it arrives as a string instead of a bool
         for (let i = 0; i < data.length; i++) {
           data[i].inStock = (data[i].inStock === 'true' ? true : false);
         }
-        products = data;
+        _products = data;
         return data;
       });
-      return productsPromise;
+      return _productsPromise;
     }
 
+    /**
+     * returns a list of product categories
+     * @return {promise}  Promise returning array of format [string, string, string...]
+     */
     function getProductCategories() {
       return getProducts().then(productsArray => {
         const categories = [];
@@ -47,14 +68,6 @@ module.exports = ngModule => {
         }
         return categories;
       });
-    }
-
-    function buildQuery() {
-      const queryBuilder = new Query();
-
-      const query = queryBuilder.select(['category', 'name', 'price', 'inStock']);
-
-      return query.query('products');
     }
   }
 
