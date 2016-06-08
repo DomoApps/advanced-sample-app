@@ -21,6 +21,8 @@ module.exports = ngModule => {
       getGrossProfitPerX,
       getItemsSoldPerX,
       getTopSellingItem,
+      getEarliestTransaction,
+      getLatestTransaction,
       getTransactionCountPerX/*,
       getTopGrossingItem*/
     };
@@ -42,6 +44,9 @@ module.exports = ngModule => {
       if (dateRangeFilter === 'quarter') {
         query.where('date').gte(moment().subtract(1, 'years').startOf('quarter').toISOString());
         query.where('date').lte(moment().subtract(1, 'years').endOf('quarter').toISOString());
+      }
+      if (typeof dateRangeFilter !== 'undefined' && typeof dateRangeFilter.start !== 'undefined' && typeof dateRangeFilter.end !== 'undefined') {
+        query.where('date').gte(moment(dateRangeFilter.start).toISOString());
       }
       query.groupBy('category', { total: 'sum', quantity: 'sum', name: 'count' });
 
@@ -96,6 +101,10 @@ module.exports = ngModule => {
         query.where('date').gte(moment().subtract(1, 'years').startOf('quarter').toISOString());
         query.where('date').lte(moment().subtract(1, 'years').endOf('quarter').toISOString());
       }
+      if (typeof dateRangeFilter !== 'undefined' && typeof dateRangeFilter.start !== 'undefined' && typeof dateRangeFilter.end !== 'undefined') {
+        query.where('date').gte(moment(dateRangeFilter.start).toISOString());
+        query.where('date').lte(moment(dateRangeFilter.end).toISOString());
+      }
 
       _queryDb(query).then(data => {
         deferred.resolve(data.map(row => {
@@ -124,6 +133,10 @@ module.exports = ngModule => {
         query.where('date').gte(moment().subtract(1, 'years').startOf('quarter').toISOString());
         query.where('date').lte(moment().subtract(1, 'years').endOf('quarter').toISOString());
       }
+      if (typeof dateRangeFilter !== 'undefined' && typeof dateRangeFilter.start !== 'undefined' && typeof dateRangeFilter.end !== 'undefined') {
+        query.where('date').gte(moment(dateRangeFilter.start).toISOString());
+        query.where('date').lte(moment(dateRangeFilter.end).toISOString());
+      }
 
       _queryDb(query).then(data => {
         deferred.resolve(data.map(row => {
@@ -138,6 +151,7 @@ module.exports = ngModule => {
     }
 
     function getTransactionCountPerX(dateGrain, categoryFilters, dateRangeFilter) {
+      console.log('dateRangeFilter', dateRangeFilter);
       const deferred = $q.defer();
       const query = (new Query()).select(['date', 'quantity']);
       if (typeof categoryFilters !== 'undefined' && categoryFilters.length > 0) {
@@ -152,6 +166,10 @@ module.exports = ngModule => {
         query.where('date').gte(moment().subtract(1, 'years').startOf('quarter').toISOString());
         query.where('date').lte(moment().subtract(1, 'years').endOf('quarter').toISOString());
       }
+      if (typeof dateRangeFilter !== 'undefined' && typeof dateRangeFilter.start !== 'undefined' && typeof dateRangeFilter.end !== 'undefined') {
+        query.where('date').gte(moment(dateRangeFilter.start).toISOString());
+        query.where('date').lte(moment(dateRangeFilter.end).toISOString());
+      }
 
       _queryDb(query).then(data => {
         deferred.resolve(data.map(row => {
@@ -163,6 +181,17 @@ module.exports = ngModule => {
       });
 
       return deferred.promise;
+    }
+
+
+    function getEarliestTransaction() {
+      const query = (new Query()).select(['date']).orderBy('date', 'asc').limit(1);
+      return _queryDb(query);
+    }
+
+    function getLatestTransaction() {
+      const query = (new Query()).select(['date']).orderBy('date', 'desc').limit(1);
+      return _queryDb(query);
     }
 
      /*function getTopGrossingItem(date) {

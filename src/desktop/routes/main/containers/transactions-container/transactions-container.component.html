@@ -20,6 +20,10 @@
           <db-dropdown-basic-list></db-dropdown-basic-list>
         </div>
       </p>
+      <div ng-hide="$ctrl.dateRangeDropdownSelectedItem.value !== 'custom'">
+        <db-datepicker ng-model="$ctrl.customStartDate" ng-change="$ctrl.onStartDatepickerChange()" min-date="$ctrl.earliestTransaction" max-date="$ctrl.latestTransaction"></db-datepicker>
+        <db-datepicker ng-model="$ctrl.customEndDate" ng-change="$ctrl.onEndDatepickerChange()" min-date="$ctrl.earliestTransaction" max-date="$ctrl.latestTransaction"></db-datepicker>
+      </div>
       <svg class="pills" style="height: 500px; width: 537.5px;">
         <g id="totalIncomePill" ng-click="$ctrl.onPillClick('totalIncomePill')" ng-class="{ active: $ctrl.activePill === 'totalIncomePill' }"></g>
         <g id="productsSoldPill" transform="translate(0,171)" ng-click="$ctrl.onPillClick('productsSoldPill')" ng-class="{ active: $ctrl.activePill === 'productsSoldPill' }"></g>

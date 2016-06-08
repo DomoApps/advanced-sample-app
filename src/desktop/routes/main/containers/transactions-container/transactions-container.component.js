@@ -31,6 +31,8 @@ module.exports = ngModule => {
     ctrl.onPillClick = onPillClick;
     ctrl.granularityDropdownSelect = granularityDropdownSelect;
     ctrl.dateRangeDropdownSelect = dateRangeDropdownSelect;
+    ctrl.onStartDatepickerChange = onStartDatepickerChange;
+    ctrl.onEndDatepickerChange = onEndDatepickerChange;
     ctrl.loading = true;
     ctrl.transactionCountLineChartData = undefined;
     ctrl.productsSoldLineChartData = undefined;
@@ -40,6 +42,10 @@ module.exports = ngModule => {
     ctrl.transactionCount = undefined;
     ctrl.salesChart = undefined;
     ctrl.widgetData = undefined;
+    ctrl.customStartDate = undefined;
+    ctrl.customEndDate = undefined;
+    ctrl.earliestTransaction = undefined;
+    ctrl.latestTransaction = undefined;
     ctrl.activePill = 'totalIncomePill';
     ctrl.pills = [];
     ctrl.granularityDropdownItems = [
@@ -105,7 +111,6 @@ module.exports = ngModule => {
         console.log('error retrieving db results!');
         console.log(error);
       });
-      console.log('da events', daEvents);
 
       _listeners.push(daEvents.on('daFilters:update', onFilterUpdate));
     }
@@ -125,7 +130,11 @@ module.exports = ngModule => {
         _categoryFilter = (options[0].selections[0] === 'All' ? undefined : [options[0].selections[0]]);
         _grainFilter = ctrl.granularityDropdownSelectedItem.value;
         _dateRangeFilter = ctrl.dateRangeDropdownSelectedItem.value;
-          // redraw all the charts
+        if (_dateRangeFilter === 'custom') {
+          console.log('startdate', ctrl.customStartDate);
+          _dateRangeFilter = { start: ctrl.customStartDate, end: ctrl.customEndDate };
+        }
+        // redraw all the charts
         refreshData(_categoryFilter, _grainFilter, _dateRangeFilter).then(() => {
           const summaryNumber = new SummaryNumber();
           ctrl.loading = false;
@@ -144,15 +153,30 @@ module.exports = ngModule => {
       return $q.all([transactionsAnalyticsService.getTotals(categoryFilter, formattedRangeFilter),
         transactionsAnalyticsService.getGrossProfitPerX(grainFilter, categoryFilter, formattedRangeFilter),
         transactionsAnalyticsService.getItemsSoldPerX(grainFilter, categoryFilter, formattedRangeFilter),
-        transactionsAnalyticsService.getTransactionCountPerX(grainFilter, categoryFilter, formattedRangeFilter)]).then(data => {
+        transactionsAnalyticsService.getTransactionCountPerX(grainFilter, categoryFilter, formattedRangeFilter),
+        transactionsAnalyticsService.getEarliestTransaction(),
+        transactionsAnalyticsService.getLatestTransaction()]).then(data => {
           ctrl.productsSoldLineChartData = formatDataForLineChart('Products Sold', data[2], 'quantity');
           ctrl.incomeLineChartData = formatDataForLineChart('Income', data[1], 'total');
           ctrl.transactionCountLineChartData = formatDataForLineChart('Transactions', data[3], 'quantity');
-          console.log(ctrl);
           ctrl.totalIncome = data[0].income;
           ctrl.productsSold = data[0].productsSold;
           ctrl.transactionCount = data[0].transactionCount;
+          ctrl.earliestTransaction = data[4][0].date;
+          ctrl.latestTransaction = data[5][0].date;
         });
+    }
+
+    function onStartDatepickerChange() {
+      if (typeof ctrl.customEndDate !== 'undefined') {
+        onFilterUpdate();
+      }
+    }
+
+    function onEndDatepickerChange() {
+      if (typeof ctrl.customStartDate !== 'undefined') {
+        onFilterUpdate();
+      }
     }
 
     function onPillClick(pill) {
@@ -183,7 +207,10 @@ module.exports = ngModule => {
 
     function dateRangeDropdownSelect(item) {
       ctrl.dateRangeDropdownSelectedItem = item;
-      onFilterUpdate();
+      // don't run the update if we still need to choose a custom time
+      if (item.value !== 'custom') {
+        onFilterUpdate();
+      }
     }
 
     function createSalesChart(d3Object) {
