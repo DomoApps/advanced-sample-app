@@ -151,19 +151,17 @@ module.exports = ngModule => {
     function refreshData(categoryFilter, grainFilter, dateRangeFilter) {
       const formattedRangeFilter = dateRangeFilter === 'all' ? undefined : dateRangeFilter;
       return $q.all([transactionsAnalyticsService.getTotals(categoryFilter, formattedRangeFilter),
-        transactionsAnalyticsService.getGrossProfitPerX(grainFilter, categoryFilter, formattedRangeFilter),
-        transactionsAnalyticsService.getItemsSoldPerX(grainFilter, categoryFilter, formattedRangeFilter),
-        transactionsAnalyticsService.getTransactionCountPerX(grainFilter, categoryFilter, formattedRangeFilter),
+        transactionsAnalyticsService.getTransactionsPerX(grainFilter, categoryFilter, formattedRangeFilter),
         transactionsAnalyticsService.getEarliestTransaction(),
         transactionsAnalyticsService.getLatestTransaction()]).then(data => {
-          ctrl.productsSoldLineChartData = formatDataForLineChart('Products Sold', data[2], 'quantity');
+          ctrl.productsSoldLineChartData = formatDataForLineChart('Products Sold', data[1], 'quantity');
           ctrl.incomeLineChartData = formatDataForLineChart('Income', data[1], 'total');
-          ctrl.transactionCountLineChartData = formatDataForLineChart('Transactions', data[3], 'quantity');
+          ctrl.transactionCountLineChartData = formatDataForLineChart('Transactions', data[1], 'category');
           ctrl.totalIncome = data[0].income;
           ctrl.productsSold = data[0].productsSold;
           ctrl.transactionCount = data[0].transactionCount;
-          ctrl.earliestTransaction = data[4][0].date;
-          ctrl.latestTransaction = data[5][0].date;
+          ctrl.earliestTransaction = data[2][0].date;
+          ctrl.latestTransaction = data[3][0].date;
         });
     }
 
