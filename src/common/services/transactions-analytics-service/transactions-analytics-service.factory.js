@@ -54,7 +54,13 @@ module.exports = ngModule => {
       });
     }
 
-
+    /**
+     * gets data on transactions per dateGrain (month, week, etc...)
+     * @param  {string/undefined} dateGrain       String of either 'month', 'week', or 'quarter'
+     * @param  {array/undefined} categoryFilters Array of categories to filter by: ['cat1', 'cat2', ...], or [], or undefined
+     * @param  {object/string/undefined} dateRangeFilter 'year' for last year, 'quarter' for this quarter last year, { start: string, end: string }, or undefined
+     * @return {array[objects]}                 array of format [{date: string, total: number, quantity: number, category: number}, ...]
+     */
     function getTransactionsPerX(dateGrain, categoryFilters, dateRangeFilter) {
       let query = (new Query()).select(['date', 'total', 'quantity', 'category']);
       if (typeof categoryFilters !== 'undefined') {
