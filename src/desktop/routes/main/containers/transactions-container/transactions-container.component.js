@@ -13,6 +13,7 @@ module.exports = ngModule => {
     controller: transactionsContainerCtrl,
     bindings: {
       // Inputs should use < and @ bindings.
+      categoryFilter: '<' // a string of the category to filter by
       // Outputs should use & bindings.
     }
   });
