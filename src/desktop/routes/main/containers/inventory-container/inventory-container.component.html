@@ -9,7 +9,7 @@
         <search-bar ng-hide="$ctrl.loading" style="flex: 1; text-align: center;" on-text-change="$ctrl.onSearchTextUpdate(newSearchText)"></search-bar>
       </div>
       <div style="height: 650px;">
-        <product-table products="$ctrl.tableFilteredProducts" style=""></product-table>
+        <product-table products="$ctrl.filteredProductsForTable" style=""></product-table>
         <!-- todo: make sure data binding is correct on filteredProducts -->
         <!-- todo: SO MANY ERRORS -->
       </div>

@@ -10,12 +10,13 @@ module.exports = ngModule => {
     }
   });
 
-  function tabsContainerCtrl($state, $scope, daFilters, productsService) {
+  function tabsContainerCtrl($state, $scope, daEvents, daFilters, productsService) {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
     ctrl.goToPage = goToPage;
     ctrl.selectedTab = 'products';
+    ctrl.categoryFilters = undefined;
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
@@ -26,6 +27,7 @@ module.exports = ngModule => {
         ctrl.selectedTab = newValue;
       });
       ctrl.selectedTab = $state.current.name;
+      // setup the filters from product categories
       productsService.getProductCategories().then(categories => {
         categories.unshift('All');
         const categoryFilters = categories.map(category => {
@@ -42,6 +44,12 @@ module.exports = ngModule => {
         });
         daFilters.initFilters(categoryFilters, {});
       });
+      // listen for a change in filters, then propagate
+      daEvents.on('daFilters:update', () => {
+        daFilters.getSelectedOptions().then(options => {
+          ctrl.categoryFilters = options[0].selections[0];
+        });
+      });
     }
 
     function goToPage(page) {
@@ -50,7 +58,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  tabsContainerCtrl.$inject = ['$state', '$scope', 'daFilters', 'productsService'];
+  tabsContainerCtrl.$inject = ['$state', '$scope', 'daEvents', 'daFilters', 'productsService'];
 
   if (ON_TEST) {
     require('./tabs-container.component.spec.js')(ngModule);

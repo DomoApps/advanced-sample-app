@@ -11,7 +11,7 @@ ngModule.config(mainConfig);
 function mainConfig($stateProvider) {
   $stateProvider.state('products', {
     url: '/',
-    template: '<inventory-container></inventory-container>',
+    template: '<inventory-container category-filter="$ctrl.categoryFilters"></inventory-container>',
     order: 1
   }).state('transactions', {
     url: '/transactions',
