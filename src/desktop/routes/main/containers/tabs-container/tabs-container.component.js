@@ -10,35 +10,26 @@ module.exports = ngModule => {
     }
   });
 
-  function tabsContainerCtrl($state, daFilters, productsService) {
+  function tabsContainerCtrl($state, $scope, daFilters, productsService) {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
     ctrl.goToPage = goToPage;
     ctrl.selectedTab = 'products';
 
-    $state.go('products');
-
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
-      // TODO: setup tabs based on routing
+      // set a watch on the current state name so we can set the tabs properly
+      $scope.state = $state;
+      $scope.$watch('state.current.name', newValue => {
+        ctrl.selectedTab = newValue;
+      });
+      ctrl.selectedTab = $state.current.name;
       productsService.getProductCategories().then(categories => {
         categories.unshift('All');
-        /*
-        const dateFilters = (['month', 'week', 'quarter']).map(dateGrain => {
-          return {
-            Id: 'dateGrain',
-            FieldName: 'dateGrain',
-            FilterName: 'Group By',
-            FieldValues: dateGrain,
-            DataType: 'string',
-            InputType: 'Single Select',
-            ColumnName: 'dateGrain'
-          };
-        });
-        */
         const categoryFilters = categories.map(category => {
+          // daFilters flat config object. This adds to the filter box in the upper left
           return {
             Id: 'category',
             FieldName: 'category',
@@ -49,29 +40,17 @@ module.exports = ngModule => {
             ColumnName: 'category'
           };
         });
-        /*
-        const betweenDateFilters = {
-          Id: 'betweenDates',
-          FieldName: 'date',
-          FilterName: 'Date',
-          DataType: 'string',
-          FieldValues: '',
-          InputType: 'betweendatepicker',
-          ColumnName: 'date'
-        };
-        */
         daFilters.initFilters(categoryFilters, {});
       });
     }
 
     function goToPage(page) {
-      ctrl.selectedTab = page;
       $state.go(page);
     }
   }
 
   // inject dependencies here
-  tabsContainerCtrl.$inject = ['$state', 'daFilters', 'productsService'];
+  tabsContainerCtrl.$inject = ['$state', '$scope', 'daFilters', 'productsService'];
 
   if (ON_TEST) {
     require('./tabs-container.component.spec.js')(ngModule);

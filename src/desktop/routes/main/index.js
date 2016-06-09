@@ -9,7 +9,6 @@ ngModule.config(mainConfig);
 
 
 function mainConfig($stateProvider) {
-  // IS DESTROYING THE DOM THE BEST WAY TO DO THIS?
   $stateProvider.state('products', {
     url: '/',
     template: '<inventory-container></inventory-container>',
