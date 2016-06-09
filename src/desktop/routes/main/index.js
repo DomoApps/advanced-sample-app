@@ -15,7 +15,7 @@ function mainConfig($stateProvider) {
     order: 1
   }).state('transactions', {
     url: '/transactions',
-    template: '<transactions-container></transactions-container>',
+    template: '<transactions-container category-filter="$ctrl.categoryFilters"></transactions-container>',
     parentName: 'products' //not actually the parent, but I wanted it to swipe sideways
   });
 }

@@ -17,8 +17,8 @@ module.exports = ngModule => {
     let _hideOutOfStock = false;
     let _inStockProducts = [];
     let _searchText = '';
-    const _listeners = [];
     let _categoryFilter = undefined;
+    const _listeners = [];
 
     // public
     ctrl.$onInit = $onInit;
@@ -57,8 +57,10 @@ module.exports = ngModule => {
       if (typeof changes.categoryFilter !== 'undefined') {
         if (changes.categoryFilter.currentValue !== 'All') {
           _categoryFilter = changes.categoryFilter.currentValue;
-          ctrl.filteredProductsForTable = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText, _categoryFilter);
+        } else {
+          _categoryFilter = undefined;
         }
+        ctrl.filteredProductsForTable = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText, _categoryFilter);
       }
     }
 
