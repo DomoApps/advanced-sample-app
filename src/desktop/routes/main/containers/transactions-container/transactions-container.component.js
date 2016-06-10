@@ -2,7 +2,6 @@ module.exports = ngModule => {
   // todo: ask andrew if there are better ways
   // todo: split into components
   require('./transactions-container.component.css');
-  const d3 = require('d3');
   const SummaryNumber = require('@domoinc/summary-number');
   require('@domoinc/ca-icon-trends-with-text');
   require('@domoinc/ca-stats-circle');
@@ -24,6 +23,7 @@ module.exports = ngModule => {
     const _dateRangeCustomFilter = {};
     const summary = new SummaryNumber();
     let _datepickerIsCustom = false;
+    const MILLISECONDS_PER_MINUTE = 60000;
     const chartTypeToDataset = {
       transactionCount: 'transactionCountLineChartData',
       productsSold: 'productsSoldLineChartData',
@@ -50,6 +50,8 @@ module.exports = ngModule => {
     ctrl.customEndDate = undefined;
     ctrl.earliestTransaction = undefined;
     ctrl.latestTransaction = undefined;
+    ctrl.dateLowerBound = undefined;
+    ctrl.dateUpperBound = undefined;
     ctrl.activePill = 'totalIncomePill';
     ctrl.pills = [];
     ctrl.lineChartDataKey = 'incomeLineChartData';
@@ -94,7 +96,12 @@ module.exports = ngModule => {
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
-      _refreshData();
+      _refreshData().then(() => {
+        // instantiate start and end dates so db-datepicker's validator doesn't get mad at us
+        ctrl.customStartDate = ctrl.earliestTransaction;
+        ctrl.customEndDate = ctrl.latestTransaction;
+        console.log('date, ', ctrl.customStartDate, ctrl.customEndDate);
+      });
     }
 
     function $onChanges(changes) {
@@ -123,19 +130,19 @@ module.exports = ngModule => {
           ctrl.totalIncome = '$' + summary.summaryNumber(data[0].income);
           ctrl.productsSold = summary.summaryNumber(data[0].productsSold);
 
-          ctrl.earliestTransaction = data[2][0].date;
-          ctrl.latestTransaction = data[3][0].date;
+          ctrl.earliestTransaction = _parseDate(data[2][0].date);
+          ctrl.latestTransaction = _parseDate(data[3][0].date);
 
           ctrl.lineChartData = ctrl[ctrl.lineChartDataKey];
 
           ctrl.loading = false;
-          console.log('pill data', data[0]);
         });
     }
 
     function onStartDatepickerChange() {
       _datepickerIsCustom = true;
       _dateRangeCustomFilter.start = ctrl.customStartDate;
+      console.log('date', ctrl.customStartDate);
       if (typeof _dateRangeCustomFilter.end !== 'undefined') {
         _refreshData();
       }
@@ -176,6 +183,13 @@ module.exports = ngModule => {
         console.log('columnName', columnName);
         return [row.date, row[columnName], title];
       });
+    }
+
+    // utility function to convert our UTC times into locale
+    // (we have to do this because db-datepicker displays dates in current locale. We can't change this.)
+    function _parseDate(date) {
+      const utcDate = new Date(date);
+      return new Date(utcDate.getTime() + (utcDate.getTimezoneOffset() * MILLISECONDS_PER_MINUTE));
     }
   }
 
