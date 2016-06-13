@@ -117,7 +117,10 @@ module.exports = ngModule => {
 
     function _refreshData() {
       ctrl.loading = true;
-      const dateRangeFilter = _datepickerIsCustom ? _dateRangeCustomFilter : ctrl.dateRangeDropdownSelectedItem.value;
+      let dateRangeFilter = ctrl.dateRangeDropdownSelectedItem.value;
+      if (ctrl.dateRangeDropdownSelectedItem.value === 'custom') {
+        dateRangeFilter = { start: ctrl.customStartDate, end: ctrl.customEndDate };
+      }
       return $q.all([transactionsAnalyticsService.getTotals(_categoryFilter, dateRangeFilter),
         transactionsAnalyticsService.getTransactionsPerX(ctrl.granularityDropdownSelectedItem.value, _categoryFilter, dateRangeFilter),
         transactionsAnalyticsService.getEarliestTransaction(),
@@ -140,20 +143,11 @@ module.exports = ngModule => {
     }
 
     function onStartDatepickerChange() {
-      _datepickerIsCustom = true;
-      _dateRangeCustomFilter.start = ctrl.customStartDate;
-      console.log('date', ctrl.customStartDate);
-      if (typeof _dateRangeCustomFilter.end !== 'undefined') {
-        _refreshData();
-      }
+      _refreshData();
     }
 
     function onEndDatepickerChange() {
-      _datepickerIsCustom = true;
-      _dateRangeCustomFilter.end = ctrl.customEndDate;
-      if (typeof _dateRangeCustomFilter.start !== 'undefined') {
-        _refreshData();
-      }
+      _refreshData();
     }
 
     function granularityDropdownSelect(item) {
@@ -162,12 +156,8 @@ module.exports = ngModule => {
     }
 
     function dateRangeDropdownSelect(item) {
-      _datepickerIsCustom = false;
       ctrl.dateRangeDropdownSelectedItem = item;
-      // don't run the update if we still need to choose a custom time
-      if (item.value !== 'custom') {
-        _refreshData();
-      }
+      _refreshData();
     }
 
     function displayLineChart(chartType) {
