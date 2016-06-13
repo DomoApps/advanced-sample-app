@@ -1,10 +1,7 @@
 module.exports = ngModule => {
-  // todo: ask andrew if there are better ways
-  // todo: split into components
   require('./transactions-container.component.css');
   const SummaryNumber = require('@domoinc/summary-number');
   require('@domoinc/ca-icon-trends-with-text');
-  require('@domoinc/ca-stats-circle');
 
   ngModule.component('transactionsContainer', {
     template: require('./transactions-container.component.html'),
@@ -16,13 +13,11 @@ module.exports = ngModule => {
     }
   });
 
-  function transactionsContainerCtrl(transactionsAnalyticsService, $q, daEvents, daFilters) {
+  function transactionsContainerCtrl(transactionsAnalyticsService, $q) {
     const ctrl = this;
 
     let _categoryFilter = undefined;
-    const _dateRangeCustomFilter = {};
     const summary = new SummaryNumber();
-    let _datepickerIsCustom = false;
     const MILLISECONDS_PER_MINUTE = 60000;
     const chartTypeToDataset = {
       transactionCount: 'transactionCountLineChartData',
@@ -45,15 +40,10 @@ module.exports = ngModule => {
     ctrl.totalincome = undefined;
     ctrl.productsSold = undefined;
     ctrl.transactionCount = undefined;
-    ctrl.widgetData = undefined;
     ctrl.customStartDate = undefined;
     ctrl.customEndDate = undefined;
     ctrl.earliestTransaction = undefined;
     ctrl.latestTransaction = undefined;
-    ctrl.dateLowerBound = undefined;
-    ctrl.dateUpperBound = undefined;
-    ctrl.activePill = 'totalIncomePill';
-    ctrl.pills = [];
     ctrl.lineChartDataKey = 'incomeLineChartData';
     ctrl.lineChartData = undefined;
     ctrl.granularityDropdownItems = [
@@ -73,7 +63,6 @@ module.exports = ngModule => {
     ctrl.granularityDropdownSelectedItem = ctrl.granularityDropdownItems[0];
     ctrl.dateRangeDropdownItems = [
       {
-        // todo: set to be null?
         name: 'All Time',
         value: 'all'
       },
@@ -100,7 +89,6 @@ module.exports = ngModule => {
         // instantiate start and end dates so db-datepicker's validator doesn't get mad at us
         ctrl.customStartDate = ctrl.earliestTransaction;
         ctrl.customEndDate = ctrl.latestTransaction;
-        console.log('date, ', ctrl.customStartDate, ctrl.customEndDate);
       });
     }
 
@@ -168,9 +156,6 @@ module.exports = ngModule => {
 
     function _formatDataForLineChart(title, salesData, columnName) {
       return salesData.map(row => {
-        console.log('row', row);
-        console.log('title', title);
-        console.log('columnName', columnName);
         return [row.date, row[columnName], title];
       });
     }
@@ -184,7 +169,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  transactionsContainerCtrl.$inject = ['transactionsAnalyticsService', '$q', 'daEvents', 'daFilters'];
+  transactionsContainerCtrl.$inject = ['transactionsAnalyticsService', '$q'];
 
   if (ON_TEST) {
     require('./transactions-container.component.spec.js')(ngModule);

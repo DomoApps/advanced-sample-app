@@ -56,7 +56,6 @@ module.exports = ngModule => {
     }
 
     function $onChanges(changes) {
-      console.log('pill change', changes);
       if (typeof changes.chartData !== 'undefined') {
         _pill.draw(changes.chartData.currentValue);
       }

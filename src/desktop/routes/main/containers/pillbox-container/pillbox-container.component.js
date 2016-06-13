@@ -25,8 +25,6 @@ module.exports = ngModule => {
     ctrl.activePill = 'income';
 
     function $onInit() {
-      console.log('pill instantiating pillbox');
-      console.log('pill ', ctrl.totalIncome);
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
     }

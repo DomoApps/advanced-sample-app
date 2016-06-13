@@ -21,11 +21,9 @@ module.exports = ngModule => {
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
-      console.log(ctrl.productsOutOfStock);
     }
 
     function onStockProduct(product) {
-      console.log(product);
       ctrl.stockProduct({ product });
     }
   }

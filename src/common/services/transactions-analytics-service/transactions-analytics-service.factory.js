@@ -117,7 +117,6 @@ module.exports = ngModule => {
         query.where('date').gte(moment().subtract(1, 'years').startOf('quarter').toISOString());
         query.where('date').lte(moment().subtract(1, 'years').endOf('quarter').toISOString());
       }
-      console.log('daterange: ', dateRangeFilter);
       if (typeof dateRangeFilter.start !== 'undefined' && typeof dateRangeFilter.end !== 'undefined') {
         query.where('date').gte(moment(dateRangeFilter.start).toISOString());
         query.where('date').lte(moment(dateRangeFilter.end).toISOString());

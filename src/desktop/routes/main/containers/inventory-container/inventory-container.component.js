@@ -32,9 +32,6 @@ module.exports = ngModule => {
     ctrl.filteredProductsForTable = [];
     ctrl.loading = true; // we want the data to fade in nicely!
 
-    // yeah, this is ridiculous, but da-table forced our hand. Again.
-    ctrl.doNothing = () => { return; };
-
     // mutating methods
     function $onInit() {
       productsService.getProducts().then(data => {
@@ -44,11 +41,10 @@ module.exports = ngModule => {
         });
         _inStockProducts = partitioned[0];
         ctrl.outOfStockProducts = partitioned[1];
-        console.log(ctrl.outOfStockProducts);
-        console.log(ctrl.outOfStockProducts);
         ctrl.filteredProductsForTable = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText, _categoryFilter);
         ctrl.loading = false;
       }, error => {
+        // todo: better error handling!
         console.log(error);
       });
     }
