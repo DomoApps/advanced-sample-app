@@ -7,10 +7,10 @@ $border-color: #e3e3e3;
 $warn-color: #E4584F;
 
 .product-table {
-  position: absolute;
-  overflow: hidden;
-  height: 100%;
-  width: 100%;
+  position: relative;
+  width: 517.5px;
+  height: 650px;
+  overflow: scroll;
 }
 
 .product-table table {
