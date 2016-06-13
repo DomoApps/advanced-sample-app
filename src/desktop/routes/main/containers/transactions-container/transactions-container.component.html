@@ -3,8 +3,6 @@
     <h2>How Much Are We Selling?</h2>
   </div>
   <div ng-hide="$ctrl.loading" class="transactions-container">
-    <line-chart id="vis" chart-data="$ctrl.lineChartData" d3-id="'#vis'">
-    </line-chart>
     <div class="pill-container">
       <div class="transactions-filters">
         <strong>Show data for each </strong>
@@ -26,5 +24,7 @@
       </div>
       <pillbox-container total-income="$ctrl.totalIncome" products-sold="$ctrl.productsSold" transaction-count="$ctrl.transactionCount" income-chart-data="$ctrl.incomeLineChartData" products-chart-data="$ctrl.productsSoldLineChartData" transaction-chart-data="$ctrl.transactionCountLineChartData" on-pill-click="$ctrl.displayLineChart(pill)"></pillbox-container>
     </div>
+    <line-chart id="vis" chart-data="$ctrl.lineChartData" d3-id="'#vis'">
+    </line-chart>
   </div>
 </div>

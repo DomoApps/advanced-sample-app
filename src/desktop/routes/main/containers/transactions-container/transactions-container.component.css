@@ -1,4 +1,4 @@
- .transactions-info {
+.transactions-info {
   .transactions-container {
     display: flex;
     height: 730px;
@@ -11,6 +11,7 @@
     flex: 1;
     width: 317.5px;
     padding-top: 70px;
+    padding-left: 40px;
   }
   .transactions-filters {
     padding-bottom: 20px;
