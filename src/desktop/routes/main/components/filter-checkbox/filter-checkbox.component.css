@@ -1,3 +1,5 @@
-.filter-checkbox {
-  > .item { /* ... */ }
+filter-checkbox db-toggle {
+  position: relative;
+  top: -6px;
+  left: 8px;
 }

@@ -1,3 +1,16 @@
-.pillbox-container {
-  > .item { /* ... */ }
+div.pills  {
+  height: 500px;
+  width: 537.5px;
+  svg {
+    opacity: .4;
+    cursor: pointer;
+    transition: opacity .25s ease-in-out;
+    width: 100%;
+  }
+  .active svg {
+    opacity: 1;
+  }
+  svg:hover {
+    opacity: 1;
+  }
 }

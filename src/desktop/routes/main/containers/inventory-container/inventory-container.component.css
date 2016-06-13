@@ -1,0 +1,31 @@
+.product-table-container {
+  height: 100%;
+  .inventory {
+    display: flex;
+    height: 730px;
+    > div {
+      flex: 1;
+      padding: 20px 20px 0 20px;
+      .filter-container {
+        height: 60px;
+        display: flex;
+        filter-checkbox {
+          flex: 1;
+        }
+        search-bar {
+          flex: 1;
+          text-align: center;
+        }
+      }
+      .product-table-container {
+        height: 650px;
+      }
+    }
+    product-stocker {
+      flex: 1;
+      padding: 20px;
+    }
+  }
+}
+
+/* I'm so, so sorry for this css. */

@@ -1,3 +1,7 @@
+tabs-container da-controlpanel.vertical {
+  height: 830px;
+  z-index: 100;
+}
 db-tabs.header-tabs:before {
   left: 0px;
   right: 0px;
@@ -12,4 +16,28 @@ db-tabs.header-tabs:before {
 tabs-container {
   height: 100%;
   width: 100%;
+  div[da-controlpanel-load] {
+    position: relative;
+    left: 50px;
+    height: 100%;
+    width: 1115px;
+    .tabs-header {
+      position: relative;
+      width: 100%;
+      db-tab {
+        color: #yb8184;
+      }
+    }
+    .view-container {
+      height: 790px;
+      width: 1115px;
+    }
+    .tabs-view {
+      height: 790px;
+      width: 1115px;
+    }
+  }
+}
+
+.tab-bar {
 }
