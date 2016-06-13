@@ -1,11 +1,14 @@
-svg.pills > g {
-  opacity: .4;
-  cursor: pointer;
-  transition: opacity .25s ease-in-out;
-  &.active {
+div.pills  {
+  & svg {
+    opacity: .4;
+    cursor: pointer;
+    transition: opacity .25s ease-in-out;
+    width: 100%;
+  }
+  & .active svg {
     opacity: 1;
   }
-  &:hover {
+  & svg:hover {
     opacity: 1;
   }
 }

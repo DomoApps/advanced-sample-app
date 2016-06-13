@@ -1,14 +1,15 @@
 const Query = require('@domoinc/query');
 const domo = require('ryuu.js');
+// moment library for date formatting
+// needs to be instantiated with moment().format()
 const moment = require('moment');
 moment().format();
 // todo: YOU DON'T NEED Q.DEFER. Just return!
 // flatten promise chains
 module.exports = ngModule => {
-  function transactionsAnalyticsService($q) {
+  function transactionsAnalyticsService() {
     // Private variables
     const _dataset = 'transactions';
-    let _topSelling = undefined;
     const _grainMap = {
       month: 'Month',
       week: 'Week',
@@ -18,77 +19,97 @@ module.exports = ngModule => {
     // Public API here
     const service = {
       getTotals,
-      getGrossProfitPerX,
-      getItemsSoldPerX,
-      getTopSellingItem,
-      getTransactionCountPerX/*,
-      getTopGrossingItem*/
+      getEarliestTransaction,
+      getLatestTransaction,
+      getTransactionsPerX
     };
 
     return service;
 
     //// Functions ////
-    // returns info on the total no of transactions, total products sold, and total income
+    /**
+     * gets useful totals for a certain category or date range
+     *
+     * @param  {array} categoryFilters - format ['category1', 'category2', ...] or []
+     * @param  {string or object or undefined} dateRangeFilter - either 'year' for last year, 'quarter'
+     **for same quarter last year, {start: X, end: X} where X is parseable by moment, or undefined
+     * @return {promise} - promise returning object of format {transactionCount: X, productsSold: X, income: X}
+     */
     function getTotals(categoryFilters, dateRangeFilter) {
-      const deferred = $q.defer();
-      const query = (new Query()).select(['category', 'quantity', 'total', 'name', 'date']);
-      console.log('filters!', categoryFilters);
-      if (typeof categoryFilters !== 'undefined' && categoryFilters.length > 0) {
-        query.where('category').in(categoryFilters);
+      let query = (new Query()).select(['category', 'quantity', 'total', 'name', 'date']);
+      if (typeof categoryFilters !== 'undefined') {
+        query = _applyCategoryFilter(query, categoryFilters);
       }
-      if (dateRangeFilter === 'year') {
-        query.previousPeriod('date', 'year');
-      }
-      if (dateRangeFilter === 'quarter') {
-        query.where('date').gte(moment().subtract(1, 'years').startOf('quarter').toISOString());
-        query.where('date').lte(moment().subtract(1, 'years').endOf('quarter').toISOString());
+      if (typeof dateRangeFilter !== 'undefined') {
+        query = _applyDateRangeFilter(query, dateRangeFilter);
       }
       query.groupBy('category', { total: 'sum', quantity: 'sum', name: 'count' });
-
-      _queryDb(query).then(data => {
-        let transactionCount = 0;
-        let productsSold = 0;
-        let income = 0;
-        for (let i = 0; i < data.length; i++) {
-          transactionCount += data[i].name; //confusing, I know...
-          productsSold += data[i].quantity;
-          income += data[i].total;
-        }
-        deferred.resolve({ transactionCount, productsSold, income });
-      }, error => {
-        deferred.reject(error);
+      return domo.get(query.query(_dataset)).then(data => {
+        return data.reduce((accumulated, currentRow) => {
+          accumulated.transactionCount += currentRow.name; // confusing, I know...
+          accumulated.productsSold += currentRow.quantity;
+          accumulated.income += currentRow.total;
+          return accumulated;
+        }, { transactionCount: 0, productsSold: 0, income: 0 });
       });
-      return deferred.promise;
     }
 
-    // todo: return all top selling?
-    function getTopSellingItem() {
-      if (typeof _topSelling !== 'undefined') {
-        return $q.resolve(_topSelling);
+    /**
+     * gets data on transactions per dateGrain (month, week, etc...)
+     * @param  {string/undefined} dateGrain       String of either 'month', 'week', or 'quarter'
+     * @param  {array/undefined} categoryFilters Array of categories to filter by: ['cat1', 'cat2', ...], or [], or undefined
+     * @param  {object/string/undefined} dateRangeFilter 'year' for last year, 'quarter' for this quarter last year, { start: string, end: string }, or undefined
+     * @return {array[objects]}                 array of format [{date: string, total: number, quantity: number, category: number}, ...]
+     */
+    function getTransactionsPerX(dateGrain, categoryFilters, dateRangeFilter) {
+      let query = (new Query()).select(['date', 'total', 'quantity', 'category']);
+      if (typeof categoryFilters !== 'undefined') {
+        query = _applyCategoryFilter(query, categoryFilters);
       }
-
-      const deferred = $q.defer();
-      const query = (new Query()).select(['name', 'price', 'quantity']).
-        orderBy('quantity', 'desc').limit(10);
-
-      _queryDb(query).then(data => {
-        _topSelling = data;
-        deferred.resolve(data);
-      }, error => {
-        deferred.reject(error);
+      if (typeof dateRangeFilter !== 'undefined') {
+        query = _applyDateRangeFilter(query, dateRangeFilter);
+      }
+      if (typeof dateGrain !== 'undefined') {
+        query = _applyDateGrainFilter(query, { column: 'date', grain: dateGrain, accumulator: { category: 'count' } });
+      }
+      return domo.get(query.query(_dataset)).then(data => {
+        return data.map(row => {
+          row.date = row['Calendar' + _grainMap[dateGrain]];
+          return row;
+        });
       });
-
-      return deferred.promise;
     }
 
-    function getGrossProfitPerX(dateGrain, categoryFilters, dateRangeFilter) {
-      const deferred = $q.defer();
-      const query = (new Query()).select(['date', 'total']);
-      if (typeof categoryFilters !== 'undefined' && categoryFilters.length > 0) {
-        query.where('category').in(categoryFilters);
-      }
-      query.dateGrain('date', dateGrain);
+    /**
+     * @return {array} - array of format [{date: string}]
+     */
+    function getEarliestTransaction() {
+      return domo.get((new Query()).select(['date']).orderBy('date', 'asc').limit(1).query(_dataset));
+    }
 
+    /**
+     * @return {array} - array of format [{date: string}]
+     */
+    function getLatestTransaction() {
+      return domo.get((new Query()).select(['date']).orderBy('date', 'desc').limit(1).query(_dataset));
+    }
+
+
+    function _applyDateGrainFilter(query, dateGrain) {
+      if (typeof dateGrain.accumulator !== 'undefined') {
+        query.dateGrain(dateGrain.column, dateGrain.grain, dateGrain.accumulator);
+      } else {
+        query.dateGrain(dateGrain.column, dateGrain.grain);
+      }
+      return query;
+    }
+
+    function _applyCategoryFilter(query, categoryFilter) {
+      query.where('category').in(categoryFilter);
+      return query;
+    }
+
+    function _applyDateRangeFilter(query, dateRangeFilter) {
       if (dateRangeFilter === 'year') {
         query.previousPeriod('date', 'year');
       }
@@ -96,104 +117,16 @@ module.exports = ngModule => {
         query.where('date').gte(moment().subtract(1, 'years').startOf('quarter').toISOString());
         query.where('date').lte(moment().subtract(1, 'years').endOf('quarter').toISOString());
       }
-
-      _queryDb(query).then(data => {
-        deferred.resolve(data.map(row => {
-          row.date = row['Calendar' + _grainMap[dateGrain]];
-          return row;
-        }));
-      }, error => {
-        deferred.reject(error);
-      });
-
-      return deferred.promise;
-    }
-
-    function getItemsSoldPerX(dateGrain, categoryFilters, dateRangeFilter) {
-      const deferred = $q.defer();
-      // todo: memory leak issues?
-      const query = (new Query()).select(['date', 'quantity']);
-      if (typeof categoryFilters !== 'undefined' && categoryFilters.length > 0) {
-        query.where('category').in(categoryFilters);
+      if (typeof dateRangeFilter.start !== 'undefined' && typeof dateRangeFilter.end !== 'undefined') {
+        query.where('date').gte(moment(dateRangeFilter.start).toISOString());
+        query.where('date').lte(moment(dateRangeFilter.end).toISOString());
       }
-      query.dateGrain('date', dateGrain);
-      if (dateRangeFilter === 'year') {
-        query.previousPeriod('date', 'year');
-      }
-      if (dateRangeFilter === 'quarter') {
-        query.where('date').gte(moment().subtract(1, 'years').startOf('quarter').toISOString());
-        query.where('date').lte(moment().subtract(1, 'years').endOf('quarter').toISOString());
-      }
-
-      _queryDb(query).then(data => {
-        deferred.resolve(data.map(row => {
-          row.date = row['Calendar' + _grainMap[dateGrain]];
-          return row;
-        }));
-      }, error => {
-        deferred.reject(error);
-      });
-
-      return deferred.promise;
-    }
-
-    function getTransactionCountPerX(dateGrain, categoryFilters, dateRangeFilter) {
-      const deferred = $q.defer();
-      const query = (new Query()).select(['date', 'quantity']);
-      if (typeof categoryFilters !== 'undefined' && categoryFilters.length > 0) {
-        query.where('category').in(categoryFilters);
-      }
-      query.dateGrain('date', dateGrain, { quantity: 'count' });
-
-      if (dateRangeFilter === 'year') {
-        query.previousPeriod('date', 'year');
-      }
-      if (dateRangeFilter === 'quarter') {
-        query.where('date').gte(moment().subtract(1, 'years').startOf('quarter').toISOString());
-        query.where('date').lte(moment().subtract(1, 'years').endOf('quarter').toISOString());
-      }
-
-      _queryDb(query).then(data => {
-        deferred.resolve(data.map(row => {
-          row.date = row['Calendar' + _grainMap[dateGrain]];
-          return row;
-        }));
-      }, error => {
-        deferred.reject(error);
-      });
-
-      return deferred.promise;
-    }
-
-     /*function getTopGrossingItem(date) {
-      const queryBuilder = new Query();
-      const query = queryBuilder.select(['name', 'total']).groupBy('name').orderBy('total', 'desc').limit(10);
-      console.log(query.query('transactions'));
-
-      domo.get(query.query('transactions')).then(data => {
-        console.log(data);
-      });
-
-      if (date) {
-        return;
-      }
-    }*/
-
-
-    function _queryDb(query) {
-      const deferred = $q.defer();
-      domo.get(query.query(_dataset)).then(data => {
-        deferred.resolve(data);
-      }, error => {
-        deferred.reject(error);
-      });
-
-      return deferred.promise;
+      return query;
     }
   }
 
   // inject dependencies here
-  transactionsAnalyticsService.$inject = ['$q'];
+  transactionsAnalyticsService.$inject = [];
 
   ngModule.factory('transactionsAnalyticsService', transactionsAnalyticsService);
 

@@ -9,14 +9,13 @@ ngModule.config(mainConfig);
 
 
 function mainConfig($stateProvider) {
-  // IS DESTROYING THE DOM THE BEST WAY TO DO THIS?
   $stateProvider.state('products', {
     url: '/',
-    template: '<inventory-container></inventory-container>',
+    template: '<inventory-container category-filter="$ctrl.categoryFilters"></inventory-container>',
     order: 1
   }).state('transactions', {
     url: '/transactions',
-    template: '<transactions-container></transactions-container>',
+    template: '<transactions-container category-filter="$ctrl.categoryFilters"></transactions-container>',
     parentName: 'products' //not actually the parent, but I wanted it to swipe sideways
   });
 }

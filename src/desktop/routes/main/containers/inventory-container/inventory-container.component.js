@@ -6,51 +6,58 @@ module.exports = ngModule => {
     controller: inventoryContainerCtrl,
     bindings: {
       // Inputs should use < and @ bindings.
-      'allValue': '<' // constant dictating the string value for the "ALL" filter
+      categoryFilter: '<' // a string of the category to filter by
       // Outputs should use & bindings.
     }
   });
 
-  function inventoryContainerCtrl(productsService, _, daEvents, daFilters) {
+  function inventoryContainerCtrl(productsService, _) {
     const ctrl = this;
     // private
     let _hideOutOfStock = false;
     let _inStockProducts = [];
     let _searchText = '';
-    const _listeners = [];
     let _categoryFilter = undefined;
+    const _listeners = [];
 
     // public
     ctrl.$onInit = $onInit;
+    ctrl.$onChanges = $onChanges;
     ctrl.$onDestroy = $onDestroy;
     ctrl.onCheckboxUpdate = onCheckboxUpdate;
     ctrl.onSearchTextUpdate = onSearchTextUpdate;
     ctrl.stockProduct = stockProduct;
     ctrl.outOfStockProducts = []; // exposing this for our product stocker
 
-    ctrl.tableFilteredProducts = [];
+    ctrl.filteredProductsForTable = [];
     ctrl.loading = true; // we want the data to fade in nicely!
-
-    // yeah, this is ridiculous, but da-table forced our hand. Again.
-    ctrl.doNothing = () => { return; };
 
     // mutating methods
     function $onInit() {
-      // Called on each controller after all the controllers have been constructed and had their bindings initialized
-      // Use this for initialization code.
-      // todo: pull this out into its parent, figure out how to make that work with ui-router
-      _listeners.push(daEvents.on('daFilters:update', () => {
-        daFilters.getSelectedOptions().then(options => {
-          console.log(options);
-          // check to make sure it's not the 'all' category
-          // todo: set this as an application constant?
-          if (options[0].selections[0] !== 'All') {
-            _categoryFilter = options[0].selections[0];
-            ctrl.tableFilteredProducts = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText, _categoryFilter);
-          }
+      productsService.getProducts().then(data => {
+        // get the in stock and out of stock products
+        const partitioned = _.partition(data, product => {
+          return product.inStock;
         });
-      }));
-      refreshProducts();
+        _inStockProducts = partitioned[0];
+        ctrl.outOfStockProducts = partitioned[1];
+        ctrl.filteredProductsForTable = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText, _categoryFilter);
+        ctrl.loading = false;
+      }, error => {
+        // todo: better error handling!
+        console.log(error);
+      });
+    }
+
+    function $onChanges(changes) {
+      if (typeof changes.categoryFilter !== 'undefined') {
+        if (changes.categoryFilter.currentValue !== 'All') {
+          _categoryFilter = changes.categoryFilter.currentValue;
+        } else {
+          _categoryFilter = undefined;
+        }
+        ctrl.filteredProductsForTable = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText, _categoryFilter);
+      }
     }
 
     function $onDestroy() {
@@ -62,14 +69,14 @@ module.exports = ngModule => {
     function onCheckboxUpdate(newValue) {
       _hideOutOfStock = newValue;
       if (!ctrl.loading) {
-        ctrl.tableFilteredProducts = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText, _categoryFilter);
+        ctrl.filteredProductsForTable = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText, _categoryFilter);
       }
     }
 
     function onSearchTextUpdate(newValue) {
       _searchText = newValue;
       if (!ctrl.loading) {
-        ctrl.tableFilteredProducts = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText, _categoryFilter);
+        ctrl.filteredProductsForTable = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText, _categoryFilter);
       }
     }
 
@@ -77,33 +84,13 @@ module.exports = ngModule => {
       // remove the product from out of stock and add it to in stock
       const i = ctrl.outOfStockProducts.indexOf(product);
       if (i === -1) {
-        console.log('We asked to restock a product that is not out of stock!');
+        // todo: error handling
         return;
       }
       ctrl.outOfStockProducts.splice(i, 1);
-      console.log(product);
       product.inStock = true;
       _inStockProducts.push(product);
-      ctrl.tableFilteredProducts = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText, _categoryFilter);
-    }
-
-    // refreshes the stored product list from the service
-    // warning, mutates this object's state!
-    function refreshProducts() {
-      productsService.getProducts().then(data => {
-        // get the in stock and out of stock products
-        const partitioned = _.partition(data, product => {
-          return product.inStock;
-        });
-        _inStockProducts = partitioned[0];
-        ctrl.outOfStockProducts = partitioned[1];
-        console.log(ctrl.outOfStockProducts);
-        console.log(ctrl.outOfStockProducts);
-        ctrl.tableFilteredProducts = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText, _categoryFilter);
-        ctrl.loading = false;
-      }, error => {
-        console.log(error);
-      });
+      ctrl.filteredProductsForTable = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText, _categoryFilter);
     }
 
     // helper (functional) functions
@@ -122,7 +109,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  inventoryContainerCtrl.$inject = ['productsService', '_', 'daEvents', 'daFilters'];
+  inventoryContainerCtrl.$inject = ['productsService', '_'];
 
   if (ON_TEST) {
     require('./inventory-container.component.spec.js')(ngModule);
