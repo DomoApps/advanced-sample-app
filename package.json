@@ -20,7 +20,7 @@
   },
   "author": "AppTeam6 <Squad.AppTeam6@domo.com>",
   "repository": "git@git.empdev.domo.com:Justin-Pumford/TutorialApp.git",
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
     "@domoinc/ca-icon-trends-with-text": "git+ssh://git@git.empdev.domo.com:AppTeam6-Widgets/CAIconTrendsWithText.git",
     "@domoinc/ca-stats-center-icon": "git+ssh://git@git.empdev.domo.com:AppTeam6-Widgets/CAStatsCenterIcon.git",
@@ -40,6 +40,7 @@
     "babel-preset-stage-1": "^6.3.13",
     "babel-register": "^6.3.13",
     "babel-runtime": "^6.3.13",
+    "body-parser": "^1.15.1",
     "cdnjs": "^0.3.2",
     "chai": "^3.4.1",
     "chalk": "^1.1.1",
@@ -98,8 +99,15 @@
     "webpack-dev-middleware": "^1.4.0",
     "webpack-dev-server": "^1.14.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "ryuu.js": "^2.5.4"
+  },
   "config": {
+    "AppTeam6": {
+      "framework": "da-webpack",
+      "frameworkVersion": "0.0.5",
+      "features": []
+    },
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
