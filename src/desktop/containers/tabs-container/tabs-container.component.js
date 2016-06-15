@@ -7,7 +7,8 @@ module.exports = ngModule => {
     bindings: {
       // Inputs should use < and @ bindings.
       // Outputs should use & bindings.
-    }
+    },
+    transclude: true
   });
 
   function tabsContainerCtrl($state, $scope, daEvents, daFilters, productsService) {
