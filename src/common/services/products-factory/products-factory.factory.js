@@ -9,7 +9,7 @@ const domo = require('ryuu.js');
  * @method getProductCategories
  */
 module.exports = ngModule => {
-  function productsService($q) {
+  function productsFactory($q) {
     // Private variables
     let _products = undefined;
     let _productsPromise = undefined;
@@ -72,11 +72,11 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  productsService.$inject = ['$q'];
+  productsFactory.$inject = ['$q'];
 
-  ngModule.factory('productsService', productsService);
+  ngModule.factory('productsFactory', productsFactory);
 
   if (ON_TEST) {
-    require('./products-service.factory.spec.js')(ngModule);
+    require('./products-factory.factory.spec.js')(ngModule);
   }
 };
