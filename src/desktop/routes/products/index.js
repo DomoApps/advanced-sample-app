@@ -1,14 +1,14 @@
 import { attachAll } from '../../../../other/boilerplate-utils.js';
 
-const ngModule = angular.module('da.desktop.main', []);
+const ngModule = angular.module('da.desktop.products', []);
 
 attachAll(require.context('./components', true, /\.(component|directive)\.js$/))(ngModule);
 attachAll(require.context('./containers', true, /\.(component|directive)\.js$/))(ngModule);
 
-ngModule.config(mainConfig);
+ngModule.config(productsConfig);
 
 
-function mainConfig($stateProvider) {
+function productsConfig($stateProvider) {
   $stateProvider.state('products', {
     url: '/',
     template: '<inventory-container category-filter="$ctrl.categoryFilters"></inventory-container>',
@@ -20,7 +20,7 @@ function mainConfig($stateProvider) {
   });
 }
 
-mainConfig.$inject = ['$stateProvider'];
+productsConfig.$inject = ['$stateProvider'];
 
 
 export default ngModule;
