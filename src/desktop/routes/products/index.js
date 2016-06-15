@@ -13,10 +13,6 @@ function productsConfig($stateProvider) {
     url: '/',
     template: '<inventory-container category-filter="$ctrl.categoryFilters"></inventory-container>',
     order: 1
-  }).state('transactions', {
-    url: '/transactions',
-    template: '<transactions-container category-filter="$ctrl.categoryFilters"></transactions-container>',
-    order: 2
   });
 }
 
