@@ -4,10 +4,9 @@ const domo = require('ryuu.js');
 // needs to be instantiated with moment().format()
 const moment = require('moment');
 moment().format();
-// todo: YOU DON'T NEED Q.DEFER. Just return!
-// flatten promise chains
+
 module.exports = ngModule => {
-  function transactionsAnalyticsService() {
+  function transactionsAnalyticsFactory() {
     // Private variables
     const _dataset = 'transactions';
     const _grainMap = {
@@ -126,11 +125,11 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  transactionsAnalyticsService.$inject = [];
+  transactionsAnalyticsFactory.$inject = [];
 
-  ngModule.factory('transactionsAnalyticsService', transactionsAnalyticsService);
+  ngModule.factory('transactionsAnalyticsFactory', transactionsAnalyticsFactory);
 
   if (ON_TEST) {
-    require('./transactions-analytics-service.factory.spec.js')(ngModule);
+    require('./transactions-analytics-factory.factory.spec.js')(ngModule);
   }
 };

@@ -13,7 +13,7 @@ module.exports = ngModule => {
     }
   });
 
-  function transactionsContainerCtrl(transactionsAnalyticsService, $q) {
+  function transactionsContainerCtrl(transactionsAnalyticsFactory, $q) {
     const ctrl = this;
 
     let _categoryFilter = undefined;
@@ -109,10 +109,10 @@ module.exports = ngModule => {
       if (ctrl.dateRangeDropdownSelectedItem.value === 'custom') {
         dateRangeFilter = { start: ctrl.customStartDate, end: ctrl.customEndDate };
       }
-      return $q.all([transactionsAnalyticsService.getTotals(_categoryFilter, dateRangeFilter),
-        transactionsAnalyticsService.getTransactionsPerX(ctrl.granularityDropdownSelectedItem.value, _categoryFilter, dateRangeFilter),
-        transactionsAnalyticsService.getEarliestTransaction(),
-        transactionsAnalyticsService.getLatestTransaction()]).then(data => {
+      return $q.all([transactionsAnalyticsFactory.getTotals(_categoryFilter, dateRangeFilter),
+        transactionsAnalyticsFactory.getTransactionsPerX(ctrl.granularityDropdownSelectedItem.value, _categoryFilter, dateRangeFilter),
+        transactionsAnalyticsFactory.getEarliestTransaction(),
+        transactionsAnalyticsFactory.getLatestTransaction()]).then(data => {
           ctrl.transactionCountLineChartData = _formatDataForLineChart('Transactions', data[1], 'category');
           ctrl.productsSoldLineChartData = _formatDataForLineChart('Products Sold', data[1], 'quantity');
           ctrl.incomeLineChartData = _formatDataForLineChart('Income', data[1], 'total');
@@ -169,7 +169,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  transactionsContainerCtrl.$inject = ['transactionsAnalyticsService', '$q'];
+  transactionsContainerCtrl.$inject = ['transactionsAnalyticsFactory', '$q'];
 
   if (ON_TEST) {
     require('./transactions-container.component.spec.js')(ngModule);
