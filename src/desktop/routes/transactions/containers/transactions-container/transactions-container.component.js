@@ -130,11 +130,13 @@ module.exports = ngModule => {
         });
     }
 
-    function onStartDatepickerChange() {
+    function onStartDatepickerChange(newDate) {
+      ctrl.customStartDate = newDate;
       _refreshData();
     }
 
-    function onEndDatepickerChange() {
+    function onEndDatepickerChange(newDate) {
+      ctrl.customEndDate = newDate;
       _refreshData();
     }
 
