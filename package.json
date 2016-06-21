@@ -31,7 +31,7 @@
     "@domoinc/single-line-text": "git+ssh://git@git.empdev.domo.com:AppTeam6-Widgets/SingleLineText.git",
     "@domoinc/summary-number": "git+ssh://git@git.empdev.domo.com:AppTeam6-Lib/summary-number.git",
     "angular-aria": "^1.5.7",
-    "angular-material": "^1.0.9",
+    "angular-material": "^1.1.0-rc.5",
     "angular-material-data-table": "^0.10.9",
     "autoprefixer": "^6.1.2",
     "babel-core": "^6.3.17",
