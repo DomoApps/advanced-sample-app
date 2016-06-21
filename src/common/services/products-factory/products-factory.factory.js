@@ -1,7 +1,5 @@
-// require domo REST query library
-const Query = require('@domoinc/query');
-// require domo.js
-const domo = require('ryuu.js');
+const sampleProducts = require('./sample-products.json');
+console.log(sampleProducts);
 
 /**
  * productsService: interface for domo backend
@@ -9,7 +7,7 @@ const domo = require('ryuu.js');
  * @method getProductCategories
  */
 module.exports = ngModule => {
-  function productsFactory($q) {
+  function productsFactory($q, $timeout) {
     // Private variables
     let _products = undefined;
     let _productsPromise = undefined;
@@ -43,14 +41,15 @@ module.exports = ngModule => {
       }
 
       // store productsPromise in case a parallel request comes in, that way the data is requested only once
-      _productsPromise = domo.get((new Query()).select(['category', 'name', 'price', 'inStock']).query('products')).then(data => {
+      _productsPromise = $timeout(() => {
+        console.log('timed out!', sampleProducts);
         // transform inStock because it arrives as a string instead of a bool
-        for (let i = 0; i < data.length; i++) {
-          data[i].inStock = (data[i].inStock === 'true' ? true : false);
+        for (let i = 0; i < sampleProducts.length; i++) {
+          sampleProducts[i].inStock = (sampleProducts[i].inStock === 'true' ? true : false);
         }
-        _products = data;
-        return data;
-      });
+        _products = sampleProducts;
+        return sampleProducts;
+      }, 1000);
       return _productsPromise;
     }
 
@@ -72,7 +71,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  productsFactory.$inject = ['$q'];
+  productsFactory.$inject = ['$q', '$timeout'];
 
   ngModule.factory('productsFactory', productsFactory);
 
