@@ -17,10 +17,12 @@
         </div>
       </div>
       <div ng-hide="$ctrl.dateRangeDropdownSelectedItem.value !== 'custom'" class="transactions-filters">
-        <strong>From</strong>
-        <input db-datepicker-popup class="input-style reduce-width" ng-change="$ctrl.onStartDatepickerChange()" min-date="$ctrl.earliestTransaction" max-date="$ctrl.latestTransaction" ng-model="$ctrl.customStartDate" />
-        <strong class="padding-left-medium">To</strong>
-        <input db-datepicker-popup class="input-style reduce-width" ng-model="$ctrl.customEndDate" ng-change="$ctrl.onEndDatepickerChange()" min-date="$ctrl.earliestTransaction" max-date="$ctrl.latestTransaction" />
+        <date-range-picker
+          min-date="$ctrl.earliestTransaction"
+          max-date="$ctrl.latestTransaction"
+          on-start-datepicker-change="$ctrl.onStartDatepickerChange(newDate)"
+          on-end-datepicker-change="$ctrl.onEndDatepickerChange(newDate)">
+        </date-range-picker>
       </div>
       <pillbox-container total-income="$ctrl.totalIncome" products-sold="$ctrl.productsSold" transaction-count="$ctrl.transactionCount" income-chart-data="$ctrl.incomeLineChartData" products-chart-data="$ctrl.productsSoldLineChartData" transaction-chart-data="$ctrl.transactionCountLineChartData" on-pill-click="$ctrl.displayLineChart(pill)"></pillbox-container>
     </div>

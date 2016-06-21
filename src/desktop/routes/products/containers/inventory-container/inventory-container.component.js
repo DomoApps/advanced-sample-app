@@ -11,7 +11,7 @@ module.exports = ngModule => {
     }
   });
 
-  function inventoryContainerCtrl(productsService, _) {
+  function inventoryContainerCtrl(productsFactory, _) {
     const ctrl = this;
     // private
     let _hideOutOfStock = false;
@@ -34,7 +34,7 @@ module.exports = ngModule => {
 
     // mutating methods
     function $onInit() {
-      productsService.getProducts().then(data => {
+      productsFactory.getProducts().then(data => {
         // get the in stock and out of stock products
         const partitioned = _.partition(data, product => {
           return product.inStock;
@@ -109,7 +109,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  inventoryContainerCtrl.$inject = ['productsService', '_'];
+  inventoryContainerCtrl.$inject = ['productsFactory', '_'];
 
   if (ON_TEST) {
     require('./inventory-container.component.spec.js')(ngModule);

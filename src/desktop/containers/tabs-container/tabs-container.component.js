@@ -7,10 +7,11 @@ module.exports = ngModule => {
     bindings: {
       // Inputs should use < and @ bindings.
       // Outputs should use & bindings.
-    }
+    },
+    transclude: true
   });
 
-  function tabsContainerCtrl($state, $scope, daEvents, daFilters, productsService) {
+  function tabsContainerCtrl($state, $scope, daEvents, daFilters, productsFactory) {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
@@ -28,7 +29,7 @@ module.exports = ngModule => {
       });
       ctrl.selectedTab = $state.current.name;
       // setup the filters from product categories
-      productsService.getProductCategories().then(categories => {
+      productsFactory.getProductCategories().then(categories => {
         categories.unshift('All');
         const categoryFilters = categories.map(category => {
           // daFilters flat config object. This adds to the filter box in the upper left
@@ -58,7 +59,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  tabsContainerCtrl.$inject = ['$state', '$scope', 'daEvents', 'daFilters', 'productsService'];
+  tabsContainerCtrl.$inject = ['$state', '$scope', 'daEvents', 'daFilters', 'productsFactory'];
 
   if (ON_TEST) {
     require('./tabs-container.component.spec.js')(ngModule);
