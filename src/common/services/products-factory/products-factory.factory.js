@@ -13,7 +13,10 @@ module.exports = ngModule => {
     // Public API here
     const service = {
       getProducts,
-      getProductCategories
+      getProductCategories,
+      getInventoryValue,
+      getNumUniqueProducts,
+      getTotalQuantity
     };
 
     return service;
@@ -64,6 +67,43 @@ module.exports = ngModule => {
           return productCategories;
         }, []);
       });
+    }
+
+    /**
+     * returns a number representing the total value of the products
+     * @return {promise(number)} total value of products
+     */
+    function getInventoryValue() {
+      return getProducts().then(productsArray => {
+        return productsArray.reduce((totalValue, product) => {
+          return totalValue + product.price;
+        }, 0);
+      });
+    }
+
+    /**
+     * returns a number representing the amount of unique product types
+     * @return {promise(number)} number of unique product types
+     */
+    function getNumUniqueProducts() {
+      return getProducts().then(productsArray => {
+        return productsArray.length;
+      });
+    }
+
+    /**
+     * returns a number representing the total number of physical products
+     * @return {promise(number)} number of physical products
+     */
+    function getTotalQuantity() {
+      return $q.when(200);
+      /*
+      return getProducts().then(productsArray => {
+        return productsArray.reduce((totalProductQuantity, product) => {
+          return totalProductQuantity + product.quantity;
+        }, 0);
+      });
+      */ //save this code for when the data is fixed
     }
   }
 
