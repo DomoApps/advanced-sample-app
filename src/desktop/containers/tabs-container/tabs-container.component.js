@@ -19,6 +19,16 @@ module.exports = ngModule => {
     ctrl.selectedTab = 'products';
     ctrl.categoryFilters = undefined;
 
+    productsFactory.getNumUniqueProducts().then(numUniqueProducts => {
+      ctrl.uniqueProducts = numUniqueProducts;
+    });
+    productsFactory.getTotalQuantity().then(totalQuantity => {
+      ctrl.totalQuantity = totalQuantity;
+    });
+    productsFactory.getInventoryValue().then(inventoryValue => {
+      ctrl.inventoryValue = inventoryValue;
+    });
+
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
