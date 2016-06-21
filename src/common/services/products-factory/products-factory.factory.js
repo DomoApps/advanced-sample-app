@@ -76,7 +76,7 @@ module.exports = ngModule => {
     function getInventoryValue() {
       return getProducts().then(productsArray => {
         return productsArray.reduce((totalValue, product) => {
-          return totalValue + product.price;
+          return totalValue + (product.price * product.quantity);
         }, 0);
       });
     }
@@ -96,14 +96,11 @@ module.exports = ngModule => {
      * @return {promise(number)} number of physical products
      */
     function getTotalQuantity() {
-      return $q.when(200);
-      /*
       return getProducts().then(productsArray => {
         return productsArray.reduce((totalProductQuantity, product) => {
           return totalProductQuantity + product.quantity;
         }, 0);
       });
-      */ //save this code for when the data is fixed
     }
   }
 
