@@ -27,7 +27,7 @@
     "@domoinc/ca-stats-circle": "git+ssh://git@git.empdev.domo.com:AppTeam6-Widgets/CAStatsCircle.git",
     "@domoinc/da-plop": "^2.0.1",
     "@domoinc/multi-line-chart": "git+ssh://git@git.empdev.domo.com:AppTeam6-Widgets/MultiLineChart.git",
-    "@domoinc/query": "git+ssh://git@git.empdev.domo.com:AppTeam6-Lib/rest-query.git#v1.0.3",
+    "@domoinc/query": "github:domoapps/query",
     "@domoinc/single-line-text": "git+ssh://git@git.empdev.domo.com:AppTeam6-Widgets/SingleLineText.git",
     "@domoinc/summary-number": "git+ssh://git@git.empdev.domo.com:AppTeam6-Lib/summary-number.git",
     "autoprefixer": "^6.1.2",
