@@ -1,7 +1,6 @@
 require('domo-bits');
 require('da-bits');
 require('angular-material');
-require('angular-material-data-table');
 require('./desktop.css');
 
 import angular from 'angular';
@@ -14,8 +13,7 @@ const ngDependencies = [
   // Add additional external Angular dependencies here
   'domobits',
   'dabits',
-  'ngMaterial',
-  'md.data.table'
+  'ngMaterial'
 ];
 
 ngDependencies.push.apply(ngDependencies, getNgModuleNames(require.context('./routes', true, /index\.js$/)));
