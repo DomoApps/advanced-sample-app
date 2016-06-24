@@ -1,4 +1,3 @@
-@import '../../node_modules/domo-bits/dist/domo-bits.css';
 @import '../../node_modules/angular-material/angular-material.css';
 @import '../common/styles/variables.css';
 
@@ -22,4 +21,43 @@ body {
     padding-top: 8px;
     margin-top: 0;
   }
+}
+
+.iconbits {
+  font-family: "iconbits";
+}
+
+* [class^="i-"]:before,
+* [class*=" i-"]:before {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: inherit;
+  text-transform: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.i-chevron-down:before {
+  content: '\e062';
+}
+
+.i-chevron-up:before {
+  content: '\e06e';
+}
+
+.i-filter:before {
+  content: '\e13e';
+}
+
+.iconbits-large {
+  font-size: 20px;
+}
+
+@font-face {
+  font-family: iconbits;
+  src: url("https://domoapps.s3.amazonaws.com/cdn/domo-bits/v1/iconbits.woff");
 }
