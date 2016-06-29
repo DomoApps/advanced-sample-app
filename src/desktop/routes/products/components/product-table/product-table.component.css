@@ -22,7 +22,7 @@ table.product-table td, .column-headings .column-heading {
   text-transform: uppercase;
 }
 
-.column-headings > .column-heading:first-child {
+.column-headings > div:first-child > .column-heading:first-child {
   border-left: none;
 }
 
