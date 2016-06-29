@@ -5,6 +5,6 @@
       'Unique Products': $ctrl.uniqueProducts,
       'Total Quantity': $ctrl.totalQuantity }">
     <h4>{{ text }}</h4>
-    <h3>{{ value | default: 'Loading...' }}</h3>
+    <h3>{{ text === 'Inventory Value' ? '$' : '' }}{{ value | summary: 1 | default: 'Loading...' }}</h3>
   </div>
 </div>

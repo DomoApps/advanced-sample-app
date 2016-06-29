@@ -10,29 +10,48 @@ module.exports = ngModule => {
     }
   });
 
-  function inventoryContainerCtrl($q, productsFactory) {
+  function inventoryContainerCtrl($q, productsFactory, globalFiltersFactory, SAMPLE_APP) {
     const ctrl = this;
     // private
     let _products = [];
     let _categories = [];
 
-    ctrl.filterProductsAndCategories = filterProductsAndCategories;
+    ctrl.onSearchbarUpdate = onSearchbarUpdate;
     ctrl.filterByName = filterByName;
     ctrl.filteredProducts = [];
     ctrl.filteredCategories = [];
     ctrl.searchBarItems = [];
+    ctrl.searchText = '';
     ctrl.loading = true;
 
-    _getToolbarItems();
-
-    $q.all([_getProducts(), _getCategories()]).then(() => {
-      filterProductsAndCategories('');
+    _getToolbarItems(globalFiltersFactory.getFilter());
+    $q.all([_getProducts(globalFiltersFactory.getFilter()), _getCategories()]).then(() => {
+      ctrl.filteredProducts = _products;
+      _filterCategories(globalFiltersFactory.getFilter());
+      _buildAutocompleteList();
       ctrl.loading = false;
     });
 
-    function _getProducts() {
-      return productsFactory.getProducts().then(products => {
-        // get the in stock and out of stock products
+    globalFiltersFactory.onFilterChange(_handleGlobalCategoryChange);
+
+    function onSearchbarUpdate(searchText) {
+      ctrl.searchText = searchText.toLowerCase();
+      _filterProducts();
+    }
+
+    function _handleGlobalCategoryChange(e, newCategory) {
+      ctrl.loading = true;
+      _getToolbarItems(newCategory);
+      _filterCategories(newCategory);
+      _getProducts(newCategory).then(() => {
+        _filterProducts();
+        _buildAutocompleteList();
+        ctrl.loading = false;
+      });
+    }
+
+    function _getProducts(category) {
+      return productsFactory.getProducts(category).then(products => {
         _products = products.map(product => {
           product.inStock = (product.quantity !== 0);
           return product;
@@ -46,39 +65,47 @@ module.exports = ngModule => {
       });
     }
 
-    function _getToolbarItems() {
-      productsFactory.getNumUniqueProducts().then(numUniqueProducts => {
+    function _getToolbarItems(category) {
+      ctrl.uniqueProducts = undefined;
+      productsFactory.getNumUniqueProducts(category).then(numUniqueProducts => {
         ctrl.uniqueProducts = numUniqueProducts;
       });
-      productsFactory.getTotalQuantity().then(totalQuantity => {
+      ctrl.totalQuantity = undefined;
+      productsFactory.getTotalQuantity(category).then(totalQuantity => {
         ctrl.totalQuantity = totalQuantity;
       });
-      productsFactory.getInventoryValue().then(inventoryValue => {
+      ctrl.inventoryValue = undefined;
+      productsFactory.getInventoryValue(category).then(inventoryValue => {
         ctrl.inventoryValue = inventoryValue;
       });
-      ctrl.productCategoriesPromise = productsFactory.getProductCategories().then(categories => {
-        ctrl.filteredCategories = categories;
+    }
+
+    function _filterCategories(newCategory) {
+      if (newCategory !== SAMPLE_APP.DEFAULT_CATEGORY) {
+        ctrl.filteredCategories = [newCategory];
+      } else {
+        ctrl.filteredCategories = _categories;
+      }
+    }
+
+    function _filterProducts() {
+      ctrl.filteredProducts = _products.filter(product => {
+        // either category or name can match
+        return ((product.name.toLowerCase().indexOf(ctrl.searchText) !== -1)
+            || (product.category.toLowerCase().indexOf(ctrl.searchText) !== -1));
       });
     }
 
-    function filterProductsAndCategories(searchText) {
-      const lowerCaseSearchText = searchText.toLowerCase();
-      if (lowerCaseSearchText !== '') {
-        ctrl.filteredProducts = _products.filter(product => {
-          return product.name.toLowerCase().indexOf(lowerCaseSearchText) !== -1;
-        });
-        ctrl.filteredCategories = _categories.filter(category => {
-          return category.toLowerCase().indexOf(lowerCaseSearchText) !== -1;
-        });
-      } else {
-        ctrl.filteredProducts = _products;
-        ctrl.filteredCategories = _categories;
-      }
-      ctrl.searchBarItems = ctrl.filteredProducts.map(item => {
-        return item.name;
-      }).concat(ctrl.filteredCategories);
+    function _buildAutocompleteList() {
+      ctrl.searchBarItems = ctrl.filteredCategories.concat(ctrl.filteredProducts.map(product => {
+        return product.name;
+      }));
     }
 
+    // this function is to be passed down to the search-bar
+    // it's up here so both filtering functions are next to each other
+    // it's separate from filterProductsAndCategories so we don't have
+    // to run a bunch of array.maps
     function filterByName(searchText, items) {
       const lowerCaseSearchText = searchText.toLowerCase();
       if (lowerCaseSearchText !== '') {
@@ -91,7 +118,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  inventoryContainerCtrl.$inject = ['$q', 'productsFactory'];
+  inventoryContainerCtrl.$inject = ['$q', 'productsFactory', 'globalFiltersFactory', 'SAMPLE_APP'];
 
   if (ON_TEST) {
     require('./inventory-container.component.spec.js')(ngModule);
