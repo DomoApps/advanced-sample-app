@@ -1,0 +1,32 @@
+.md-toolbar {
+  border-bottom: 1px solid rgba(0,0,0,0.12);
+}
+
+.md-toolbar-tools.no-padding {
+  padding: 0;
+}
+
+.toolbar-item {
+  padding-left: 20px;
+}
+
+.md-toolbar-tools .toolbar-heading {
+  font-weight: 300;
+  font-size: 24px;
+}
+
+.md-toolbar-tools h3 {
+  font-size: 24px;
+  font-weight: 300;
+  margin: 0;
+}
+
+.md-toolbar-tools h4 {
+  font-size: 11px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.md-toolbar-tools .toolbar-indicators {
+  margin: auto;
+}

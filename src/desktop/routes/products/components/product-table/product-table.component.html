@@ -1,18 +1,56 @@
-<div class="product-table" style="position: relative; width: 517.5px; height: 650px;">
-  <table style="table-layout: fixed;">
-    <thead>
-      <tr>
-        <th ng-repeat="label in ['Name', 'Price', 'Category']">
-          <div class="header-label background">{{ label }}</div>
-        </th>
-      </tr>
-    </thead>
+<div style="height: 57px;" flex="none" layout="row" class="column-headings">
+  <div flex="50" layout="row">
+    <div class="column-heading"
+          ng-class="{ 'column-sorted': $ctrl.orderByProperty === heading.key }"
+          flex="{{ heading.width }}"
+          ng-click="$ctrl.orderBy(heading.key)"
+          ng-repeat="heading in [
+              { width: 25, title: 'In Stock', key: 'inStock' },
+              { width: 75, title: 'Name', key: 'name' }
+            ]">
+        {{ heading.title }}
+      <md-icon md-font-icon="i-chevron-down"
+          ng-class="'i-chevron-' + (($ctrl.orderByProperty === heading.key) && $ctrl.reverseOrder ? 'up' : 'down')"
+          class="sort-arrow"></md-icon>
+    </div>
+  </div>
+  <div flex="50" layout="row">
+    <div class="column-heading"
+          ng-class="{ 'column-sorted': $ctrl.orderByProperty === heading.key }"
+          flex="33"
+          ng-click="$ctrl.orderBy(heading.key)"
+          ng-repeat="heading in [
+              { title: 'Price', key: 'price' },
+              { title: 'Category', key: 'category' },
+              { title: 'Quantity', key: 'quantity' }
+            ]">
+        {{ heading.title }}
+      <md-icon md-font-icon="i-chevron-down"
+          ng-class="'i-chevron-' + (($ctrl.orderByProperty === heading.key) && $ctrl.reverseOrder ? 'up' : 'down')"
+          class="sort-arrow"></md-icon>
+    </div>
+  </div>
+</div>
+<div flex style="overflow: scroll;">
+  <table class="product-table">
     <tbody>
-      <tr ng-repeat="product in $ctrl.products" ng-class="product.inStock ? 'in-stock' : 'out-of-stock'">
-        <td ng-repeat="cellKey in ['name', 'price', 'category']">
-          <div class="cell-container">
-            <span class="display-text" ng-style="cellKey === 'price' ? { 'text-align': 'right' } : {}">{{ cellKey === 'price' ? (product[cellKey] | currency) : product[cellKey] }}</span>
+      <tr ng-repeat="product in $ctrl.products | orderBy: $ctrl.orderByProperty : $ctrl.reverseOrder" layout="row">
+        <td flex="12">
+          <div class="stock-indicator-circle" md-colors="{ background: 'default-{{ product.quantity !== 0 ? 'primary' : 'warn' }}-700' }">
+            &nbsp;
           </div>
+        </td>
+        <td flex="37">
+          {{ product.name }}
+        </td>
+        <td flex="16" class="number">
+          {{ product.price | currency }}
+        </td>
+        <td flex="16">
+          {{ product.category }}
+        </td>
+        <td flex="16" class="number">
+          {{ product.quantity }}
         </td>
       </tr>
     </tbody>

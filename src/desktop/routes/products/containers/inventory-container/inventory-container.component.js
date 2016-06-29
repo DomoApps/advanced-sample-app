@@ -6,110 +6,92 @@ module.exports = ngModule => {
     controller: inventoryContainerCtrl,
     bindings: {
       // Inputs should use < and @ bindings.
-      categoryFilter: '<' // a string of the category to filter by
       // Outputs should use & bindings.
     }
   });
 
-  function inventoryContainerCtrl(productsFactory, _) {
+  function inventoryContainerCtrl($q, productsFactory) {
     const ctrl = this;
     // private
-    let _hideOutOfStock = false;
-    let _inStockProducts = [];
-    let _searchText = '';
-    let _categoryFilter = undefined;
-    const _listeners = [];
+    let _products = [];
+    let _categories = [];
 
-    // public
-    ctrl.$onInit = $onInit;
-    ctrl.$onChanges = $onChanges;
-    ctrl.$onDestroy = $onDestroy;
-    ctrl.onCheckboxUpdate = onCheckboxUpdate;
-    ctrl.onSearchTextUpdate = onSearchTextUpdate;
-    ctrl.stockProduct = stockProduct;
-    ctrl.outOfStockProducts = []; // exposing this for our product stocker
+    ctrl.filterProductsAndCategories = filterProductsAndCategories;
+    ctrl.filterByName = filterByName;
+    ctrl.filteredProducts = [];
+    ctrl.filteredCategories = [];
+    ctrl.searchBarItems = [];
+    ctrl.loading = true;
 
-    ctrl.filteredProductsForTable = [];
-    ctrl.loading = true; // we want the data to fade in nicely!
+    _getToolbarItems();
 
-    // mutating methods
-    function $onInit() {
-      productsFactory.getProducts().then(data => {
+    $q.all([_getProducts(), _getCategories()]).then(() => {
+      filterProductsAndCategories('');
+      ctrl.loading = false;
+    });
+
+    function _getProducts() {
+      return productsFactory.getProducts().then(products => {
         // get the in stock and out of stock products
-        const partitioned = _.partition(data, product => {
-          return product.inStock;
+        _products = products.map(product => {
+          product.inStock = (product.quantity !== 0);
+          return product;
         });
-        _inStockProducts = partitioned[0];
-        ctrl.outOfStockProducts = partitioned[1];
-        ctrl.filteredProductsForTable = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText, _categoryFilter);
-        ctrl.loading = false;
-      }, error => {
-        // todo: better error handling!
-        console.log(error);
       });
     }
 
-    function $onChanges(changes) {
-      if (typeof changes.categoryFilter !== 'undefined') {
-        if (changes.categoryFilter.currentValue !== 'All') {
-          _categoryFilter = changes.categoryFilter.currentValue;
-        } else {
-          _categoryFilter = undefined;
-        }
-        ctrl.filteredProductsForTable = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText, _categoryFilter);
-      }
-    }
-
-    function $onDestroy() {
-      _listeners.forEach(deregister => {
-        deregister();
+    function _getCategories() {
+      return productsFactory.getProductCategories().then(categories => {
+        _categories = categories;
       });
     }
 
-    function onCheckboxUpdate(newValue) {
-      _hideOutOfStock = newValue;
-      if (!ctrl.loading) {
-        ctrl.filteredProductsForTable = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText, _categoryFilter);
-      }
+    function _getToolbarItems() {
+      productsFactory.getNumUniqueProducts().then(numUniqueProducts => {
+        ctrl.uniqueProducts = numUniqueProducts;
+      });
+      productsFactory.getTotalQuantity().then(totalQuantity => {
+        ctrl.totalQuantity = totalQuantity;
+      });
+      productsFactory.getInventoryValue().then(inventoryValue => {
+        ctrl.inventoryValue = inventoryValue;
+      });
+      ctrl.productCategoriesPromise = productsFactory.getProductCategories().then(categories => {
+        ctrl.filteredCategories = categories;
+      });
     }
 
-    function onSearchTextUpdate(newValue) {
-      _searchText = newValue;
-      if (!ctrl.loading) {
-        ctrl.filteredProductsForTable = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText, _categoryFilter);
-      }
-    }
-
-    function stockProduct(product) {
-      // remove the product from out of stock and add it to in stock
-      const i = ctrl.outOfStockProducts.indexOf(product);
-      if (i === -1) {
-        // todo: error handling
-        return;
-      }
-      ctrl.outOfStockProducts.splice(i, 1);
-      product.inStock = true;
-      _inStockProducts.push(product);
-      ctrl.filteredProductsForTable = filterProducts(ctrl.outOfStockProducts.concat(_inStockProducts), _hideOutOfStock, _searchText, _categoryFilter);
-    }
-
-    // helper (functional) functions
-    // because the dataset is so small we can do filtering on the client side
-    // transactions and other larger datasets are done on the server
-    function filterProducts(products, hideOutOfStock, searchText, categoryFilter) {
+    function filterProductsAndCategories(searchText) {
       const lowerCaseSearchText = searchText.toLowerCase();
-      return products.filter(product => {
-        return (hideOutOfStock ? product.inStock : true);
-      }).filter(product => {
-        return (typeof categoryFilter !== 'undefined' ? product.category === categoryFilter : true);
-      }).filter(product => {
-        return (searchText !== '' ? product.name.toLowerCase().indexOf(lowerCaseSearchText) !== -1 : true);
-      });
+      if (lowerCaseSearchText !== '') {
+        ctrl.filteredProducts = _products.filter(product => {
+          return product.name.toLowerCase().indexOf(lowerCaseSearchText) !== -1;
+        });
+        ctrl.filteredCategories = _categories.filter(category => {
+          return category.toLowerCase().indexOf(lowerCaseSearchText) !== -1;
+        });
+      } else {
+        ctrl.filteredProducts = _products;
+        ctrl.filteredCategories = _categories;
+      }
+      ctrl.searchBarItems = ctrl.filteredProducts.map(item => {
+        return item.name;
+      }).concat(ctrl.filteredCategories);
+    }
+
+    function filterByName(searchText, items) {
+      const lowerCaseSearchText = searchText.toLowerCase();
+      if (lowerCaseSearchText !== '') {
+        return items.filter(item => {
+          return item.toLowerCase().indexOf(lowerCaseSearchText) !== -1;
+        });
+      }
+      return items;
     }
   }
 
   // inject dependencies here
-  inventoryContainerCtrl.$inject = ['productsFactory', '_'];
+  inventoryContainerCtrl.$inject = ['$q', 'productsFactory'];
 
   if (ON_TEST) {
     require('./inventory-container.component.spec.js')(ngModule);

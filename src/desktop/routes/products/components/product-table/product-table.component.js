@@ -15,10 +15,18 @@ module.exports = ngModule => {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
+    ctrl.orderBy = orderBy;
+    ctrl.orderByProperty = 'inStock';
+    ctrl.reverseOrder = false;
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
+    }
+
+    function orderBy(property) {
+      ctrl.reverseOrder = (ctrl.orderByProperty === property) ? !ctrl.reverseOrder : false;
+      ctrl.orderByProperty = property;
     }
   }
 

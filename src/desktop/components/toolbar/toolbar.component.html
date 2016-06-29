@@ -1,6 +1,8 @@
-<md-toolbar>
-  <div class="md-toolbar-tools" layout="row">
-    <span flex>{{ $ctrl.toolbarText }}</span>
-    <ng-transclude flex layout="row" style="height: 100%;"></ng-transclude>
+<md-toolbar class="md-primary md-hue-1 md-toolbar">
+  <div class="md-toolbar-tools no-padding" layout="row">
+    <h1 flex="25" class="toolbar-item toolbar-heading">
+      {{ $ctrl.toolbarText }}
+    </h1>
+    <ng-transclude flex="75" layout="row"></ng-transclude>
   </div>
 </md-toolbar>

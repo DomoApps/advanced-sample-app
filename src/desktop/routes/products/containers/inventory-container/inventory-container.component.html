@@ -1,17 +1,14 @@
-<div da-loading-mask="{{ $ctrl.loading }}" class="product-table-container">
-  <div class="header-bar">
-    <h2>What Are We Selling?</h2>
-  </div>
-  <div class="inventory">
-    <div>
-      <div class="filter-container">
-        <search-bar ng-hide="$ctrl.loading" on-text-change="$ctrl.onSearchTextUpdate(newSearchText)"></search-bar>
-      </div>
-      <div>
-        <product-table products="$ctrl.filteredProductsForTable" style=""></product-table>
-        <!-- todo: make sure data binding is correct on filteredProducts -->
-      </div>
-    </div>
-    <product-stocker products-out-of-stock="$ctrl.outOfStockProducts" stock-product="$ctrl.stockProduct(product)"></product-stocker>
-  </div>
+<div layout="column" flex da-loading-mask="{{ $ctrl.loading }}">
+  <toolbar toolbar-text="What Are We Selling?" flex="none">
+    <inventory-tools layout="row"
+                      flex
+                      inventory-value="$ctrl.inventoryValue"
+                      unique-products="$ctrl.uniqueProducts"
+                      total-quantity="$ctrl.totalQuantity"
+                      search-bar-items="$ctrl.searchBarItems"
+                      on-search-text-update="$ctrl.filterProductsAndCategories(searchText)"
+                      filter-function="$ctrl.filterByName">
+    </inventory-tools>
+  </toolbar>
+  <product-table layout="column" flex products="$ctrl.filteredProducts"></product-table>
 </div>

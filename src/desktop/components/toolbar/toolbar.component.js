@@ -6,8 +6,7 @@ module.exports = ngModule => {
     controller: toolbarCtrl,
     bindings: {
       // Inputs should use < and @ bindings.
-      toolbarText: '@',
-      sidenavId: '@'
+      toolbarText: '@'
       // Outputs should use & bindings.
     },
     transclude: true

@@ -11,13 +11,16 @@ module.exports = ngModule => {
     transclude: true
   });
 
-  function tabsContainerCtrl($state, $scope, daEvents, daFilters, productsFactory) {
+  function tabsContainerCtrl($state, $scope, productsFactory, $mdSidenav) {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
     ctrl.goToPage = goToPage;
+    ctrl.toggleSidenav = toggleSidenav;
+    ctrl.onCategorySelect = onCategorySelect;
     ctrl.selectedTab = 'products';
-    ctrl.categoryFilters = undefined;
+    ctrl.categoryFilters = [];
+    ctrl.categoryFilter = '';
 
     productsFactory.getNumUniqueProducts().then(numUniqueProducts => {
       ctrl.uniqueProducts = numUniqueProducts;
@@ -38,38 +41,28 @@ module.exports = ngModule => {
         ctrl.selectedTab = newValue;
       });
       ctrl.selectedTab = $state.current.name;
-      // setup the filters from product categories
       productsFactory.getProductCategories().then(categories => {
         categories.unshift('All');
-        const categoryFilters = categories.map(category => {
-          // daFilters flat config object. This adds to the filter box in the upper left
-          return {
-            Id: 'category',
-            FieldName: 'category',
-            FilterName: 'Product Category',
-            FieldValues: category,
-            DataType: 'string',
-            InputType: 'Single Select',
-            ColumnName: 'category'
-          };
-        });
-        daFilters.initFilters(categoryFilters, {});
+        ctrl.categoryFilters = categories;
+        ctrl.categoryFilter = ctrl.categoryFilters[0];
       });
-      // listen for a change in filters, then propagate
-      daEvents.on('daFilters:update', () => {
-        daFilters.getSelectedOptions().then(options => {
-          ctrl.categoryFilters = options[0].selections[0];
-        });
-      });
+    }
+
+    function toggleSidenav() {
+      $mdSidenav('filters').toggle();
     }
 
     function goToPage(page) {
       $state.go(page);
     }
+
+    function onCategorySelect() {
+      toggleSidenav();
+    }
   }
 
   // inject dependencies here
-  tabsContainerCtrl.$inject = ['$state', '$scope', 'daEvents', 'daFilters', 'productsFactory'];
+  tabsContainerCtrl.$inject = ['$state', '$scope', 'productsFactory', '$mdSidenav'];
 
   if (ON_TEST) {
     require('./tabs-container.component.spec.js')(ngModule);

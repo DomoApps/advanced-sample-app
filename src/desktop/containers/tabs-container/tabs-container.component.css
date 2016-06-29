@@ -1,0 +1,14 @@
+.sidebar {
+  width: 49px;
+  border-right: 1px solid #E5E5E5;
+  background-color: #F8F8F8;
+  padding-top: 3px;
+}
+
+.md-sidenav-left > div {
+  padding: 20px;
+}
+
+._md-nav-button-text span {
+  font-weight: 600;
+}
