@@ -11,7 +11,8 @@ module.exports = ngModule => {
     transclude: true
   });
 
-  function tabsContainerCtrl($state, $scope, productsFactory, $mdSidenav) {
+  function tabsContainerCtrl($state, $scope, productsFactory,
+    globalFiltersFactory, SAMPLE_APP, $mdSidenav) {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
@@ -31,6 +32,12 @@ module.exports = ngModule => {
     productsFactory.getInventoryValue().then(inventoryValue => {
       ctrl.inventoryValue = inventoryValue;
     });
+    productsFactory.getProductCategories().then(categories => {
+      categories.unshift(SAMPLE_APP.DEFAULT_CATEGORY);
+      ctrl.categoryFilters = categories;
+      ctrl.categoryFilter = ctrl.categoryFilters[0];
+    });
+    globalFiltersFactory.onFilterChange(_onFilterChange);
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
@@ -41,11 +48,6 @@ module.exports = ngModule => {
         ctrl.selectedTab = newValue;
       });
       ctrl.selectedTab = $state.current.name;
-      productsFactory.getProductCategories().then(categories => {
-        categories.unshift('All');
-        ctrl.categoryFilters = categories;
-        ctrl.categoryFilter = ctrl.categoryFilters[0];
-      });
     }
 
     function toggleSidenav() {
@@ -57,12 +59,19 @@ module.exports = ngModule => {
     }
 
     function onCategorySelect() {
+      globalFiltersFactory.setFilter(ctrl.categoryFilter);
       toggleSidenav();
+    }
+
+    // to keep or not to keep? Can I assume I am in charge of filters?
+    function _onFilterChange(e, newFilter) {
+      ctrl.categoryFilter = newFilter;
     }
   }
 
   // inject dependencies here
-  tabsContainerCtrl.$inject = ['$state', '$scope', 'productsFactory', '$mdSidenav'];
+  tabsContainerCtrl.$inject = ['$state', '$scope', 'productsFactory',
+      'globalFiltersFactory', 'SAMPLE_APP', '$mdSidenav'];
 
   if (ON_TEST) {
     require('./tabs-container.component.spec.js')(ngModule);
