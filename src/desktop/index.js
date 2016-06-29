@@ -22,7 +22,11 @@ ngDependencies.push.apply(ngDependencies, getNgModuleNames(require.context('./ro
 const ngModule = angular.module('da.desktop', ngDependencies)
   .constant('$', require('jquery'))
   .constant('d3', require('d3'))
-  .constant('_', require('lodash'));
+  .constant('_', require('lodash'))
+  .constant('SAMPLE_APP', {
+    E_CAT_FILTER_CHANGE: 'filters:change',  // event string for category filter change
+    DEFAULT_CATEGORY: 'All'
+  });
 
 attachAll(require.context('./components', true, /\.(component|directive)\.js$/))(ngModule);
 attachAll(require.context('./containers', true, /\.(component|directive)\.js$/))(ngModule);
