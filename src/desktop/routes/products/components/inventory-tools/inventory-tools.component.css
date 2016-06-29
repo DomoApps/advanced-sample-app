@@ -1,0 +1,5 @@
+.inventory-search-bar {
+  position: relative;
+  top: 4px; /* fix top/bottom alignment without changing container */
+  padding: 0 20px 0 20px;
+}
