@@ -44,10 +44,6 @@ module.exports = ngModule => {
 
       // store productsPromise in case a parallel request comes in, that way the data is requested only once
       _productsPromise = $timeout(() => {
-        // transform inStock because it arrives as a string instead of a bool
-        for (let i = 0; i < sampleProducts.length; i++) {
-          sampleProducts[i].inStock = (sampleProducts[i].inStock === 'true' ? true : false);
-        }
         _products = sampleProducts;
         return sampleProducts;
       }, 1000);
