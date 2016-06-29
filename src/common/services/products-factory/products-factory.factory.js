@@ -6,10 +6,9 @@ const sampleProducts = require('./sample-products.json');
  * @method getProductCategories
  */
 module.exports = ngModule => {
-  function productsFactory($q, $timeout) {
+  function productsFactory(SAMPLE_APP, $q, $timeout) {
     // Private variables
-    let _products = undefined;
-    let _productsPromise = undefined;
+    const _productsPromises = {};
     // Public API here
     const service = {
       getProducts,
@@ -23,31 +22,26 @@ module.exports = ngModule => {
 
     //// Functions ////
 
-    /**
-     * returns a list of products from the server.
-     * Will cache queries and thus only makes one request per instantiation
-     * of the service.
-     *
-     * @return {promise}  Promise returning an array of format [{category, name, price, inStock}, {...}, ...]
-     */
-    function getProducts() {
+     /**
+      * returns a list of products form the server.
+      * @param  {string} category optional: string of the category to filter by
+      * @return {promise} Promise returning an array of format [{category, name, price, quantity}, {...}, ...]
+      */
+    function getProducts(optCategory) {
       // 3 possiblities: never before requested, in progress, and already received
-      // are they already being requested?
+      const category = typeof optCategory === 'undefined' ? SAMPLE_APP.DEFAULT_CATEGORY : optCategory;
 
-      if (typeof _productsPromise !== 'undefined') {
-        return _productsPromise;
-      }
-
-      if (typeof _products !== 'undefined') {
-        return $q.resolve(_products);
+      if (typeof _productsPromises[category] !== 'undefined') {
+        return _productsPromises[category];
       }
 
       // store productsPromise in case a parallel request comes in, that way the data is requested only once
-      _productsPromise = $timeout(() => {
-        _products = sampleProducts;
-        return sampleProducts;
+      _productsPromises[category] = $timeout(() => {
+        return (category === SAMPLE_APP.DEFAULT_CATEGORY) ? sampleProducts : sampleProducts.filter(product => {
+          return product.category === category;
+        });
       }, 1000);
-      return _productsPromise;
+      return _productsPromises[category];
     }
 
     /**
@@ -69,8 +63,8 @@ module.exports = ngModule => {
      * returns a number representing the total value of the products
      * @return {promise(number)} total value of products
      */
-    function getInventoryValue() {
-      return getProducts().then(productsArray => {
+    function getInventoryValue(category) {
+      return getProducts(category).then(productsArray => {
         return productsArray.reduce((totalValue, product) => {
           return totalValue + (product.price * product.quantity);
         }, 0);
@@ -81,8 +75,8 @@ module.exports = ngModule => {
      * returns a number representing the amount of unique product types
      * @return {promise(number)} number of unique product types
      */
-    function getNumUniqueProducts() {
-      return getProducts().then(productsArray => {
+    function getNumUniqueProducts(category) {
+      return getProducts(category).then(productsArray => {
         return productsArray.length;
       });
     }
@@ -91,8 +85,8 @@ module.exports = ngModule => {
      * returns a number representing the total number of physical products
      * @return {promise(number)} number of physical products
      */
-    function getTotalQuantity() {
-      return getProducts().then(productsArray => {
+    function getTotalQuantity(category) {
+      return getProducts(category).then(productsArray => {
         return productsArray.reduce((totalProductQuantity, product) => {
           return totalProductQuantity + product.quantity;
         }, 0);
@@ -101,7 +95,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  productsFactory.$inject = ['$q', '$timeout'];
+  productsFactory.$inject = ['SAMPLE_APP', '$q', '$timeout'];
 
   ngModule.factory('productsFactory', productsFactory);
 
