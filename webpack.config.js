@@ -16,5 +16,9 @@ module.exports = getConfig({
   },
   loaders: [
     // Include your app's extra loaders here
+    {
+      test: /\.json$/,
+      loader: 'json'
+    }
   ]
 });
