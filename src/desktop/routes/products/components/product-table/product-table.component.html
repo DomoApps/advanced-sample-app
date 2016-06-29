@@ -1,29 +1,19 @@
 <div style="height: 57px;" flex="none" layout="row" class="column-headings">
-  <div flex="50" layout="row">
+  <div flex="50" layout="row" ng-repeat="section in [
+      [
+        { width: 25, title: 'In Stock', key: 'inStock' },
+        { width: 75, title: 'Name', key: 'name' },
+      ],
+      [
+        { width: 33, title: 'Price', key: 'price' },
+        { width: 33, title: 'Category', key: 'category'},
+        { width: 33, title: 'Quantity', key: 'quantity' }
+      ]]">
     <div class="column-heading"
           ng-class="{ 'column-sorted': $ctrl.orderByProperty === heading.key }"
           flex="{{ heading.width }}"
           ng-click="$ctrl.orderBy(heading.key)"
-          ng-repeat="heading in [
-              { width: 25, title: 'In Stock', key: 'inStock' },
-              { width: 75, title: 'Name', key: 'name' }
-            ]">
-        {{ heading.title }}
-      <md-icon md-font-icon="i-chevron-down"
-          ng-class="'i-chevron-' + (($ctrl.orderByProperty === heading.key) && $ctrl.reverseOrder ? 'up' : 'down')"
-          class="sort-arrow"></md-icon>
-    </div>
-  </div>
-  <div flex="50" layout="row">
-    <div class="column-heading"
-          ng-class="{ 'column-sorted': $ctrl.orderByProperty === heading.key }"
-          flex="33"
-          ng-click="$ctrl.orderBy(heading.key)"
-          ng-repeat="heading in [
-              { title: 'Price', key: 'price' },
-              { title: 'Category', key: 'category' },
-              { title: 'Quantity', key: 'quantity' }
-            ]">
+          ng-repeat="heading in section">
         {{ heading.title }}
       <md-icon md-font-icon="i-chevron-down"
           ng-class="'i-chevron-' + (($ctrl.orderByProperty === heading.key) && $ctrl.reverseOrder ? 'up' : 'down')"
