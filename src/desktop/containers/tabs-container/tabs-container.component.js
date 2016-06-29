@@ -23,15 +23,6 @@ module.exports = ngModule => {
     ctrl.categoryFilters = [];
     ctrl.categoryFilter = '';
 
-    productsFactory.getNumUniqueProducts().then(numUniqueProducts => {
-      ctrl.uniqueProducts = numUniqueProducts;
-    });
-    productsFactory.getTotalQuantity().then(totalQuantity => {
-      ctrl.totalQuantity = totalQuantity;
-    });
-    productsFactory.getInventoryValue().then(inventoryValue => {
-      ctrl.inventoryValue = inventoryValue;
-    });
     productsFactory.getProductCategories().then(categories => {
       categories.unshift(SAMPLE_APP.DEFAULT_CATEGORY);
       ctrl.categoryFilters = categories;
