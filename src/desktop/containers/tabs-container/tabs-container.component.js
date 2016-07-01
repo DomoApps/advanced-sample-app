@@ -11,8 +11,12 @@ module.exports = ngModule => {
     transclude: true
   });
 
-  function tabsContainerCtrl($state, $scope, productsFactory,
-    globalFiltersFactory, SAMPLE_APP, $mdSidenav) {
+  function tabsContainerCtrl($state,
+                             $scope,
+                             productsFactory,
+                             globalFiltersFactory,
+                             SAMPLE_APP,
+                             $mdSidenav) {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
