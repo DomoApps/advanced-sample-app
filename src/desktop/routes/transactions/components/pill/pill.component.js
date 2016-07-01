@@ -8,7 +8,6 @@ module.exports = ngModule => {
     controller: pillCtrl,
     bindings: {
       // Inputs should use < and @ bindings.
-      d3Id: '<',
       chartData: '<',
       pillTitle: '<',
       pillCaption: '<'
@@ -16,25 +15,29 @@ module.exports = ngModule => {
     }
   });
 
-  function pillCtrl() {
+  function pillCtrl($element) {
     const ctrl = this;
     let _pill = undefined;
     let _circle = undefined;
 
     ctrl.$onInit = $onInit;
+    ctrl.$postLink = $postLink;
     ctrl.$onChanges = $onChanges;
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
-      _pill = d3.select(ctrl.d3Id + ' svg').insert('g')
+    }
+
+    function $postLink() {
+      _pill = d3.select($element.children()[0]).insert('g')
         .chart('CAIconTrendsWithText')
         .c({
           width: 317,
           height: 121
         });
       _pill.draw(ctrl.chartData);
-      _circle = d3.select(ctrl.d3Id).select(' .iconCircle').node();
+      _circle = d3.select($element.children()[0]).select(' .iconCircle').node();
 
       d3.select(_circle.parentNode)
         .insert('g', () => { return _circle; })
@@ -74,7 +77,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  pillCtrl.$inject = [];
+  pillCtrl.$inject = ['$element'];
 
   if (ON_TEST) {
     require('./pill.component.spec.js')(ngModule);
