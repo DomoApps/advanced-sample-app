@@ -34,7 +34,7 @@ module.exports = ngModule => {
         .c({
           height: 500,
           width: 467,
-          showGradients: { name: 'Hide', value: false },
+          strokeWidth: 3,
           xAddAxis: { name: 'Show', value: true },
           xAddGridlines: { name: 'Show', value: true },
           yAddZeroline: { name: 'Hide', value: false }
