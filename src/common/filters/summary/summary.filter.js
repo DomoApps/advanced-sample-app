@@ -1,7 +1,8 @@
 module.exports = ngModule => {
   function summary() {
     const units = ['k', 'M', 'B', 'T'];
-    return (input, precision) => {
+    return (input, optPrecision) => {
+      const precision = (typeof optPrecision !== 'undefined' ? optPrecision : 0);
       if (typeof input === 'undefined' || isNaN(input)) {
         return input;
       }
@@ -12,7 +13,7 @@ module.exports = ngModule => {
           return (input / decimal).toFixed(precision) + units[i];
         }
       }
-      return input;
+      return input.toFixed(precision);
     };
   }
 
