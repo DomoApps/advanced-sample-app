@@ -1,7 +1,11 @@
 module.exports = ngModule => {
   function summary() {
     const units = ['k', 'M', 'B', 'T'];
-    return (input, optPrecision) => {
+    // fractional numbers: if set to true, will assume that quantities
+    // are not discrete. i.e., dollars should set fractional to true
+    // while products should not
+    return (input, optFractional, optPrecision) => {
+      const fractional = (typeof optFractional !== 'undefined' ? optFractional : false);
       const precision = (typeof optPrecision !== 'undefined' ? optPrecision : 0);
       if (typeof input === 'undefined' || isNaN(input)) {
         return input;
@@ -13,7 +17,10 @@ module.exports = ngModule => {
           return (input / decimal).toFixed(precision) + units[i];
         }
       }
-      return input.toFixed(precision);
+      if (fractional) {
+        return input.toFixed(precision);
+      }
+      return input;
     };
   }
 
