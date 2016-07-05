@@ -14,7 +14,7 @@ module.exports = ngModule => {
     }
   });
 
-  function lineChartCtrl() {
+  function lineChartCtrl($element) {
     const ctrl = this;
     let _chart = undefined;
 
@@ -25,7 +25,7 @@ module.exports = ngModule => {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
 
-      _chart = d3.select(ctrl.d3Id).insert('svg')
+      _chart = d3.select($element.children()[0])
         .attr('height', 650)
         .attr('width', 517.5)
         .append('g')
@@ -53,7 +53,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  lineChartCtrl.$inject = [];
+  lineChartCtrl.$inject = ['$element'];
 
   if (ON_TEST) {
     require('./line-chart.component.spec.js')(ngModule);
