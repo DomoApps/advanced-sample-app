@@ -6,7 +6,7 @@ const moment = require('moment');
 moment().format();
 
 module.exports = ngModule => {
-  function transactionsAnalyticsFactory() {
+  function transactionsAnalyticsFactory(SAMPLE_APP) {
     // Private variables
     const _dataset = 'transactions';
     const _grainMap = {
@@ -18,8 +18,6 @@ module.exports = ngModule => {
     // Public API here
     const service = {
       getTotals,
-      getEarliestTransaction,
-      getLatestTransaction,
       getTransactionsPerX
     };
 
@@ -29,16 +27,14 @@ module.exports = ngModule => {
     /**
      * gets useful totals for a certain category or date range
      *
-     * @param  {array} categoryFilters - format ['category1', 'category2', ...] or []
+     * @param  {string} categoryFilters
      * @param  {string or object or undefined} dateRangeFilter - either 'year' for last year, 'quarter'
      **for same quarter last year, {start: X, end: X} where X is parseable by moment, or undefined
      * @return {promise} - promise returning object of format {transactionCount: X, productsSold: X, income: X}
      */
     function getTotals(categoryFilters, dateRangeFilter) {
       let query = (new Query()).select(['category', 'quantity', 'total', 'name', 'date']);
-      if (typeof categoryFilters !== 'undefined') {
-        query = _applyCategoryFilter(query, categoryFilters);
-      }
+      query = _applyCategoryFilter(query, categoryFilters);
       if (typeof dateRangeFilter !== 'undefined') {
         query = _applyDateRangeFilter(query, dateRangeFilter);
       }
@@ -56,15 +52,13 @@ module.exports = ngModule => {
     /**
      * gets data on transactions per dateGrain (month, week, etc...)
      * @param  {string/undefined} dateGrain       String of either 'month', 'week', or 'quarter'
-     * @param  {array/undefined} categoryFilters Array of categories to filter by: ['cat1', 'cat2', ...], or [], or undefined
+     * @param  {string} categoryFilters
      * @param  {object/string/undefined} dateRangeFilter 'year' for last year, 'quarter' for this quarter last year, { start: string, end: string }, or undefined
      * @return {array[objects]}                 array of format [{date: string, total: number, quantity: number, category: number}, ...]
      */
     function getTransactionsPerX(dateGrain, categoryFilters, dateRangeFilter) {
       let query = (new Query()).select(['date', 'total', 'quantity', 'category']);
-      if (typeof categoryFilters !== 'undefined') {
-        query = _applyCategoryFilter(query, categoryFilters);
-      }
+      query = _applyCategoryFilter(query, categoryFilters);
       if (typeof dateRangeFilter !== 'undefined') {
         query = _applyDateRangeFilter(query, dateRangeFilter);
       }
@@ -79,21 +73,6 @@ module.exports = ngModule => {
       });
     }
 
-    /**
-     * @return {array} - array of format [{date: string}]
-     */
-    function getEarliestTransaction() {
-      return domo.get((new Query()).select(['date']).orderBy('date', 'asc').limit(1).query(_dataset));
-    }
-
-    /**
-     * @return {array} - array of format [{date: string}]
-     */
-    function getLatestTransaction() {
-      return domo.get((new Query()).select(['date']).orderBy('date', 'desc').limit(1).query(_dataset));
-    }
-
-
     function _applyDateGrainFilter(query, dateGrain) {
       if (typeof dateGrain.accumulator !== 'undefined') {
         query.dateGrain(dateGrain.column, dateGrain.grain, dateGrain.accumulator);
@@ -104,7 +83,9 @@ module.exports = ngModule => {
     }
 
     function _applyCategoryFilter(query, categoryFilter) {
-      query.where('category').in(categoryFilter);
+      if (categoryFilter !== SAMPLE_APP.DEFAULT_CATEGORY) {
+        query.where('category').in([categoryFilter]);
+      }
       return query;
     }
 
@@ -113,6 +94,7 @@ module.exports = ngModule => {
         query.previousPeriod('date', 'year');
       }
       if (dateRangeFilter === 'quarter') {
+        // this quarter last year
         query.where('date').gte(moment().subtract(1, 'years').startOf('quarter').toISOString());
         query.where('date').lte(moment().subtract(1, 'years').endOf('quarter').toISOString());
       }
@@ -125,7 +107,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  transactionsAnalyticsFactory.$inject = [];
+  transactionsAnalyticsFactory.$inject = ['SAMPLE_APP'];
 
   ngModule.factory('transactionsAnalyticsFactory', transactionsAnalyticsFactory);
 
