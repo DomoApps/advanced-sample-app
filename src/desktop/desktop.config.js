@@ -19,7 +19,7 @@ function config($urlRouterProvider, $mdThemingProvider, $mdIconProvider) {
     'A700': '#7b0006'
   };
   $mdThemingProvider
-      .definePalette('customPrimary',
+      .definePalette('custom-primary',
                       customPrimary);
 
   const customAccent = {
@@ -39,7 +39,7 @@ function config($urlRouterProvider, $mdThemingProvider, $mdIconProvider) {
     'A700': '#23ffd4',
   };
   $mdThemingProvider
-      .definePalette('customAccent',
+      .definePalette('custom-accent',
                       customAccent);
 
   const customWarn = {
@@ -59,7 +59,7 @@ function config($urlRouterProvider, $mdThemingProvider, $mdIconProvider) {
     'A700': '#803200'
   };
   $mdThemingProvider
-      .definePalette('customWarn',
+      .definePalette('custom-warn',
                       customWarn);
 
   const customBackground = {
@@ -79,16 +79,16 @@ function config($urlRouterProvider, $mdThemingProvider, $mdIconProvider) {
     'A700': '#000000'
   };
   $mdThemingProvider
-      .definePalette('customBackground',
+      .definePalette('custom-background',
                       customBackground);
 
   $mdThemingProvider.theme('default')
-    .primaryPalette('customPrimary', {
+    .primaryPalette('custom-primary', {
       'hue-1': '50'
     })
-    .accentPalette('customAccent')
-    .warnPalette('customWarn')
-    .backgroundPalette('customBackground', {
+    .accentPalette('custom-accent')
+    .warnPalette('custom-warn')
+    .backgroundPalette('custom-background', {
       'default': '50'
     });
 
