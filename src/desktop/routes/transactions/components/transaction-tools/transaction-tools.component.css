@@ -1,0 +1,8 @@
+.toolbar-selects {
+  font-size: 16px;
+}
+
+.toolbar-selects > div {
+  position: relative;
+  top: 5px; /* fix vertical alignment in toolbar */
+}
