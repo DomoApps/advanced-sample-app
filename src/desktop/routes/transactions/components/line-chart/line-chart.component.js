@@ -9,7 +9,7 @@ module.exports = ngModule => {
     bindings: {
       // Inputs should use < and @ bindings.
       chartData: '<',
-      d3Id: '<'
+      lineColor: '<'
       // Outputs should use & bindings.
     }
   });
@@ -20,24 +20,29 @@ module.exports = ngModule => {
 
     ctrl.$onInit = $onInit;
     ctrl.$onChanges = $onChanges;
+    ctrl.$onDestroy = $onDestroy;
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
 
+      // the chart's axes are by default larger than the svg element
+      const translateX = 25;
+      const translateY = 5;
       _chart = d3.select($element.children()[0])
         .attr('height', 650)
-        .attr('width', 517.5)
+        .attr('width', 528)
         .append('g')
-        .attr('transform', 'translate(25,50)')
+        .attr('transform', 'translate(' + translateX + ',' + translateY + ')')
         .chart('MultiLineChart')
         .c({
-          height: 500,
-          width: 467,
+          height: 620,
+          width: 478,
           strokeWidth: 3,
           xAddAxis: { name: 'Show', value: true },
           xAddGridlines: { name: 'Show', value: true },
-          yAddZeroline: { name: 'Hide', value: false }
+          yAddZeroline: { name: 'Hide', value: false },
+          singleColor: ctrl.lineColor
         }).a('X Axis', line => {
           // override default accessor, it doesn't accept "quarter" values (ex "2015 Q1")
           return line[0];
@@ -46,9 +51,16 @@ module.exports = ngModule => {
     }
 
     function $onChanges(changes) {
-      if (typeof changes.chartData !== 'undefined' && typeof _chart !== 'undefined') {
+      if (typeof changes.chartData !== 'undefined' || typeof changes.lineColor !== 'undefined') {
+        if (typeof changes.lineColor !== 'undefined') {
+          _chart.c({ singleColor: ctrl.lineColor });
+        }
         _chart.draw(ctrl.chartData);
       }
+    }
+
+    function $onDestroy() {
+      _chart = d3.select($element.children()[0]).remove();
     }
   }
 
