@@ -6,12 +6,7 @@ module.exports = ngModule => {
     controller: pillboxContainerCtrl,
     bindings: {
       // Inputs should use < and @ bindings.
-      totalIncome: '<',
-      productsSold: '<',
-      transactionCount: '<',
-      incomeChartData: '<',
-      productsChartData: '<',
-      transactionChartData: '<',
+      pillData: '<',
       // Outputs should use & bindings.
       onPillClick: '&'
     }
@@ -22,7 +17,7 @@ module.exports = ngModule => {
 
     ctrl.$onInit = $onInit;
     ctrl.switchPills = switchPills;
-    ctrl.activePill = 'income';
+    ctrl.activePill = 0;
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized

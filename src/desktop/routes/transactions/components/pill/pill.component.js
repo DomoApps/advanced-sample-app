@@ -10,7 +10,8 @@ module.exports = ngModule => {
       // Inputs should use < and @ bindings.
       chartData: '<',
       pillTitle: '<',
-      pillCaption: '<'
+      pillCaption: '<',
+      pillColor: '<'
       // Outputs should use & bindings.
     }
   });
@@ -35,7 +36,13 @@ module.exports = ngModule => {
         .chart('CAIconTrendsWithText')
         .c({
           width: 480,
-          height: 121
+          height: 121,
+          generalFillBadColor: ctrl.pillColor,
+          generalFillGoodColor: ctrl.pillColor,
+          generalFillNeutralColor: ctrl.pillColor,
+          generalStrokeBadColor: ctrl.pillColor,
+          generalStrokeGoodColor: ctrl.pillColor,
+          generalStrokeNeutralColor: ctrl.pillColor
         });
       _pill.draw(ctrl.chartData);
       _circle = d3.select($element.children()[0]).select(' .iconCircle').node();
@@ -77,7 +84,7 @@ module.exports = ngModule => {
 
     function $onDestroy() {
       // free up memory
-      _pill = _pill.remove();
+      _pill = d3.select($element.children()[0]).remove();
     }
 
     function _changeText(circle, pillTitle, pillCaption) {
