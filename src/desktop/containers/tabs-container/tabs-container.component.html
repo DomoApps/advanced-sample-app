@@ -1,9 +1,8 @@
 <div layout-fill layout="row">
   <md-sidenav md-component-id="filters" class="md-sidenav-left">
-    <div layout="column">
+    <div layout="column" flex>
       <md-input-container>
-        <label>Category</label>
-        <md-select md-on-close="$ctrl.onCategorySelect()" ng-model="$ctrl.categoryFilter">
+        <md-select placehold="Category" md-on-close="$ctrl.onCategorySelect()" ng-model="$ctrl.categoryFilter">
           <md-option ng-repeat="category in $ctrl.categoryFilters" value="{{ category }}">
             {{ category }}
           </md-option>
