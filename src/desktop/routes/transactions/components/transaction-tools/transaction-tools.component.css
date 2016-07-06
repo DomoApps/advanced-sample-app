@@ -3,6 +3,7 @@
 }
 
 .toolbar-selects > div {
+  /* wrapper div around md-input-container is to help with label alignment */
   position: relative;
   top: 5px; /* fix vertical alignment in toolbar */
 }

@@ -8,7 +8,7 @@ module.exports = ngModule => {
       // Inputs should use < and @ bindings.
       // Outputs should use & bindings.
       onGranularityDropdownSelect: '&',
-      onDateRangeDropdownSelect: '&'
+      onDateRangeDropdownSelect: '&',
     }
   });
 
@@ -33,10 +33,6 @@ module.exports = ngModule => {
       {
         name: 'This Quarter Last Year',
         value: 'quarter'
-      },
-      {
-        name: 'Custom',
-        value: 'custom'
       }
     ];
     ctrl.dateRangeDropdownSelectedItem = ctrl.dateRangeDropdownItems[0];
