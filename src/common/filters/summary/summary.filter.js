@@ -1,6 +1,6 @@
 module.exports = ngModule => {
   function summary() {
-    const units = ['k', 'M', 'B', 'T'];
+    const units = ['K', 'M', 'B', 'T'];
     // fractional numbers: if set to true, will assume that quantities
     // are not discrete. i.e., dollars should set fractional to true
     // while products should not
