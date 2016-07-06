@@ -1,1 +1,15 @@
-<input type="text" placeholder="Filter items" class="input-style search-bar" ng-change="$ctrl.onInput()" ng-model="$ctrl.searchText">
+<md-autocomplete md-selected-item="$ctrl.selectedItem"
+                md-selected-item-change="$ctrl.onSelectedItemChange()"
+                md-search-text="$ctrl.searchText"
+                md-search-text-change="$ctrl.onSearchTextChange()"
+                md-items="item in $ctrl.filterFunction($ctrl.searchText, $ctrl.items)"
+                placeholder="Search items and categories">
+  <md-item-template>
+    <span md-highlight-text="$ctrl.searchText" md-highlight-flags="ig">
+      {{ item }}
+    </span>
+  </md-item-template>
+  <md-not-found>
+    No items matching "{{ $ctrl.searchText }}" were found
+  </md-not-found>
+</md-autocomplete>

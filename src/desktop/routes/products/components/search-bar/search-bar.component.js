@@ -6,8 +6,10 @@ module.exports = ngModule => {
     controller: searchBarCtrl,
     bindings: {
       // Inputs should use < and @ bindings.
+      items: '<',
+      filterFunction: '<',
       // Outputs should use & bindings.
-      onTextChange: '&'
+      onSearchTextUpdate: '&'
     }
   });
 
@@ -16,16 +18,23 @@ module.exports = ngModule => {
 
     ctrl.$onInit = $onInit;
     ctrl.searchText = '';
-    ctrl.onInput = onInput;
+    ctrl.onSelectedItemChange = onSelectedItemChange;
+    ctrl.onSearchTextChange = onSearchTextChange;
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
     }
 
-    function onInput() {
-      // propagate text to parent
-      ctrl.onTextChange({ newSearchText: ctrl.searchText });
+    function onSelectedItemChange() {
+      // checking to make sure user hasn't cleared search bar
+      if (typeof ctrl.selectedItem !== 'undefined') {
+        ctrl.onSearchTextUpdate({ searchText: ctrl.searchText });
+      }
+    }
+
+    function onSearchTextChange() {
+      ctrl.onSearchTextUpdate({ searchText: ctrl.searchText });
     }
   }
 

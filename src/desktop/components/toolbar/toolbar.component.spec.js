@@ -1,10 +1,10 @@
 module.exports = ngModule => {
-  describe('component:filterCheckbox', () => {
+  describe('component:toolbar', () => {
     let scope;
     let $componentController;
 
     function createController(bindings = {}) {
-      const $ctrl = $componentController('filterCheckbox', { $scope: scope }, bindings);
+      const $ctrl = $componentController('toolbar', { $scope: scope }, bindings);
       if ($ctrl.$onInit) $ctrl.$onInit();
       return $ctrl;
     }

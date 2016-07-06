@@ -1,0 +1,10 @@
+<search-bar flex="33" class="inventory-search-bar" items="$ctrl.searchBarItems" on-search-text-update="$ctrl.searchTextUpdate(searchText)" filter-function="$ctrl.filterFunction"></search-bar>
+<div flex="66" layout="row">
+  <div flex="33" class="toolbar-item toolbar-indicators" ng-repeat="(text, value) in
+    { 'Inventory Value': $ctrl.inventoryValue,
+      'Unique Products': $ctrl.uniqueProducts,
+      'Total Quantity': $ctrl.totalQuantity }">
+    <h4>{{ text }}</h4>
+    <h3>{{ text === 'Inventory Value' ? '$' : '' }}{{ value | summary: 1 | default: 'Loading...' }}</h3>
+  </div>
+</div>

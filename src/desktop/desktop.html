@@ -21,7 +21,7 @@
 <body ng-cloak ng-app="da.desktop">
   <div id="appContainer">
     <tabs-container>
-      <div class="tabs-view" ui-view></div>
+      <div ui-view flex layout="column"></div>
     </tabs-container>
   </div>
   {% if (o.htmlWebpackPlugin.options.dev) { %}<script src="/webpack-dev-server.js"></script>{% } %}

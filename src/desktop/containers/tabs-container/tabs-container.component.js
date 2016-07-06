@@ -11,13 +11,27 @@ module.exports = ngModule => {
     transclude: true
   });
 
-  function tabsContainerCtrl($state, $scope, daEvents, daFilters, productsFactory) {
+  function tabsContainerCtrl($state,
+                             $scope,
+                             productsFactory,
+                             globalFiltersFactory,
+                             SAMPLE_APP,
+                             $mdSidenav) {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
     ctrl.goToPage = goToPage;
+    ctrl.toggleSidenav = toggleSidenav;
+    ctrl.onCategorySelect = onCategorySelect;
     ctrl.selectedTab = 'products';
-    ctrl.categoryFilters = undefined;
+    ctrl.categoryFilters = [];
+    ctrl.categoryFilter = '';
+
+    productsFactory.getProductCategories().then(categories => {
+      categories.unshift(SAMPLE_APP.DEFAULT_CATEGORY);
+      ctrl.categoryFilters = categories;
+      ctrl.categoryFilter = ctrl.categoryFilters[0];
+    });
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
@@ -28,38 +42,31 @@ module.exports = ngModule => {
         ctrl.selectedTab = newValue;
       });
       ctrl.selectedTab = $state.current.name;
-      // setup the filters from product categories
-      productsFactory.getProductCategories().then(categories => {
-        categories.unshift('All');
-        const categoryFilters = categories.map(category => {
-          // daFilters flat config object. This adds to the filter box in the upper left
-          return {
-            Id: 'category',
-            FieldName: 'category',
-            FilterName: 'Product Category',
-            FieldValues: category,
-            DataType: 'string',
-            InputType: 'Single Select',
-            ColumnName: 'category'
-          };
-        });
-        daFilters.initFilters(categoryFilters, {});
-      });
-      // listen for a change in filters, then propagate
-      daEvents.on('daFilters:update', () => {
-        daFilters.getSelectedOptions().then(options => {
-          ctrl.categoryFilters = options[0].selections[0];
-        });
-      });
+    }
+
+    function toggleSidenav() {
+      $mdSidenav('filters').toggle();
     }
 
     function goToPage(page) {
       $state.go(page);
     }
+
+    function onCategorySelect() {
+      // tabs-container will not listen for filter changes because
+      // it is in charge of global filters. We don't want to promote shared state
+      // and confusing ownership.
+      // The only reason globalFiltersFactory exists is to pass information
+      // to children around ui-router, which does not allow for one-way databinding
+      // to views that consist of components
+      globalFiltersFactory.setFilter(ctrl.categoryFilter);
+      toggleSidenav();
+    }
   }
 
   // inject dependencies here
-  tabsContainerCtrl.$inject = ['$state', '$scope', 'daEvents', 'daFilters', 'productsFactory'];
+  tabsContainerCtrl.$inject = ['$state', '$scope', 'productsFactory',
+      'globalFiltersFactory', 'SAMPLE_APP', '$mdSidenav'];
 
   if (ON_TEST) {
     require('./tabs-container.component.spec.js')(ngModule);
