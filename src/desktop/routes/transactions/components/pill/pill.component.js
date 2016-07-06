@@ -54,7 +54,7 @@ module.exports = ngModule => {
         d3.select(_circle.parentNode)
           .append('text')
           .attr('class', 'text-' + textType)
-          .attr('transform', 'translate(' + xloc + ',' + (textType === 'small' ? yloc : yloc - 10) + ')') // align top text a little higher
+          .attr('transform', 'translate(' + xloc + ',' + (textType === 'small' ? yloc : yloc - 10) + ')') // align large text a little higher
           .attr('text-anchor', 'middle')
           .attr('alignment-baseline', alignemtnBaseline)
           .attr('dy', '.35em')
