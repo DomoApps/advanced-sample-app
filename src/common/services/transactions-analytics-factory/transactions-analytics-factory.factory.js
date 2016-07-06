@@ -27,21 +27,22 @@ module.exports = ngModule => {
     /**
      * gets useful totals for a certain category or date range
      *
-     * @param  {string} categoryFilters
+     * @param  {string} categoryFilter
      * @param  {string or object or undefined} dateRangeFilter - either 'year' for last year, 'quarter'
-     **for same quarter last year, {start: X, end: X} where X is parseable by moment, or undefined
+     **for same quarter last year, or undefined
      * @return {promise} - promise returning object of format {transactionCount: X, productsSold: X, income: X}
      */
-    function getTotals(categoryFilters, dateRangeFilter) {
+    function getTotals(categoryFilter, dateRangeFilter) {
       let query = (new Query()).select(['category', 'quantity', 'total', 'name', 'date']);
-      query = _applyCategoryFilter(query, categoryFilters);
+      query = _applyCategoryFilter(query, categoryFilter);
       if (typeof dateRangeFilter !== 'undefined') {
         query = _applyDateRangeFilter(query, dateRangeFilter);
       }
       query.groupBy('category', { total: 'sum', quantity: 'sum', name: 'count' });
       return domo.get(query.query(_dataset)).then(data => {
         return data.reduce((accumulated, currentRow) => {
-          accumulated.transactionCount += currentRow.name; // confusing, I know...
+          // domo.get doesn't allow us to create 'virtual' rows yet, so we just reuse the rows we don't need
+          accumulated.transactionCount += currentRow.name;
           accumulated.productsSold += currentRow.quantity;
           accumulated.income += currentRow.total;
           return accumulated;
@@ -56,12 +57,12 @@ module.exports = ngModule => {
      * @param  {object/string/undefined} dateRangeFilter 'year' for last year, 'quarter' for this quarter last year, { start: string, end: string }, or undefined
      * @return {array[objects]}                 array of format [{date: string, total: number, quantity: number, category: number}, ...]
      */
-    function getTransactionsPerX(optDateGrain, categoryFilter, dateRangeFilter) {
+    function getTransactionsPerX(categoryFilter, optDateGrain, optDateRange) {
       let query = (new Query()).select(['date', 'total', 'quantity', 'category']);
       const dateGrain = typeof optDateGrain !== 'undefined' ? optDateGrain : 'month';
       query = _applyCategoryFilter(query, categoryFilter);
-      if (typeof dateRangeFilter !== 'undefined') {
-        query = _applyDateRangeFilter(query, dateRangeFilter);
+      if (typeof optDateRange !== 'undefined') {
+        query = _applyDateRangeFilter(query, optDateRange);
       }
       query = _applyDateGrainFilter(query, dateGrain);
       return domo.get(query.query(_dataset)).then(data => {

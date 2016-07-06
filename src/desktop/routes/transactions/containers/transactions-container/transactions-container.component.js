@@ -69,7 +69,7 @@ module.exports = ngModule => {
       const dateRangeFilter = (typeof ctrl.dateRangeDropdownSelectedItem !== 'undefined' ?
           ctrl.dateRangeDropdownSelectedItem.value : undefined);
       return $q.all([transactionsAnalyticsFactory.getTotals(_categoryFilter, dateRangeFilter),
-        transactionsAnalyticsFactory.getTransactionsPerX(ctrl.granularityDropdownSelectedItem, _categoryFilter, dateRangeFilter)]).then(data => {
+        transactionsAnalyticsFactory.getTransactionsPerX(_categoryFilter, ctrl.granularityDropdownSelectedItem, dateRangeFilter)]).then(data => {
           ctrl.pillData[0].chart = _formatDataForLineChart('Income', data[1], 'total');
           ctrl.pillData[1].chart = _formatDataForLineChart('Products Sold', data[1], 'quantity');
           ctrl.pillData[2].chart = _formatDataForLineChart('Transactions', data[1], 'category');
