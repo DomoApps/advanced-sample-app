@@ -51,20 +51,19 @@ module.exports = ngModule => {
 
     /**
      * gets data on transactions per dateGrain (month, week, etc...)
-     * @param  {string/undefined} dateGrain       String of either 'month', 'week', or 'quarter'
-     * @param  {string} categoryFilters
+     * @param  {string/undefined} optDateGrain       String of either 'month', 'week', or 'quarter'. defaults to month
+     * @param  {string} categoryFilter
      * @param  {object/string/undefined} dateRangeFilter 'year' for last year, 'quarter' for this quarter last year, { start: string, end: string }, or undefined
      * @return {array[objects]}                 array of format [{date: string, total: number, quantity: number, category: number}, ...]
      */
-    function getTransactionsPerX(dateGrain, categoryFilters, dateRangeFilter) {
+    function getTransactionsPerX(optDateGrain, categoryFilter, dateRangeFilter) {
       let query = (new Query()).select(['date', 'total', 'quantity', 'category']);
-      query = _applyCategoryFilter(query, categoryFilters);
+      const dateGrain = typeof optDateGrain !== 'undefined' ? optDateGrain : 'month';
+      query = _applyCategoryFilter(query, categoryFilter);
       if (typeof dateRangeFilter !== 'undefined') {
         query = _applyDateRangeFilter(query, dateRangeFilter);
       }
-      if (typeof dateGrain !== 'undefined') {
-        query = _applyDateGrainFilter(query, { column: 'date', grain: dateGrain, accumulator: { category: 'count' } });
-      }
+      query = _applyDateGrainFilter(query, dateGrain);
       return domo.get(query.query(_dataset)).then(data => {
         return data.map(row => {
           row.date = row['Calendar' + _grainMap[dateGrain]];
@@ -74,11 +73,7 @@ module.exports = ngModule => {
     }
 
     function _applyDateGrainFilter(query, dateGrain) {
-      if (typeof dateGrain.accumulator !== 'undefined') {
-        query.dateGrain(dateGrain.column, dateGrain.grain, dateGrain.accumulator);
-      } else {
-        query.dateGrain(dateGrain.column, dateGrain.grain);
-      }
+      query.dateGrain('date', dateGrain, { category: 'count' });
       return query;
     }
 
@@ -97,10 +92,6 @@ module.exports = ngModule => {
         // this quarter last year
         query.where('date').gte(moment().subtract(1, 'years').startOf('quarter').toISOString());
         query.where('date').lte(moment().subtract(1, 'years').endOf('quarter').toISOString());
-      }
-      if (typeof dateRangeFilter.start !== 'undefined' && typeof dateRangeFilter.end !== 'undefined') {
-        query.where('date').gte(moment(dateRangeFilter.start).toISOString());
-        query.where('date').lte(moment(dateRangeFilter.end).toISOString());
       }
       return query;
     }
