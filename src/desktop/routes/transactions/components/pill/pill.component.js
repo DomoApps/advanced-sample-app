@@ -23,6 +23,7 @@ module.exports = ngModule => {
     ctrl.$onInit = $onInit;
     ctrl.$postLink = $postLink;
     ctrl.$onChanges = $onChanges;
+    ctrl.$onDestroy = $onDestroy;
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
@@ -33,7 +34,7 @@ module.exports = ngModule => {
       _pill = d3.select($element.children()[0]).insert('g')
         .chart('CAIconTrendsWithText')
         .c({
-          width: 317,
+          width: 480,
           height: 121
         });
       _pill.draw(ctrl.chartData);
@@ -42,16 +43,20 @@ module.exports = ngModule => {
       d3.select(_circle.parentNode)
         .insert('g', () => { return _circle; })
         .append(() => { return _circle; });
+
+
+      const circleBBox = _circle.getBBox();
+      const xloc = circleBBox.x + (circleBBox.width / 2);
+      const yloc = circleBBox.y + (circleBBox.height / 2);
       ['small', 'large'].forEach(textType => {
-        const circleBBox = _circle.getBBox();
         const fontSize = (textType === 'small' ? '12' : '23');
-        const xloc = circleBBox.x + (circleBBox.width / 2);
-        const yloc = circleBBox.y + ((circleBBox.height / 3) * (textType === 'small' ? 2 : 1));
+        const alignemtnBaseline = (textType === 'small' ? 'hanging' : 'alphabetic');
         d3.select(_circle.parentNode)
           .append('text')
           .attr('class', 'text-' + textType)
-          .attr('transform', 'translate(' + xloc + ',' + yloc + ')')
+          .attr('transform', 'translate(' + xloc + ',' + (textType === 'small' ? yloc : yloc - 10) + ')') // align top text a little higher
           .attr('text-anchor', 'middle')
+          .attr('alignment-baseline', alignemtnBaseline)
           .attr('dy', '.35em')
           .attr('font-size', fontSize);
       });
@@ -68,6 +73,11 @@ module.exports = ngModule => {
       if (typeof changes.pillCaption !== 'undefined') {
         _changeText(_circle, ctrl.pillTitle, changes.pillCaption.currentValue);
       }
+    }
+
+    function $onDestroy() {
+      // free up memory
+      _pill = _pill.remove();
     }
 
     function _changeText(circle, pillTitle, pillCaption) {

@@ -1,19 +1,22 @@
-<div class="pills">
+<div class="pills" layout="column" flex>
   <pill chart-data="$ctrl.incomeChartData"
       pill-title="'$' + ($ctrl.totalIncome | summary:true:1)"
       pill-caption="'Total Income'"
       ng-click="$ctrl.switchPills('income')"
-      ng-class="{ active: $ctrl.activePill === 'income' }"></pill>
+      ng-class="{ active: $ctrl.activePill === 'income' }"
+      flex></pill>
   <pill chart-data="$ctrl.productsChartData"
       pill-title="$ctrl.productsSold | summary:false:1"
       pill-caption="'Products Sold'"
       transform="translate(0,171)"
       ng-click="$ctrl.switchPills('productsSold')"
-      ng-class="{ active: $ctrl.activePill === 'productsSold' }"></pill>
+      ng-class="{ active: $ctrl.activePill === 'productsSold' }"
+      flex></pill>
   <pill chart-data="$ctrl.transactionChartData"
       pill-title="$ctrl.transactionCount | summary:false:1"
       pill-caption="'Transactions'"
       transform="translate(0,342)"
       ng-click="$ctrl.switchPills('transactionCount')"
-      ng-class="{ active: $ctrl.activePill === 'transactionCount' }"></pill>
+      ng-class="{ active: $ctrl.activePill === 'transactionCount' }"
+      flex></pill>
 </svg>
