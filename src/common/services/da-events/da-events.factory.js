@@ -2,9 +2,9 @@ module.exports = ngModule => {
   function daEvents($rootScope, $q, $log, SAMPLE_APP) {
     // central place for documenting app events
     const _eventRegistry = {
-      'app:loaded': 'This event is fired when the appFrame as finished loading.'
+      'app:loaded': 'This event is fired when the appFrame as finished loading.',
+      [SAMPLE_APP.E_CAT_FILTER_CHANGE]: 'This even is fired when the filters get updated'
     };
-    _eventRegistry[SAMPLE_APP.E_CAT_FILTER_CHANGE] = 'This even is fired when the filters get updated';
 
     // Create promise to reolve when appFrame has finished animating
     const _diferred = $q.defer();

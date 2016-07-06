@@ -11,8 +11,12 @@ module.exports = ngModule => {
     transclude: true
   });
 
-  function tabsContainerCtrl($state, $scope, productsFactory,
-    globalFiltersFactory, SAMPLE_APP, $mdSidenav) {
+  function tabsContainerCtrl($state,
+                             $scope,
+                             productsFactory,
+                             globalFiltersFactory,
+                             SAMPLE_APP,
+                             $mdSidenav) {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
@@ -28,7 +32,6 @@ module.exports = ngModule => {
       ctrl.categoryFilters = categories;
       ctrl.categoryFilter = ctrl.categoryFilters[0];
     });
-    globalFiltersFactory.onFilterChange(_onFilterChange);
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
@@ -50,13 +53,14 @@ module.exports = ngModule => {
     }
 
     function onCategorySelect() {
+      // tabs-container will not listen for filter changes because
+      // it is in charge of global filters. We don't want to promote shared state
+      // and confusing ownership.
+      // The only reason globalFiltersFactory exists is to pass information
+      // to children around ui-router, which does not allow for one-way databinding
+      // to views that consist of components
       globalFiltersFactory.setFilter(ctrl.categoryFilter);
       toggleSidenav();
-    }
-
-    // to keep or not to keep? Can I assume I am in charge of filters?
-    function _onFilterChange(e, newFilter) {
-      ctrl.categoryFilter = newFilter;
     }
   }
 
