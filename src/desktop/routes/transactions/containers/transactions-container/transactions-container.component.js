@@ -31,19 +31,19 @@ module.exports = ngModule => {
         text: 'Total Income',
         summary: null,
         chart: null,
-        color: $mdColors.getThemeColor('default-customPrimary-700')
+        color: $mdColors.getThemeColor('default-domoPrimary-700')
       },
       {
         text: 'Products Sold',
         summary: null,
         chart: null,
-        color: $mdColors.getThemeColor('default-customAccent-A200')
+        color: $mdColors.getThemeColor('default-domoAccent-A200')
       },
       {
         text: 'Transactions',
         summary: null,
         chart: null,
-        color: $mdColors.getThemeColor('default-customWarn-700')
+        color: $mdColors.getThemeColor('default-domoWarn-700')
       }];
     ctrl.activePillData = ctrl.pillData[0];
 
