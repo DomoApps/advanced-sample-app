@@ -40,6 +40,12 @@ module.exports = ngModule => {
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
+
+      // call these so parent knows which values are the defaults
+      // otherwise when the user selects an already selected value in the transaction tools
+      // a refresh will occur when one should not
+      ctrl.onGranularityDropdownSelect({ value: ctrl.granularityDropdownSelectedItem });
+      ctrl.onDateRangeDropdownSelect({ value: ctrl.dateRangeDropdownSelectedItem });
     }
 
     function granularityDropdownSelect() {

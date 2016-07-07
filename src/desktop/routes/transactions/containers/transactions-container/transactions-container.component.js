@@ -52,8 +52,6 @@ module.exports = ngModule => {
 
     globalFiltersFactory.onFilterChange(_onCategoryChange);
 
-    _refreshData();
-
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
@@ -83,13 +81,17 @@ module.exports = ngModule => {
     }
 
     function granularityDropdownSelect(selectedGranularity) {
-      ctrl.granularityDropdownSelectedItem = selectedGranularity;
-      _refreshData();
+      if (ctrl.granularityDropdownSelectedItem !== selectedGranularity) {
+        ctrl.granularityDropdownSelectedItem = selectedGranularity;
+        _refreshData();
+      }
     }
 
     function dateRangeDropdownSelect(selectedDateRange) {
-      ctrl.dateRangeDropdownSelectedItem = selectedDateRange;
-      _refreshData();
+      if (ctrl.dateRangeDropdownSelectedItem !== selectedDateRange) {
+        ctrl.dateRangeDropdownSelectedItem = selectedDateRange;
+        _refreshData();
+      }
     }
 
     function displayLineChart(chartId) {
