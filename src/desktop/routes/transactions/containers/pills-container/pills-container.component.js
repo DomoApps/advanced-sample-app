@@ -1,9 +1,9 @@
 module.exports = ngModule => {
-  require('./pillbox-container.component.css');
+  require('./pills-container.component.css');
 
-  ngModule.component('pillboxContainer', {
-    template: require('./pillbox-container.component.html'),
-    controller: pillboxContainerCtrl,
+  ngModule.component('pillsContainer', {
+    template: require('./pills-container.component.html'),
+    controller: pillsContainerCtrl,
     bindings: {
       // Inputs should use < and @ bindings.
       pillData: '<',
@@ -12,7 +12,7 @@ module.exports = ngModule => {
     }
   });
 
-  function pillboxContainerCtrl() {
+  function pillsContainerCtrl() {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
@@ -31,9 +31,9 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  pillboxContainerCtrl.$inject = [];
+  pillsContainerCtrl.$inject = [];
 
   if (ON_TEST) {
-    require('./pillbox-container.component.spec.js')(ngModule);
+    require('./pills-container.component.spec.js')(ngModule);
   }
 };
