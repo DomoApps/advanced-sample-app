@@ -26,12 +26,16 @@ module.exports = ngModule => {
     const _translateY = 5;
 
     ctrl.$onInit = $onInit;
+    ctrl.$postLink = $postLink;
     ctrl.$onChanges = $onChanges;
     ctrl.$onDestroy = $onDestroy;
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
+    }
+
+    function $postLink() {
       _chart = d3.select($element.children()[0])
         .attr('height', _svgHeight)
         .attr('width', _svgWidth)
