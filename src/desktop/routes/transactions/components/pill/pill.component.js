@@ -21,6 +21,14 @@ module.exports = ngModule => {
     let _pill = undefined;
     let _circle = undefined;
 
+    const _centerOffset = '.35em'; // y offset to center text in pill
+    const _textSizes = {
+      small: '12',
+      large: '23'
+    };
+    const _pillWidth = 480;
+    const _pillHeight = 121;
+
     ctrl.$onInit = $onInit;
     ctrl.$postLink = $postLink;
     ctrl.$onChanges = $onChanges;
@@ -35,8 +43,8 @@ module.exports = ngModule => {
       _pill = d3.select($element.children()[0]).insert('g')
         .chart('CAIconTrendsWithText')
         .c({
-          width: 480,
-          height: 121,
+          width: _pillWidth,
+          height: _pillHeight,
           generalFillBadColor: ctrl.pillColor,
           generalFillGoodColor: ctrl.pillColor,
           generalFillNeutralColor: ctrl.pillColor,
@@ -56,7 +64,7 @@ module.exports = ngModule => {
       const xloc = circleBBox.x + (circleBBox.width / 2);
       const yloc = circleBBox.y + (circleBBox.height / 2);
       ['small', 'large'].forEach(textType => {
-        const fontSize = (textType === 'small' ? '12' : '23');
+        const fontSize = (textType === 'small' ? _textSizes.small : _textSizes.large);
         const alignemtnBaseline = (textType === 'small' ? 'hanging' : 'alphabetic');
         d3.select(_circle.parentNode)
           .append('text')
@@ -64,7 +72,7 @@ module.exports = ngModule => {
           .attr('transform', 'translate(' + xloc + ',' + (textType === 'small' ? yloc : yloc - 10) + ')') // align large text a little higher
           .attr('text-anchor', 'middle')
           .attr('alignment-baseline', alignemtnBaseline)
-          .attr('dy', '.35em')
+          .attr('dy', _centerOffset)
           .attr('font-size', fontSize);
       });
       _changeText(_circle, ctrl.pillTitle, ctrl.pillCaption);

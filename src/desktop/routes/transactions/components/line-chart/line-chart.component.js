@@ -17,6 +17,13 @@ module.exports = ngModule => {
   function lineChartCtrl($element) {
     const ctrl = this;
     let _chart = undefined;
+    const _svgHeight = 650;
+    const _svgWidth = 528;
+    const _lineChartHeight = 620;
+    const _lineChartWidth = 478;
+    // the chart's axes are by default larger than the svg element
+    const _translateX = 25;
+    const _translateY = 5;
 
     ctrl.$onInit = $onInit;
     ctrl.$onChanges = $onChanges;
@@ -25,19 +32,15 @@ module.exports = ngModule => {
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
-
-      // the chart's axes are by default larger than the svg element
-      const translateX = 25;
-      const translateY = 5;
       _chart = d3.select($element.children()[0])
-        .attr('height', 650)
-        .attr('width', 528)
+        .attr('height', _svgHeight)
+        .attr('width', _svgWidth)
         .append('g')
-        .attr('transform', 'translate(' + translateX + ',' + translateY + ')')
+        .attr('transform', 'translate(' + _translateX + ',' + _translateY + ')')
         .chart('MultiLineChart')
         .c({
-          height: 620,
-          width: 478,
+          height: _lineChartHeight,
+          width: _lineChartWidth,
           strokeWidth: 3,
           xAddAxis: { name: 'Show', value: true },
           xAddGridlines: { name: 'Show', value: true },
