@@ -1,3 +1,9 @@
+@import '../../../common/styles/variables.css';
+
+$loading-mask-color: rgba(85, 85, 85, 0.2);
+$loading-spinner-size: 48px;
+/* set to match option chosen with md-progress */
+
 .loading-container {
   position: relative; /* to position loading mask properly */
 }
@@ -9,7 +15,7 @@ loading-mask {
   height: 100%;
   width: 100%;
   z-index: 999;
-  background-color: rgba(85, 85, 85, 0.2);
+  background-color: $loading-mask-color;
   visibility: hidden;
   opacity: 0;
   transition: opacity 250ms ease-in-out, visibility 0s linear 250ms;
@@ -25,13 +31,13 @@ loading-mask.visible {
 .loading-square {
   background: white;
   border-radius: 3px;
-  box-shadow: 0 0 0 4px rgba(85, 85, 85, 0.2); /* border */
+  box-shadow: 0 0 0 4px $loading-mask-color; /* border */
   padding: 20px;
   padding-bottom: 15px;
   >.loading-spinner {
     margin: 0 auto;
     margin-bottom: 10px;
-    height: 48px;
-    width: 48px;
+    height: $loading-spinner-size;
+    width: $loading-spinner-size;
   }
 }
