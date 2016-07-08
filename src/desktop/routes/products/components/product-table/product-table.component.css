@@ -1,4 +1,4 @@
-$border: #e3e3e3;
+@import '../../../../../common/styles/variables.css';
 
 table.product-table {
   border-collapse: collapse;
@@ -11,14 +11,14 @@ table.product-table td, .column-headings .column-heading {
 }
 
 .column-headings .column-heading {
-  background-color: #F8F8F8;
-  color: #555;
-  font-size: 12px;
-  font-weight: 400;
-  border-left: 1px solid $border;
-  border-bottom: 1px solid $border;
+  background-color: $light-bar-color;
+  font-size: $paragraph;
+  font-weight: $light;
+  border-left: $border;
+  border-bottom: $border;
   outline: none;
   cursor: pointer;
+  user-select: none;
   text-transform: uppercase;
 }
 
@@ -27,15 +27,14 @@ table.product-table td, .column-headings .column-heading {
 }
 
 .column-headings .column-heading.column-sorted {
-  background-color: #eee;
+  background-color: $dark-bar-color;
 }
 
 table.product-table tbody td {
-  color: #555;
-  border-left: 1px solid $border;
-  font-size: 12px;
-  border-bottom: 1px solid $border;
-  font-weight: 400;
+  border-left: $border;
+  font-size: $paragraph;
+  border-bottom: $border;
+  font-weight: $light;
 }
 
 table.product-table tbody td:first-child {

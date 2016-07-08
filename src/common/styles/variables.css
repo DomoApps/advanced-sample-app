@@ -1,15 +1,9 @@
-/* Typesetting variables.*/
-/* in pixels. This would result in 22px on desktop */
-$baseFontSize: 12;
+$border: 1px solid #e5e5e5;
+$light-bar-color: #f8f8f8;
+$dark-bar-color: #eee;
+$text-color: #555;
 
-/* how large the line height is as a multiple of font size */
-$baseLineHeight: 1.5;
-$leading: $baseLineHeight * 1rem;
+$light: 400;
+$bold: 600;
 
-/* Rate of growth for headings
- * I actually like this to be slightly smaller then the leading. Makes for tight headings. 
- */
-$scale: 1.414;
-
-/* Domo Blue Color */
-$domo-blue: #99ccee;
+$paragraph: 12px;

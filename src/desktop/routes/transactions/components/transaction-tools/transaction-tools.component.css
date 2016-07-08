@@ -1,5 +1,7 @@
+$toolbar-font-size: 16px;
+
 .toolbar-selects {
-  font-size: 16px;
+  font-size: $toolbar-font-size;
 }
 
 .toolbar-selects > div {

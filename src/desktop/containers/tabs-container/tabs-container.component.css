@@ -1,7 +1,9 @@
+@import '../../../common/styles/variables.css';
+
 .sidebar {
   width: 49px;
-  border-right: 1px solid #E5E5E5;
-  background-color: #F8F8F8;
+  border-right: $border;
+  background-color: $light-bar-color;
   padding-top: 3px;
 }
 
@@ -10,5 +12,5 @@
 }
 
 ._md-nav-button-text span {
-  font-weight: 600;
+  font-weight: $bold;
 }
