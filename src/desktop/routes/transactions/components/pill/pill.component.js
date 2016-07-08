@@ -11,8 +11,10 @@ module.exports = ngModule => {
       chartData: '<',
       pillTitle: '<',
       pillCaption: '<',
-      pillColor: '<'
+      pillColor: '<',
+      isActive: '<',
       // Outputs should use & bindings.
+      onClick: '&'
     }
   });
 
@@ -20,6 +22,7 @@ module.exports = ngModule => {
     const ctrl = this;
     let _pill = undefined;
     let _circle = undefined;
+    const _grayColor = '#bbb';
 
     const _centerOffset = '.35em'; // y offset to center text in pill
     const _textSizes = {
@@ -33,6 +36,7 @@ module.exports = ngModule => {
     ctrl.$postLink = $postLink;
     ctrl.$onChanges = $onChanges;
     ctrl.$onDestroy = $onDestroy;
+    ctrl.pillClicked = pillClicked;
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
@@ -40,18 +44,14 @@ module.exports = ngModule => {
     }
 
     function $postLink() {
+      const chartOptions = {
+        width: _pillWidth,
+        height: _pillHeight
+      };
+      Object.assign(chartOptions, _getColors());
       _pill = d3.select($element.children()[0]).insert('g')
         .chart('CAIconTrendsWithText')
-        .c({
-          width: _pillWidth,
-          height: _pillHeight,
-          generalFillBadColor: ctrl.pillColor,
-          generalFillGoodColor: ctrl.pillColor,
-          generalFillNeutralColor: ctrl.pillColor,
-          generalStrokeBadColor: ctrl.pillColor,
-          generalStrokeGoodColor: ctrl.pillColor,
-          generalStrokeNeutralColor: ctrl.pillColor
-        });
+        .c(chartOptions);
       _pill.draw(ctrl.chartData);
       _circle = d3.select($element.children()[0]).select(' .iconCircle').node();
 
@@ -88,6 +88,10 @@ module.exports = ngModule => {
       if (typeof changes.pillCaption !== 'undefined') {
         _changeText(_circle, ctrl.pillTitle, changes.pillCaption.currentValue);
       }
+      if (typeof changes.isActive !== 'undefined') {
+        _pill.c(_getColors());
+        _pill.draw(ctrl.chartData);
+      }
     }
 
     function $onDestroy() {
@@ -95,9 +99,34 @@ module.exports = ngModule => {
       _pill = d3.select($element.children()[0]).remove();
     }
 
+    function pillClicked() {
+      ctrl.onClick();
+    }
+
     function _changeText(circle, pillTitle, pillCaption) {
       d3.select(circle.parentNode).select('.text-large').text(pillTitle);
       d3.select(circle.parentNode).select('.text-small').text(pillCaption);
+    }
+
+    function _getColors() {
+      if (ctrl.isActive) {
+        return {
+          generalFillBadColor: ctrl.pillColor,
+          generalFillGoodColor: ctrl.pillColor,
+          generalFillNeutralColor: ctrl.pillColor,
+          generalStrokeBadColor: ctrl.pillColor,
+          generalStrokeGoodColor: ctrl.pillColor,
+          generalStrokeNeutralColor: ctrl.pillColor
+        };
+      }
+      return {
+        generalFillBadColor: _grayColor,
+        generalFillGoodColor: _grayColor,
+        generalFillNeutralColor: _grayColor,
+        generalStrokeBadColor: _grayColor,
+        generalStrokeGoodColor: _grayColor,
+        generalStrokeNeutralColor: _grayColor
+      };
     }
   }
 
