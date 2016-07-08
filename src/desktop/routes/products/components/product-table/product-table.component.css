@@ -14,8 +14,8 @@ table.product-table td, .column-headings .column-heading {
   background-color: $light-bar-color;
   font-size: $paragraph;
   font-weight: $light;
-  border-left: 1px solid $border-color;
-  border-bottom: 1px solid $border-color;
+  border-left: $border;
+  border-bottom: $border;
   outline: none;
   cursor: pointer;
   user-select: none;
@@ -31,9 +31,9 @@ table.product-table td, .column-headings .column-heading {
 }
 
 table.product-table tbody td {
-  border-left: 1px solid $border-color;
+  border-left: $border;
   font-size: $paragraph;
-  border-bottom: 1px solid $border-color;
+  border-bottom: $border;
   font-weight: $light;
 }
 

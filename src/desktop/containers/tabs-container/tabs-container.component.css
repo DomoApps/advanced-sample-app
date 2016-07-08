@@ -2,7 +2,7 @@
 
 .sidebar {
   width: 49px;
-  border-right: 1px solid $border-color;
+  border-right: $border;
   background-color: $light-bar-color;
   padding-top: 3px;
 }
