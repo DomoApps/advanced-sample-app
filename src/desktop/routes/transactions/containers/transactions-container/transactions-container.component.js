@@ -43,7 +43,7 @@ module.exports = ngModule => {
         text: 'Transactions',
         summary: null,
         chart: null,
-        color: $mdColors.getThemeColor('default-domoWarn-700')
+        color: $mdColors.getThemeColor('default-domoWarn-600')
       }];
     ctrl.activePillData = ctrl.pillData[0];
 
