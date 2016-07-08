@@ -1,3 +1,6 @@
+// const Query = require('@domoinc/query');
+// const domo = require('ryuu.js');
+
 const sampleProducts = require('./sample-products.json');
 
 /**
@@ -42,6 +45,8 @@ module.exports = ngModule => {
         });
       }, 1000);
       return _productsPromises[category];
+      // query for using domo.get in production:
+      //_productsPromises[category] = domo.get((new Query()).select(['category', 'name', 'price', 'inStock']).query('products')).then(products => {
     }
 
     /**
