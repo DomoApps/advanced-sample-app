@@ -1,32 +1,25 @@
-<div da-loading-mask="{{ $ctrl.loading }}" class="transactions-info" style="height: 100%;">
-  <div class="header-bar">
-    <h2>How Much Are We Selling?</h2>
-  </div>
-  <div ng-hide="$ctrl.loading" class="transactions-container">
-    <div class="pill-container">
-      <div class="transactions-filters">
-        <strong>Show data for each </strong>
-        <div db-dropdown items="$ctrl.granularityDropdownItems" on-item-selected="$ctrl.granularityDropdownSelect(item)" label-attribute="name" style="display: inline-block;">
-          <db-dropdown-button>{{ $ctrl.granularityDropdownSelectedItem.name }}</db-dropdown-button>
-          <db-dropdown-basic-list></db-dropdown-basic-list>
-        </div>
-        <strong class="padding-left-medium">Show data for </strong>
-        <div db-dropdown items="$ctrl.dateRangeDropdownItems" on-item-selected="$ctrl.dateRangeDropdownSelect(item)" label-attribute="name" style="display: inline-block;">
-          <db-dropdown-button>{{ $ctrl.dateRangeDropdownSelectedItem.name }}</db-dropdown-button>
-          <db-dropdown-basic-list></db-dropdown-basic-list>
-        </div>
-      </div>
-      <div ng-hide="$ctrl.dateRangeDropdownSelectedItem.value !== 'custom'" class="transactions-filters">
-        <date-range-picker
-          min-date="$ctrl.earliestTransaction"
-          max-date="$ctrl.latestTransaction"
-          on-start-datepicker-change="$ctrl.onStartDatepickerChange(newDate)"
-          on-end-datepicker-change="$ctrl.onEndDatepickerChange(newDate)">
-        </date-range-picker>
-      </div>
-      <pillbox-container total-income="$ctrl.totalIncome" products-sold="$ctrl.productsSold" transaction-count="$ctrl.transactionCount" income-chart-data="$ctrl.incomeLineChartData" products-chart-data="$ctrl.productsSoldLineChartData" transaction-chart-data="$ctrl.transactionCountLineChartData" on-pill-click="$ctrl.displayLineChart(pill)"></pillbox-container>
-    </div>
-    <line-chart id="vis" chart-data="$ctrl.lineChartData" d3-id="'#vis'">
+<div layout="column" flex class="loading-container">
+  <loading-mask loading="$ctrl.loading"></loading-mask>
+  <toolbar toolbar-text="How Much Are We Selling?" flex="none" heading-width="30">
+    <transaction-tools
+        on-granularity-dropdown-select="$ctrl.granularityDropdownSelect(value)"
+        on-date-range-dropdown-select="$ctrl.dateRangeDropdownSelect(value)"
+        layout="row"
+        flex></transaction-tools>
+  </toolbar>
+  <div class="transactions-container" flex layout="row">
+    <pills-container
+        flex
+        layout="column"
+        pill-data="$ctrl.pillData"
+        on-pill-click="$ctrl.displayLineChart(pill)">
+    </pills-container>
+    <line-chart
+        flex
+        layout="row"
+        id="vis"
+        chart-data="$ctrl.activePillData.chart"
+        line-color="$ctrl.activePillData.color">
     </line-chart>
   </div>
 </div>

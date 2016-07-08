@@ -1,5 +1,3 @@
-require('domo-bits');
-require('da-bits');
 require('angular-material');
 require('./desktop.css');
 
@@ -11,8 +9,6 @@ const ngDependencies = [
   'ngAnimate',
   require('../common').name,
   // Add additional external Angular dependencies here
-  'domobits',
-  'dabits',
   'ngMaterial'
 ];
 

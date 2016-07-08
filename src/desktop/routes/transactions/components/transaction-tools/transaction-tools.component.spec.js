@@ -1,10 +1,10 @@
 module.exports = ngModule => {
-  describe('component:dateRangePicker', () => {
+  describe('component:transactionTools', () => {
     let scope;
     let $componentController;
 
     function createController(bindings = {}) {
-      const $ctrl = $componentController('dateRangePicker', { $scope: scope }, bindings);
+      const $ctrl = $componentController('transactionTools', { $scope: scope }, bindings);
       if ($ctrl.$onInit) $ctrl.$onInit();
       return $ctrl;
     }

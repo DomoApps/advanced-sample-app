@@ -8,48 +8,71 @@ module.exports = ngModule => {
     controller: pillCtrl,
     bindings: {
       // Inputs should use < and @ bindings.
-      d3Id: '<',
       chartData: '<',
       pillTitle: '<',
-      pillCaption: '<'
+      pillCaption: '<',
+      pillColor: '<'
       // Outputs should use & bindings.
     }
   });
 
-  function pillCtrl() {
+  function pillCtrl($element) {
     const ctrl = this;
     let _pill = undefined;
     let _circle = undefined;
 
+    const _centerOffset = '.35em'; // y offset to center text in pill
+    const _textSizes = {
+      small: '12',
+      large: '23'
+    };
+    const _pillWidth = 480;
+    const _pillHeight = 121;
+
     ctrl.$onInit = $onInit;
+    ctrl.$postLink = $postLink;
     ctrl.$onChanges = $onChanges;
+    ctrl.$onDestroy = $onDestroy;
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
-      _pill = d3.select(ctrl.d3Id + ' svg').insert('g')
+    }
+
+    function $postLink() {
+      _pill = d3.select($element.children()[0]).insert('g')
         .chart('CAIconTrendsWithText')
         .c({
-          width: 317,
-          height: 121
+          width: _pillWidth,
+          height: _pillHeight,
+          generalFillBadColor: ctrl.pillColor,
+          generalFillGoodColor: ctrl.pillColor,
+          generalFillNeutralColor: ctrl.pillColor,
+          generalStrokeBadColor: ctrl.pillColor,
+          generalStrokeGoodColor: ctrl.pillColor,
+          generalStrokeNeutralColor: ctrl.pillColor
         });
       _pill.draw(ctrl.chartData);
-      _circle = d3.select(ctrl.d3Id).select(' .iconCircle').node();
+      _circle = d3.select($element.children()[0]).select(' .iconCircle').node();
 
       d3.select(_circle.parentNode)
         .insert('g', () => { return _circle; })
         .append(() => { return _circle; });
+
+
+      const circleBBox = _circle.getBBox();
+      const xloc = circleBBox.x + (circleBBox.width / 2);
+      const yloc = circleBBox.y + (circleBBox.height / 2);
       ['small', 'large'].forEach(textType => {
-        const circleBBox = _circle.getBBox();
-        const fontSize = (textType === 'small' ? '12' : '23');
-        const xloc = circleBBox.x + (circleBBox.width / 2);
-        const yloc = circleBBox.y + ((circleBBox.height / 3) * (textType === 'small' ? 2 : 1));
+        const fontSize = (textType === 'small' ? _textSizes.small : _textSizes.large);
+        const alignemtnBaseline = (textType === 'small' ? 'hanging' : 'alphabetic');
         d3.select(_circle.parentNode)
           .append('text')
           .attr('class', 'text-' + textType)
-          .attr('transform', 'translate(' + xloc + ',' + yloc + ')')
+          .attr('transform', 'translate(' + xloc + ',' + (textType === 'small' ? yloc : yloc - 10) + ')') // align large text a little higher
           .attr('text-anchor', 'middle')
-          .attr('dy', '.35em')
+          .attr('alignment-baseline', alignemtnBaseline)
+          .attr('dy', _centerOffset)
           .attr('font-size', fontSize);
       });
       _changeText(_circle, ctrl.pillTitle, ctrl.pillCaption);
@@ -67,6 +90,11 @@ module.exports = ngModule => {
       }
     }
 
+    function $onDestroy() {
+      // free up memory
+      _pill = d3.select($element.children()[0]).remove();
+    }
+
     function _changeText(circle, pillTitle, pillCaption) {
       d3.select(circle.parentNode).select('.text-large').text(pillTitle);
       d3.select(circle.parentNode).select('.text-small').text(pillCaption);
@@ -74,7 +102,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  pillCtrl.$inject = [];
+  pillCtrl.$inject = ['$element'];
 
   if (ON_TEST) {
     require('./pill.component.spec.js')(ngModule);

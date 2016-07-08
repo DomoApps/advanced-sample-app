@@ -1,0 +1,13 @@
+<div class="pills" layout="column" flex>
+  <pill ng-repeat="(index, pill) in $ctrl.pillData"
+      chart-data="pill.chart"
+      pill-title="pill.summary"
+      pill-caption="pill.text"
+      pill-color="pill.color"
+      ng-click="$ctrl.switchPills(index)"
+      ng-class="{ active: $ctrl.activePill === index }"
+      flex
+      layout="column"
+      layout-align="center">
+  </pill>
+</div>

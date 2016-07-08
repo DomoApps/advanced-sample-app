@@ -1,10 +1,10 @@
 module.exports = ngModule => {
-  describe('component:pillboxContainer', () => {
+  describe('component:loadingMask', () => {
     let scope;
     let $componentController;
 
     function createController(bindings = {}) {
-      const $ctrl = $componentController('pillboxContainer', { $scope: scope }, bindings);
+      const $ctrl = $componentController('loadingMask', { $scope: scope }, bindings);
       if ($ctrl.$onInit) $ctrl.$onInit();
       return $ctrl;
     }

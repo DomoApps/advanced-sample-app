@@ -9,35 +9,47 @@ module.exports = ngModule => {
     bindings: {
       // Inputs should use < and @ bindings.
       chartData: '<',
-      d3Id: '<'
+      lineColor: '<'
       // Outputs should use & bindings.
     }
   });
 
-  function lineChartCtrl() {
+  function lineChartCtrl($element) {
     const ctrl = this;
     let _chart = undefined;
+    const _svgHeight = 650;
+    const _svgWidth = 528;
+    const _lineChartHeight = 620;
+    const _lineChartWidth = 478;
+    // the chart's axes are by default larger than the svg element
+    const _translateX = 25;
+    const _translateY = 5;
 
     ctrl.$onInit = $onInit;
+    ctrl.$postLink = $postLink;
     ctrl.$onChanges = $onChanges;
+    ctrl.$onDestroy = $onDestroy;
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
+    }
 
-      _chart = d3.select(ctrl.d3Id).insert('svg')
-        .attr('height', 650)
-        .attr('width', 517.5)
+    function $postLink() {
+      _chart = d3.select($element.children()[0])
+        .attr('height', _svgHeight)
+        .attr('width', _svgWidth)
         .append('g')
-        .attr('transform', 'translate(25,50)')
+        .attr('transform', 'translate(' + _translateX + ',' + _translateY + ')')
         .chart('MultiLineChart')
         .c({
-          height: 500,
-          width: 467,
-          showGradients: { name: 'Hide', value: false },
+          height: _lineChartHeight,
+          width: _lineChartWidth,
+          strokeWidth: 3,
           xAddAxis: { name: 'Show', value: true },
           xAddGridlines: { name: 'Show', value: true },
-          yAddZeroline: { name: 'Hide', value: false }
+          yAddZeroline: { name: 'Hide', value: false },
+          singleColor: ctrl.lineColor
         }).a('X Axis', line => {
           // override default accessor, it doesn't accept "quarter" values (ex "2015 Q1")
           return line[0];
@@ -46,14 +58,21 @@ module.exports = ngModule => {
     }
 
     function $onChanges(changes) {
-      if (typeof changes.chartData !== 'undefined' && typeof _chart !== 'undefined') {
+      if (typeof changes.chartData !== 'undefined' || typeof changes.lineColor !== 'undefined') {
+        if (typeof changes.lineColor !== 'undefined') {
+          _chart.c({ singleColor: ctrl.lineColor });
+        }
         _chart.draw(ctrl.chartData);
       }
+    }
+
+    function $onDestroy() {
+      _chart = d3.select($element.children()[0]).remove();
     }
   }
 
   // inject dependencies here
-  lineChartCtrl.$inject = [];
+  lineChartCtrl.$inject = ['$element'];
 
   if (ON_TEST) {
     require('./line-chart.component.spec.js')(ngModule);

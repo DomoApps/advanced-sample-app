@@ -1,0 +1,37 @@
+.loading-container {
+  position: relative; /* to position loading mask properly */
+}
+
+loading-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 999;
+  background-color: rgba(85, 85, 85, 0.2);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 250ms ease-in-out, visibility 0s linear 250ms;
+}
+
+loading-mask.visible {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
+  pointer-events: all;
+}
+
+.loading-square {
+  background: white;
+  border-radius: 3px;
+  box-shadow: 0 0 0 4px rgba(85, 85, 85, 0.2); /* border */
+  padding: 20px;
+  padding-bottom: 15px;
+  >.loading-spinner {
+    margin: 0 auto;
+    margin-bottom: 10px;
+    height: 48px;
+    width: 48px;
+  }
+}

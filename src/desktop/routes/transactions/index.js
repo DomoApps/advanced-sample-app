@@ -11,8 +11,7 @@ ngModule.config(transactionsConfig);
 function transactionsConfig($stateProvider) {
   $stateProvider.state('transactions', {
     url: '/transactions',
-    template: '<transactions-container category-filter="$ctrl.categoryFilters"></transactions-container>',
-    order: 2
+    template: '<transactions-container category-filter="$ctrl.categoryFilters"></transactions-container>'
   });
 }
 

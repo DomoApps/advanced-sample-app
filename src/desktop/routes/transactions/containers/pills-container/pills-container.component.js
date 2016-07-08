@@ -1,28 +1,23 @@
 module.exports = ngModule => {
-  require('./pillbox-container.component.css');
+  require('./pills-container.component.css');
 
-  ngModule.component('pillboxContainer', {
-    template: require('./pillbox-container.component.html'),
-    controller: pillboxContainerCtrl,
+  ngModule.component('pillsContainer', {
+    template: require('./pills-container.component.html'),
+    controller: pillsContainerCtrl,
     bindings: {
       // Inputs should use < and @ bindings.
-      totalIncome: '<',
-      productsSold: '<',
-      transactionCount: '<',
-      incomeChartData: '<',
-      productsChartData: '<',
-      transactionChartData: '<',
+      pillData: '<',
       // Outputs should use & bindings.
       onPillClick: '&'
     }
   });
 
-  function pillboxContainerCtrl() {
+  function pillsContainerCtrl() {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
     ctrl.switchPills = switchPills;
-    ctrl.activePill = 'income';
+    ctrl.activePill = 0;
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
@@ -36,9 +31,9 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  pillboxContainerCtrl.$inject = [];
+  pillsContainerCtrl.$inject = [];
 
   if (ON_TEST) {
-    require('./pillbox-container.component.spec.js')(ngModule);
+    require('./pills-container.component.spec.js')(ngModule);
   }
 };
