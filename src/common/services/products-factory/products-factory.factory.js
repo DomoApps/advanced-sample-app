@@ -1,3 +1,25 @@
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!   Note about datasources !!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//
+// Normally in a production app one would
+// gather data from a 'datasource'. This
+// data is gathered through the Domo client
+// included by adding `domo = require('ryuu.js');`
+// to the top of your file.
+//
+// For our purposes we have left sample code
+// using the Domo client to query data.
+// This code is dispersed in comments or at
+// the bottom of relevant methods.
+//
+// More information on the Domo client can
+// be found at https://developer.domo.com
+
+
+// const Query = require('@domoinc/query');
+// const domo = require('ryuu.js');
+
 const sampleProducts = require('./sample-products.json');
 
 /**
@@ -42,6 +64,8 @@ module.exports = ngModule => {
         });
       }, 1000);
       return _productsPromises[category];
+      // query for using domo.get in production:
+      //_productsPromises[category] = domo.get((new Query()).select(['category', 'name', 'price', 'inStock']).query('products')).then(products => {
     }
 
     /**
