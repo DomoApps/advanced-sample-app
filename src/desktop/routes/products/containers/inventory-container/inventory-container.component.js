@@ -34,6 +34,10 @@ module.exports = ngModule => {
 
     globalFiltersFactory.onFilterChange(_handleGlobalCategoryChange);
 
+    /**
+     * refilters the products based on search text
+     * @param  {string} searchText
+     */
     function onSearchbarUpdate(searchText) {
       ctrl.searchText = searchText.toLowerCase();
       _filterProducts();
@@ -65,6 +69,10 @@ module.exports = ngModule => {
       });
     }
 
+    /**
+     * retrieves metrics for a certain category
+     * @param  {string} category category to filter by
+     */
     function _getToolbarItems(category) {
       ctrl.uniqueProducts = undefined;
       productsFactory.getNumUniqueProducts(category).then(numUniqueProducts => {
@@ -88,6 +96,7 @@ module.exports = ngModule => {
       }
     }
 
+    // will filter products by both product name and category
     function _filterProducts() {
       ctrl.filteredProducts = _products.filter(product => {
         // either category or name can match
@@ -104,8 +113,8 @@ module.exports = ngModule => {
 
     // this function is to be passed down to the search-bar
     // it's up here so both filtering functions are next to each other
-    // it's separate from filterProductsAndCategories so we don't have
-    // to run a bunch of array.maps
+    // it's separate from _filterProducts so we don't have to transform arrays
+    // around to fit a single interface
     function filterByName(searchText, items) {
       const lowerCaseSearchText = searchText.toLowerCase();
       if (lowerCaseSearchText !== '') {

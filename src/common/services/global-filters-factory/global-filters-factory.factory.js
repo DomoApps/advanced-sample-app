@@ -1,4 +1,7 @@
 module.exports = ngModule => {
+  /**
+   * a simple wrapper for da-events to facilitate global filter changes
+   */
   function globalFiltersFactory(daEvents, SAMPLE_APP) {
     // Private variables
     let _filter = SAMPLE_APP.DEFAULT_CATEGORY;
@@ -13,6 +16,10 @@ module.exports = ngModule => {
     return service;
 
     //// Functions ////
+    /**
+     * will set the current filter and trigger all callbacks with the new _filter
+     * @param {string} newFilter the new filter text to use
+     */
     function setFilter(newFilter) {
       if ((typeof newFilter === 'string') && (newFilter !== _filter)) {
         _filter = newFilter;
@@ -21,10 +28,17 @@ module.exports = ngModule => {
       }
     }
 
+    /**
+     * @return {string} the current filter
+     */
     function getFilter() {
       return _filter;
     }
 
+    /**
+     * registers a callback that will be called every time the filter is changed
+     * @param  {Function} callback a function that is passed (event object, newFilter)
+     */
     function onFilterChange(callback) {
       daEvents.on(SAMPLE_APP.E_CAT_FILTER_CHANGE, callback);
     }

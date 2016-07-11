@@ -1,9 +1,14 @@
 module.exports = ngModule => {
+  /**
+   * summary filter will summarize numbers. 5000 => 5K, 10000000 => 10M
+   * @param  {bool/undefined} optFractional if set to true, will assume that quantities are not discrete
+   *                                        i.e., 'dollars' should set fractional to true, while
+   *                                        'products' should not
+   * @param  {number/undefined} optPrecision  floating point precision of returned number
+   * @return {string}
+   */
   function summary() {
     const units = ['K', 'M', 'B', 'T'];
-    // fractional numbers: if set to true, will assume that quantities
-    // are not discrete. i.e., dollars should set fractional to true
-    // while products should not
     return (input, optFractional, optPrecision) => {
       const fractional = (typeof optFractional !== 'undefined' ? optFractional : false);
       const precision = (typeof optPrecision !== 'undefined' ? optPrecision : 0);

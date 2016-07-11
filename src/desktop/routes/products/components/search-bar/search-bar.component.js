@@ -26,8 +26,14 @@ module.exports = ngModule => {
       // Use this for initialization code.
     }
 
+    /**
+     * called when a new item is selected in the autocomplete search bar
+     * notifies the component's parent of the search text change
+     */
     function onSelectedItemChange() {
-      // checking to make sure user hasn't cleared search bar
+      // this is called even if the user has just cleared the
+      // search bar
+      // check to make sure user hasn't just cleared the search bar
       if (typeof ctrl.selectedItem !== 'undefined') {
         ctrl.onSearchTextUpdate({ searchText: ctrl.searchText });
       }

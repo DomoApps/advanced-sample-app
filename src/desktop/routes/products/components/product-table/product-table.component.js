@@ -56,6 +56,12 @@ module.exports = ngModule => {
       // Use this for initialization code.
     }
 
+    /**
+     * function called on click. Checks to see if we have already sorted by this
+     * property, if we have it will reverse the sort order. If not, it will
+     * initiate sorting by that property
+     * @param  {string} property property to sort by (i.e. category, name, price...)
+     */
     function orderBy(property) {
       ctrl.reverseOrder = (ctrl.orderByProperty === property) ? !ctrl.reverseOrder : false;
       ctrl.orderByProperty = property;
