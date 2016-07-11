@@ -2,7 +2,7 @@
 # Domo Apps Starter Kit
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
-![App Thumbnail](domo/thumbnail.png)
+![App Thumbnail](domo/thumbnail.svg)
 
 ## Getting Started
 1. clone this repo
