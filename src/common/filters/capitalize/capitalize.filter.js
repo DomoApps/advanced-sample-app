@@ -1,4 +1,8 @@
 module.exports = ngModule => {
+  /**
+   * filter to capitalize individual words in a sentence
+   * @return {string}
+   */
   function capitalize() {
     return (value) => {
       if (typeof value !== 'string') {
