@@ -27,7 +27,6 @@ module.exports = ngModule => {
       // Use this for initialization code.
     }
 
-    // isn't there a better way to do this?!
     function searchTextUpdate(searchText) {
       ctrl.onSearchTextUpdate({ searchText });
     }

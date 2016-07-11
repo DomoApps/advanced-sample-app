@@ -1,4 +1,7 @@
 module.exports = ngModule => {
+  /**
+   * a simple wrapper for da-events to facilitate global filter changes
+   */
   function globalFiltersFactory(daEvents, SAMPLE_APP) {
     // Private variables
     let _filter = SAMPLE_APP.DEFAULT_CATEGORY;

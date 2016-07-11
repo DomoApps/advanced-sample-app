@@ -1,3 +1,8 @@
+/**
+ * da-events is included in starter-kit
+ * it's a simple event listener that can register and trigger callbacks
+ * based on events that are triggered through its methods
+ */
 module.exports = ngModule => {
   function daEvents($rootScope, $q, $log, SAMPLE_APP) {
     // central place for documenting app events

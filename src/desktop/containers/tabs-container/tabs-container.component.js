@@ -28,6 +28,7 @@ module.exports = ngModule => {
     ctrl.categoryFilter = '';
 
     productsFactory.getProductCategories().then(categories => {
+      // add our default category to the list of categories
       categories.unshift(SAMPLE_APP.DEFAULT_CATEGORY);
       ctrl.categoryFilters = categories;
       ctrl.categoryFilter = ctrl.categoryFilters[0];

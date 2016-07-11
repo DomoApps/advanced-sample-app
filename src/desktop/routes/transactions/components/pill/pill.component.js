@@ -48,6 +48,7 @@ module.exports = ngModule => {
         width: _pillWidth,
         height: _pillHeight
       };
+      // merge color options object with chartOptions
       Object.assign(chartOptions, _getColors());
       _pill = d3.select($element.children()[0]).insert('g')
         .chart('CAIconTrendsWithText')
@@ -55,15 +56,17 @@ module.exports = ngModule => {
       _pill.draw(ctrl.chartData);
       _circle = d3.select($element.children()[0]).select(' .iconCircle').node();
 
+      // create a <g> parent of _circle
       d3.select(_circle.parentNode)
         .insert('g', () => { return _circle; })
         .append(() => { return _circle; });
-
 
       const circleBBox = _circle.getBBox();
       const xloc = circleBBox.x + (circleBBox.width / 2);
       const yloc = circleBBox.y + (circleBBox.height / 2);
       ['small', 'large'].forEach(textType => {
+        // add text inside the parent <g> and size them
+        // to fit inside the circle
         const fontSize = (textType === 'small' ? _textSizes.small : _textSizes.large);
         const alignemtnBaseline = (textType === 'small' ? 'hanging' : 'alphabetic');
         d3.select(_circle.parentNode)

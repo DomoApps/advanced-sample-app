@@ -40,6 +40,7 @@ module.exports = ngModule => {
         .attr('height', _svgHeight)
         .attr('width', _svgWidth)
         .append('g')
+        // offset the chart so we can see the axes
         .attr('transform', 'translate(' + _translateX + ',' + _translateY + ')')
         .chart('MultiLineChart')
         .c({

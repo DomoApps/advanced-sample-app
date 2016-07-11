@@ -50,9 +50,9 @@ module.exports = ngModule => {
       * @return {promise} Promise returning an array of format [{category, name, price, quantity}, {...}, ...]
       */
     function getProducts(optCategory) {
-      // 3 possiblities: never before requested, in progress, and already received
       const category = typeof optCategory === 'undefined' ? SAMPLE_APP.DEFAULT_CATEGORY : optCategory;
 
+      // check to make sure this request hasn't already been filled
       if (typeof _productsPromises[category] !== 'undefined') {
         return _productsPromises[category];
       }
