@@ -9,7 +9,10 @@ module.exports = ngModule => {
       return $ctrl;
     }
 
-    beforeEach(window.module(ngModule.name));
+    beforeEach(() => {
+      window.module('ui.router');
+      window.module(ngModule.name);
+    });
 
     beforeEach(inject(($rootScope, _$componentController_) => {
       scope = $rootScope.$new();

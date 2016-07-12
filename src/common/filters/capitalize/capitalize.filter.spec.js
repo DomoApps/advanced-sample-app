@@ -1,15 +1,15 @@
 module.exports = ngModule => {
   describe('Filter:capitalize', () => {
-    let capitalize;
+    let $injector;
 
     beforeEach(window.module(ngModule.name));
 
-    beforeEach(inject(_capitalize_ => {
-      capitalize = _capitalize_;
+    beforeEach(inject((_$injector_) => {
+      $injector = _$injector_;
     }));
 
     it('should test properly', () => {
-      expect(capitalize).to.not.equal(undefined);
+      expect($injector.has('capitalizeFilter')).to.not.equal(false);
     });
   });
 };

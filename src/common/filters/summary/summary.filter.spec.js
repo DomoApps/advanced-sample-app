@@ -1,15 +1,15 @@
 module.exports = ngModule => {
   describe('Filter:summary', () => {
-    let summary;
+    let $injector;
 
     beforeEach(window.module(ngModule.name));
 
-    beforeEach(inject(_summary_ => {
-      summary = _summary_;
+    beforeEach(inject((_$injector_) => {
+      $injector = _$injector_;
     }));
 
     it('should test properly', () => {
-      expect(summary).to.not.equal(undefined);
+      expect($injector.has('summaryFilter')).to.not.equal(false);
     });
   });
 };
