@@ -1,15 +1,15 @@
 module.exports = ngModule => {
   describe('Filter:default', () => {
-    let default;
+    let $injector;
 
     beforeEach(window.module(ngModule.name));
 
-    beforeEach(inject(_default_ => {
-      default = _default_;
+    beforeEach(inject((_$injector_) => {
+      $injector = _$injector_;
     }));
 
     it('should test properly', () => {
-      expect(default).to.not.equal(undefined);
+      expect($injector.has('defaultFilter')).to.not.equal(false);
     });
   });
 };

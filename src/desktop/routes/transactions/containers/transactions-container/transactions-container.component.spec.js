@@ -9,7 +9,22 @@ module.exports = ngModule => {
       return $ctrl;
     }
 
-    beforeEach(window.module(ngModule.name));
+    beforeEach(() => {
+      window.module('ui.router');
+      window.module(ngModule.name);
+      window.module(($provide) => {
+        $provide.factory('globalFiltersFactory', () => ({ getFilter: () => {}, onFilterChange: () => {} }));
+      });
+      window.module(($provide) => {
+        $provide.factory('transactionsAnalyticsFactory', () => ({}));
+      });
+      window.module(($provide) => {
+        $provide.factory('$mdColors', () => ({ getThemeColor: () => {} }));
+      });
+      window.module(($provide) => {
+        $provide.factory('summaryFilter', () => ({}));
+      });
+    });
 
     beforeEach(inject(($rootScope, _$componentController_) => {
       scope = $rootScope.$new();

@@ -28,7 +28,7 @@ const sampleTransactions = require('./sample-transactions.json');
 
 
 module.exports = ngModule => {
-  function transactionsAnalyticsFactory($q, _, SAMPLE_APP) {
+  function transactionsAnalyticsFactory($q, SAMPLE_APP) {
     // Private variables
     // these variables are for domo.get with ryuu.js
     /*
@@ -226,7 +226,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  transactionsAnalyticsFactory.$inject = ['$q', '_', 'SAMPLE_APP'];
+  transactionsAnalyticsFactory.$inject = ['$q', 'SAMPLE_APP'];
 
   ngModule.factory('transactionsAnalyticsFactory', transactionsAnalyticsFactory);
 

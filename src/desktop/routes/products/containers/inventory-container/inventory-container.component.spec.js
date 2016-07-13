@@ -9,7 +9,19 @@ module.exports = ngModule => {
       return $ctrl;
     }
 
-    beforeEach(window.module(ngModule.name));
+    beforeEach(() => {
+      window.module('ui.router');
+      window.module(ngModule.name);
+      window.module(($provide) => {
+        $provide.factory('productsFactory', () => ({ getNumUniqueProducts: () => new Promise(resolve => resolve()), getTotalQuantity: () => new Promise(resolve => resolve()), getInventoryValue: () => new Promise(resolve => resolve()), getProducts: () => new Promise(resolve => resolve()), getProductCategories: () => new Promise(resolve => resolve()) }));
+      });
+      window.module(($provide) => {
+        $provide.factory('globalFiltersFactory', () => ({ getFilter: () => {}, onFilterChange: () => {} }));
+      });
+      window.module(($provide) => {
+        $provide.factory('SAMPLE_APP', () => ({}));
+      });
+    });
 
     beforeEach(inject(($rootScope, _$componentController_) => {
       scope = $rootScope.$new();

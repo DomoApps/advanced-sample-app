@@ -4,9 +4,14 @@ module.exports = ngModule => {
 
     beforeEach(window.module(ngModule.name));
 
-    beforeEach(inject(_transactionsAnalyticsFactory => {
-      transactionsAnalyticsFactory = _transactionsAnalyticsFactory;
-    }));
+    beforeEach(() => {
+      window.module(($provide) => {
+        $provide.factory('SAMPLE_APP', () => ({}));
+      });
+      inject(_transactionsAnalyticsFactory_ => {
+        transactionsAnalyticsFactory = _transactionsAnalyticsFactory_;
+      });
+    });
 
     it('should test properly', () => {
       expect(transactionsAnalyticsFactory).to.not.equal(undefined);

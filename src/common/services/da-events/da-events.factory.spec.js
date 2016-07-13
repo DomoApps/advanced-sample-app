@@ -8,9 +8,15 @@ module.exports = ngModule => {
 
     beforeEach(window.module(ngModule.name));
 
-    beforeEach(inject(_daEvents_ => {
-      daEvents = _daEvents_;
-    }));
+    beforeEach(() => {
+      window.module(($provide) => {
+        $provide.factory('SAMPLE_APP', () => ({}));
+      });
+
+      inject(_daEvents_ => {
+        daEvents = _daEvents_;
+      });
+    });
 
     it('should exist emit registered events', () => {
       const spy = sinon.spy();
