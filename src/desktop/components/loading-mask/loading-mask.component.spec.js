@@ -12,7 +12,7 @@ module.exports = ngModule => {
     beforeEach(() => {
       window.module(ngModule.name);
       window.module(($provide) => {
-        $provide.factory('$element', () => ({}));
+        $provide.factory('$element', () => ({ addClass: () => {}, removeClass: () => {} }));
       });
     });
 
