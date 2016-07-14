@@ -14,7 +14,7 @@ module.exports = ngModule => {
     }
   });
 
-  function lineChartCtrl($element) {
+  function lineChartCtrl($element, $timeout) {
     const ctrl = this;
     let _chart = undefined;
     const _svgHeight = 650;
@@ -55,7 +55,17 @@ module.exports = ngModule => {
           // override default accessor, it doesn't accept "quarter" values (ex "2015 Q1")
           return line[0];
         });
-      _chart.draw(ctrl.chartData);
+      /**
+       * wrap chart drawing in a timeout
+       *
+       * for some reason the DOM is not painted when $postLink is run, which messes with d3
+       *
+       * by running a timeout(fn, 0) we add our _chart.draw to the end of the event queue,
+       * after the first layout paint
+       */
+      $timeout(() => {
+        _chart.draw(ctrl.chartData);
+      }, 0, false);
     }
 
     function $onChanges(changes) {
@@ -73,7 +83,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  lineChartCtrl.$inject = ['$element'];
+  lineChartCtrl.$inject = ['$element', '$timeout'];
 
   if (ON_TEST) {
     require('./line-chart.component.spec.js')(ngModule);

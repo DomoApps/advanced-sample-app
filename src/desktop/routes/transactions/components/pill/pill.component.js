@@ -18,7 +18,7 @@ module.exports = ngModule => {
     }
   });
 
-  function pillCtrl($element) {
+  function pillCtrl($element, $timeout) {
     const ctrl = this;
     let _pill = undefined;
     let _circle = undefined;
@@ -53,32 +53,44 @@ module.exports = ngModule => {
       _pill = d3.select($element.children()[0]).insert('g')
         .chart('CAIconTrendsWithText')
         .c(chartOptions);
-      _pill.draw(ctrl.chartData);
-      _circle = d3.select($element.children()[0]).select(' .iconCircle').node();
 
-      // create a <g> parent of _circle
-      d3.select(_circle.parentNode)
-        .insert('g', () => { return _circle; })
-        .append(() => { return _circle; });
+      /**
+       * wrap chart drawing in a timeout
+       *
+       * for some reason the DOM is not painted when $postLink is run, which messes with
+       * `getBBox()` and d3 in general
+       *
+       * by running a timeout(fn, 0) we add our _chart.draw to the end of the event queue,
+       * after the first layout paint
+       */
+      $timeout(() => {
+        _pill.draw(ctrl.chartData);
+        _circle = d3.select($element.children()[0]).select(' .iconCircle').node();
 
-      const circleBBox = _circle.getBBox();
-      const xloc = circleBBox.x + (circleBBox.width / 2);
-      const yloc = circleBBox.y + (circleBBox.height / 2);
-      ['small', 'large'].forEach(textType => {
-        // add text inside the parent <g> and size them
-        // to fit inside the circle
-        const fontSize = (textType === 'small' ? _textSizes.small : _textSizes.large);
-        const alignemtnBaseline = (textType === 'small' ? 'hanging' : 'alphabetic');
+        // create a <g> parent of _circle
         d3.select(_circle.parentNode)
-          .append('text')
-          .attr('class', 'text-' + textType)
-          .attr('transform', 'translate(' + xloc + ',' + (textType === 'small' ? yloc : yloc - 10) + ')') // align large text a little higher
-          .attr('text-anchor', 'middle')
-          .attr('alignment-baseline', alignemtnBaseline)
-          .attr('dy', _centerOffset)
-          .attr('font-size', fontSize);
-      });
-      _changeText(_circle, ctrl.pillTitle, ctrl.pillCaption);
+          .insert('g', () => { return _circle; })
+          .append(() => { return _circle; });
+
+        const circleBBox = _circle.getBBox();
+        const xloc = circleBBox.x + (circleBBox.width / 2);
+        const yloc = circleBBox.y + (circleBBox.height / 2);
+        ['small', 'large'].forEach(textType => {
+          // add text inside the parent <g> and size them
+          // to fit inside the circle
+          const fontSize = (textType === 'small' ? _textSizes.small : _textSizes.large);
+          const alignemtnBaseline = (textType === 'small' ? 'hanging' : 'alphabetic');
+          d3.select(_circle.parentNode)
+            .append('text')
+            .attr('class', 'text-' + textType)
+            .attr('transform', 'translate(' + xloc + ',' + (textType === 'small' ? yloc : yloc - 10) + ')') // align large text a little higher
+            .attr('text-anchor', 'middle')
+            .attr('alignment-baseline', alignemtnBaseline)
+            .attr('dy', _centerOffset)
+            .attr('font-size', fontSize);
+        });
+        _changeText(_circle, ctrl.pillTitle, ctrl.pillCaption);
+      }, 0, false);
     }
 
     function $onChanges(changes) {
@@ -134,7 +146,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  pillCtrl.$inject = ['$element'];
+  pillCtrl.$inject = ['$element', '$timeout'];
 
   if (ON_TEST) {
     require('./pill.component.spec.js')(ngModule);
