@@ -28,7 +28,7 @@ const sampleProducts = require('./sample-products.json');
  * @method getProductCategories
  */
 module.exports = ngModule => {
-  function productsFactory(SAMPLE_APP, $q, $timeout) {
+  function productsFactory(SAMPLE_APP, $timeout) {
     // Private variables
     const _productsPromises = {};
     // Public API here
@@ -119,7 +119,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  productsFactory.$inject = ['SAMPLE_APP', '$q', '$timeout'];
+  productsFactory.$inject = ['SAMPLE_APP', '$timeout'];
 
   ngModule.factory('productsFactory', productsFactory);
 
