@@ -1,7 +1,7 @@
 module.exports = ngModule => {
-  // filter that will revert to a 'default' text when a value is undefined
   /**
    * filter that will revert to a 'default' text when a value is undefined
+   *
    * @param {string} def default text
    * @return {string} either the input value or the `def` param
    */
