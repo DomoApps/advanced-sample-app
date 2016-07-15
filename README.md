@@ -5,20 +5,20 @@
 ![App Thumbnail](domo/thumbnail.png)
 
 ## What is the Sample App?
-This app was created to demonstrate how to use the Domo Apps [Starter Kit](https://github.com/DomoApps/starter-kit) and how commonly-requested functionality is implemented in a Domo App
+This app was created to demonstrate how to use the Domo Apps [Starter Kit](https://github.com/DomoApps/starter-kit) and how commonly requested functionality is implemented in a Domo App
 
 Because this app is not attached to an instance of Domo, DataSource requests are mocked in the products and transaction analytics factories. Comments are included to explain how production DataSource requests are made. See the [Domo Developer Guide](https://developer.domo.com/docs/dev-studio/dev-studio-data) for more information on DataSource requests.
 
 ## Getting Started
-1. clone this repo
+1. Clone this repo
     `$ git clone {URL}`
-2. install dependencies `$ npm install`
-3. run local server `$ npm start`
+2. Install dependencies `$ npm install`
+3. Run local server `$ npm start`
 
 ## Uploading to Domo
-1. login to Domo `$ domo login`
-2. publish sample app `$ npm run upload`
-3. update the `{ id: ... }` value in `domo/manifest.json` with your new app id
+1. Login to Domo `$ domo login`
+2. Publish sample app `$ npm run upload`
+3. Update the `{ id: ... }` value in `domo/manifest.json` with your new app id
 
 ## All npm Commands
 - `$ npm start` to run webpack-dev-server
