@@ -10,29 +10,41 @@ module.exports = ngModule => {
     }
   });
 
-  function inventoryContainerCtrl($q, productsFactory, globalFiltersFactory, SAMPLE_APP) {
+  function inventoryContainerCtrl(
+    $q,
+    productsFactory,
+    productTableHeader,
+    globalFiltersFactory,
+    SAMPLE_APP
+  ) {
     const ctrl = this;
     // private
     let _products = [];
     let _categories = [];
 
+    ctrl.$onInit = $onInit;
+
     ctrl.onSearchbarUpdate = onSearchbarUpdate;
     ctrl.filterByName = filterByName;
-    ctrl.filteredProducts = [];
+
     ctrl.filteredCategories = [];
+    ctrl.filteredProducts = [];
+    ctrl.headerInfo = productTableHeader;
+    ctrl.loading = true;
     ctrl.searchBarItems = [];
     ctrl.searchText = '';
-    ctrl.loading = true;
 
-    _getToolbarItems(globalFiltersFactory.getFilter());
-    $q.all([_getProducts(globalFiltersFactory.getFilter()), _getCategories()]).then(() => {
-      ctrl.filteredProducts = _products;
-      _filterCategories(globalFiltersFactory.getFilter());
-      _buildAutocompleteList();
-      ctrl.loading = false;
-    });
+    function $onInit() {
+      _getToolbarItems(globalFiltersFactory.getFilter());
+      $q.all([_getProducts(globalFiltersFactory.getFilter()), _getCategories()]).then(() => {
+        ctrl.filteredProducts = _products;
+        _filterCategories(globalFiltersFactory.getFilter());
+        _buildAutocompleteList();
+        ctrl.loading = false;
+      });
 
-    globalFiltersFactory.onFilterChange(_handleGlobalCategoryChange);
+      globalFiltersFactory.onFilterChange(_handleGlobalCategoryChange);
+    }
 
     /**
      * refilters the products based on search text
@@ -127,7 +139,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  inventoryContainerCtrl.$inject = ['$q', 'productsFactory', 'globalFiltersFactory', 'SAMPLE_APP'];
+  inventoryContainerCtrl.$inject = ['$q', 'productsFactory', 'productTableHeader', 'globalFiltersFactory', 'SAMPLE_APP'];
 
   if (ON_TEST) {
     require('./inventory-container.component.spec.js')(ngModule);
