@@ -1,22 +1,11 @@
 module.exports = ngModule => {
-  // moment library for date formatting
-  // needs to be instantiated with moment().format()
-  const moment = require('moment');
-  moment().format();
-
-  const sampleTransactions = require('./sample-transactions.json');
-
   function devTransactionsAnalyticsFactory($q, SAMPLE_APP) {
-    // Private variables
-    // these variables are for domo.get with ryuu.js
-    /*
-    const _dataset = 'transactions';
-    const _grainMap = {
-      month: 'Month',
-      week: 'Week',
-      quarter: 'Quarter'
-    };
-    */
+    // moment library for date formatting
+    // needs to be instantiated with moment().format()
+    const moment = require('moment');
+    moment().format();
+
+    const sampleTransactions = require('./sample-transactions.json');
 
     // Public API here
     const service = {
@@ -58,24 +47,6 @@ module.exports = ngModule => {
         accumulated.income += currentRow.total;
         return accumulated;
       }, { transactionCount: 0, productsSold: 0, income: 0 }));
-
-      /*
-      let query = (new Query()).select(['category', 'quantity', 'total', 'name', 'date']);
-      query = _applyCategoryFilter(query, categoryFilter);
-      if (typeof dateRangeFilter !== 'undefined') {
-        query = _applyDateRangeFilter(query, dateRangeFilter);
-      }
-      query.groupBy('category', { total: 'sum', quantity: 'sum', name: 'count' });
-      return domo.get(query.query(_dataset)).then(data => {
-        return data.reduce((accumulated, currentRow) => {
-          // domo.get doesn't allow us to create 'virtual' rows yet, so we just reuse the rows we don't need
-          accumulated.transactionCount += currentRow.name;
-          accumulated.productsSold += currentRow.quantity;
-          accumulated.income += currentRow.total;
-          return accumulated;
-        }, { transactionCount: 0, productsSold: 0, income: 0 });
-      });
-      */
     }
 
     /**
@@ -86,7 +57,6 @@ module.exports = ngModule => {
      * @return {array[objects]}                 array of format [{date: string, total: number, quantity: number, category: number}, ...]
      */
     function getTransactionsPerX(categoryFilter, optDateGrain, optDateRange) {
-      // in normal production code we would follow the commented samples below.
       // because this is a sample app we will modify the JSON ourselves
       // readability was chosen over performance
       return $q(resolve => {
@@ -110,22 +80,6 @@ module.exports = ngModule => {
         });
         resolve(transactions);
       });
-
-      /*
-      let query = (new Query()).select(['date', 'total', 'quantity', 'category']);
-      const dateGrain = typeof optDateGrain !== 'undefined' ? optDateGrain : 'month';
-      query = _applyCategoryFilter(query, categoryFilter);
-      if (typeof optDateRange !== 'undefined') {
-        query = _applyDateRangeFilter(query, optDateRange);
-      }
-      query = _applyDateGrainFilter(query, dateGrain);
-      return domo.get(query.query(_dataset)).then(data => {
-        return data.map(row => {
-          row.date = row['Calendar' + _grainMap[dateGrain]];
-          return row;
-        });
-      });
-      */
     }
 
     function _applyDateGrainFilter(query, dateGrain) {
@@ -153,10 +107,6 @@ module.exports = ngModule => {
         accumulated.push(tail, currentRow);
         return accumulated;
       }, []);
-      /*
-      query.dateGrain('date', dateGrain, { category: 'count' });
-      return query;
-      */
     }
 
     function _applyCategoryFilter(query, categoryFilter) {
@@ -166,12 +116,6 @@ module.exports = ngModule => {
         });
       }
       return query;
-      /*
-      if (categoryFilter !== SAMPLE_APP.DEFAULT_CATEGORY) {
-        query.where('category').in([categoryFilter]);
-      }
-      return query;
-      */
     }
 
     function _applyDateRangeFilter(query, dateRangeFilter) {
@@ -189,17 +133,6 @@ module.exports = ngModule => {
         });
       }
       return query;
-      /*
-      if (dateRangeFilter === 'year') {
-        query.previousPeriod('date', 'year');
-      }
-      if (dateRangeFilter === 'quarter') {
-        // this quarter last year
-        query.where('date').gte(moment().subtract(1, 'years').startOf('quarter').toISOString());
-        query.where('date').lte(moment().subtract(1, 'years').endOf('quarter').toISOString());
-      }
-      return query;
-      */
     }
   }
 
