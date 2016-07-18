@@ -30,6 +30,14 @@ Because this app is not attached to an instance of Domo, DataSource requests are
 - `$ npm run upload` to upload new version to domo. aka `domo publish`
 - `$ npm run update-tools` to pull in improvements to the dev tools
 
+## Compatiblity
+#### Tested and working
+- Chrome (OSX)
+- Safari (OSX)
+
+#### Known Issues
+- Windows
+  Sticky table header does not align with table body
 
 ## Technologies
 - [webpack](http://webpack.github.io/)
