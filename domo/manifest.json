@@ -3,23 +3,23 @@
   "mapping": [
     {
       "alias": "products",
-      "dataSetId": "7a1422c7-fb48-4684-9afb-9e3639d377e4",
+      "dataSetId": "8b105d2d-350b-4a52-b539-6a1eb25bfa32",
       "fields": [
         {
           "alias": "category",
-          "columnName": "Product Category"
+          "columnName": "category"
         },
         {
           "alias": "name",
-          "columnName": "Product Name"
+          "columnName": "name"
         },
         {
           "alias": "price",
-          "columnName": "Price"
+          "columnName": "price"
         },
         {
-          "alias": "inStock",
-          "columnName": "In Stock"
+          "alias": "quantity",
+          "columnName": "quantity"
         }
       ]
     },
