@@ -10,8 +10,8 @@
 //
 // For our purposes we have left sample code
 // using the Domo client to query data.
-// This code is dispersed in comments or at
-// the bottom of relevant methods.
+// The code you use can be chosen by changing
+// the value of MOCK_REQUESTS in desktop/index.js
 //
 // More information on the Domo client can
 // be found at https://developer.domo.com
@@ -19,6 +19,9 @@
  * productsService: interface for domo backend
  * @method getProducts
  * @method getProductCategories
+ * @method getInventoryValue
+ * @method getNumUniqueProducts
+ * @method getTotalQuantity
  */
 module.exports = ngModule => {
   function productsFactory(SAMPLE_APP, $injector) {

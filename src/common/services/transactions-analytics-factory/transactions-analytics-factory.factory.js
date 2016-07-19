@@ -10,17 +10,16 @@
 //
 // For our purposes we have left sample code
 // using the Domo client to query data.
-// This code is dispersed in comments or at
-// the bottom of relevant methods.
+// The code you use can be chosen by changing
+// the value of MOCK_REQUESTS in desktop/index.js
 //
 // More information on the Domo client can
 // be found at https://developer.domo.com
-
-
-//const Query = require('@domoinc/query');
-//const domo = require('ryuu.js');
-
-
+/**
+ * transactionAnalyticsFactory
+ * @method getTotals
+ * @method getTransactionsPerX
+ */
 module.exports = ngModule => {
   function transactionsAnalyticsFactory($injector, SAMPLE_APP) {
     if (SAMPLE_APP.MOCK_REQUESTS) {
