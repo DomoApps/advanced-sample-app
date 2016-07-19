@@ -2,8 +2,12 @@
   <loading-mask loading="$ctrl.loading"></loading-mask>
   <toolbar toolbar-text="How Much Are We Selling?" flex="none" heading-width="30">
     <transaction-tools
+        date-range-options="$ctrl.dateRangeOptions"
+        granularity-options="$ctrl.granularityOptions"
         on-granularity-dropdown-select="$ctrl.granularityDropdownSelect(value)"
         on-date-range-dropdown-select="$ctrl.dateRangeDropdownSelect(value)"
+        selected-date-range="$ctrl.dateRangeDropdownSelectedItem"
+        selected-granularity="$ctrl.granularityDropdownSelectedItem"
         layout="row"
         flex></transaction-tools>
   </toolbar>

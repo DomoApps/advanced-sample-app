@@ -15,6 +15,8 @@ module.exports = ngModule => {
       $q,
       $mdColors,
       globalFiltersFactory,
+      dateRangeItems,
+      granularityItems,
       summaryFilter) {
     const ctrl = this;
 
@@ -47,14 +49,17 @@ module.exports = ngModule => {
       }];
     ctrl.activePillData = ctrl.pillData[0];
 
-    ctrl.granularityDropdownSelectedItem = undefined;
-    ctrl.dateRangeDropdownSelectedItem = undefined;
+    ctrl.dateRangeOptions = dateRangeItems;
+    ctrl.granularityOptions = granularityItems;
+    ctrl.dateRangeDropdownSelectedItem = ctrl.dateRangeOptions[0];
+    ctrl.granularityDropdownSelectedItem = ctrl.granularityOptions[0];
 
     globalFiltersFactory.onFilterChange(_onCategoryChange);
 
     function $onInit() {
       // Called on each controller after all the controllers have been constructed and had their bindings initialized
       // Use this for initialization code.
+      _refreshData();
     }
 
     function _onCategoryChange(e, newCategory) {
@@ -107,7 +112,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  transactionsContainerCtrl.$inject = ['transactionsAnalyticsFactory', '$q', '$mdColors', 'globalFiltersFactory', 'summaryFilter'];
+  transactionsContainerCtrl.$inject = ['transactionsAnalyticsFactory', '$q', '$mdColors', 'globalFiltersFactory', 'dateRangeItems', 'granularityItems', 'summaryFilter'];
 
   if (ON_TEST) {
     require('./transactions-container.component.spec.js')(ngModule);
