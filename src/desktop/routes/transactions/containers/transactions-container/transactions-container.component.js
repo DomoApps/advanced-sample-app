@@ -50,20 +50,22 @@ module.exports = ngModule => {
 
     function _refreshData() {
       ctrl.loading = true;
-      const dateRangeFilter = (typeof ctrl.dateRangeDropdownSelectedOption !== 'undefined' ?
-          ctrl.dateRangeDropdownSelectedOption.value : undefined);
-      return $q.all([transactionsAnalyticsFactory.getTotals(_categoryFilter, dateRangeFilter),
-        transactionsAnalyticsFactory.getTransactionsPerX(_categoryFilter, ctrl.granularityDropdownSelectedOption, dateRangeFilter)]).then(data => {
-          ctrl.pillData[0].chart = _formatDataForLineChart('Income', data[1], 'total');
-          ctrl.pillData[1].chart = _formatDataForLineChart('Products Sold', data[1], 'quantity');
-          ctrl.pillData[2].chart = _formatDataForLineChart('Transactions', data[1], 'category');
+      const dateRangeFilter = (typeof ctrl.dateRangeDropdownSelectedItem !== 'undefined' ?
+          ctrl.dateRangeDropdownSelectedItem.value : undefined);
+      const totalsPromise = transactionsAnalyticsFactory.getTotals(_categoryFilter, dateRangeFilter);
+      const chartDataPromise = transactionsAnalyticsFactory
+        .getTransactionsPerX(_categoryFilter, ctrl.granularityDropdownSelectedItem, dateRangeFilter);
+      return $q.all([totalsPromise, chartDataPromise]).then(data => {
+        ctrl.pillData[0].chart = _formatDataForLineChart('Income', data[1], 'total');
+        ctrl.pillData[1].chart = _formatDataForLineChart('Products Sold', data[1], 'quantity');
+        ctrl.pillData[2].chart = _formatDataForLineChart('Transactions', data[1], 'category');
 
-          ctrl.pillData[0].summary = '$' + summaryFilter(data[0].income, true, 1);
-          ctrl.pillData[1].summary = summaryFilter(data[0].productsSold, false, 1);
-          ctrl.pillData[2].summary = summaryFilter(data[0].transactionCount, false, 1);
+        ctrl.pillData[0].summary = '$' + summaryFilter(data[0].income, true, 1);
+        ctrl.pillData[1].summary = summaryFilter(data[0].productsSold, false, 1);
+        ctrl.pillData[2].summary = summaryFilter(data[0].transactionCount, false, 1);
 
-          ctrl.loading = false;
-        });
+        ctrl.loading = false;
+      });
     }
 
     function granularityDropdownSelect(selectedGranularity) {

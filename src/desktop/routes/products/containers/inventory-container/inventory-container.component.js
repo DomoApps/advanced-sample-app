@@ -22,8 +22,6 @@ module.exports = ngModule => {
     let _products = [];
     let _categories = [];
 
-    ctrl.$onInit = $onInit;
-
     ctrl.onSearchbarUpdate = onSearchbarUpdate;
     ctrl.filterByName = filterByName;
 
@@ -34,17 +32,19 @@ module.exports = ngModule => {
     ctrl.searchBarItems = [];
     ctrl.searchText = '';
 
-    function $onInit() {
-      _getToolbarItems(globalFiltersFactory.getFilter());
-      $q.all([_getProducts(globalFiltersFactory.getFilter()), _getCategories()]).then(() => {
-        ctrl.filteredProducts = _products;
-        _filterCategories(globalFiltersFactory.getFilter());
-        _buildAutocompleteList();
-        ctrl.loading = false;
-      });
+    _getToolbarItems(globalFiltersFactory.getFilter());
 
-      globalFiltersFactory.onFilterChange(_handleGlobalCategoryChange);
-    }
+    const productsPromise = _getProducts(globalFiltersFactory.getFilter());
+    const categoriesPromise = _getCategories();
+    $q.all([productsPromise, categoriesPromise]).then(() => {
+      ctrl.filteredProducts = _products;
+      _filterCategories(globalFiltersFactory.getFilter());
+      _buildAutocompleteList();
+      ctrl.loading = false;
+    });
+
+    globalFiltersFactory.onFilterChange(_handleGlobalCategoryChange);
+
 
     /**
      * refilters the products based on search text
