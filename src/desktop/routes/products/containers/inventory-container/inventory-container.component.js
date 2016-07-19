@@ -25,7 +25,9 @@ module.exports = ngModule => {
     ctrl.loading = true;
 
     _getToolbarItems(globalFiltersFactory.getFilter());
-    $q.all([_getProducts(globalFiltersFactory.getFilter()), _getCategories()]).then(() => {
+    const productsPromise = _getProducts(globalFiltersFactory.getFilter());
+    const categoriesPromise = _getCategories();
+    $q.all([productsPromise, categoriesPromise]).then(() => {
       ctrl.filteredProducts = _products;
       _filterCategories(globalFiltersFactory.getFilter());
       _buildAutocompleteList();
