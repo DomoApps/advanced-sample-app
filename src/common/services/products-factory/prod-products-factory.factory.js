@@ -43,14 +43,15 @@ module.exports = ngModule => {
      * @return {promise}  Promise returning array of format [string, string, string...]
      */
     function getProductCategories() {
-      return getProducts().then(productsArray => {
-        return productsArray.reduce((productCategories, product) => {
-          if (productCategories.indexOf(product.category) === -1) {
-            productCategories.push(product.category);
-          }
-          return productCategories;
-        }, []);
-      });
+      return domo.get((new Query())
+        .select(['category'])
+        .groupBy('category')
+        .query('products'))
+        .then(categories => {
+          return categories.map(category => {
+            return category.category;
+          });
+        });
     }
 
     /**
@@ -70,9 +71,17 @@ module.exports = ngModule => {
      * @return {promise(number)} number of unique product types
      */
     function getNumUniqueProducts(category) {
-      return getProducts(category).then(productsArray => {
-        return productsArray.length;
-      });
+      const query = (new Query()).select(['name']);
+      if (typeof category !== 'undefined' && category !== SAMPLE_APP.DEFAULT_CATEGORY) {
+        query.where('category').equals(category);
+      }
+      return domo.get(query
+        .select(['name'])
+        .aggregate('name', 'count')
+        .query('products'))
+        .then(result => {
+          return result[0].name;
+        });
     }
 
     /**
@@ -80,11 +89,17 @@ module.exports = ngModule => {
      * @return {promise(number)} number of physical products
      */
     function getTotalQuantity(category) {
-      return getProducts(category).then(productsArray => {
-        return productsArray.reduce((totalProductQuantity, product) => {
-          return totalProductQuantity + product.quantity;
-        }, 0);
-      });
+      const query = (new Query()).select(['quantity']);
+      if (typeof category !== 'undefined' && category !== SAMPLE_APP.DEFAULT_CATEGORY) {
+        query.where('category').equals(category);
+      }
+      return domo.get(query
+        .select(['name'])
+        .aggregate('quantity', 'sum')
+        .query('products'))
+        .then(result => {
+          return result[0].quantity;
+        });
     }
   }
 
