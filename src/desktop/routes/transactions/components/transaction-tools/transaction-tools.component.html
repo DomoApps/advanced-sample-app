@@ -3,16 +3,16 @@
     <div flex layout="row" flex="45">
       <md-input-container flex>
         <label>Show data for each </label>
-        <md-select md-on-close="$ctrl.granularityDropdownSelect()" ng-model="$ctrl.selectedGranularity">
-          <md-option ng-repeat="dateGrain in $ctrl.granularityOptions" ng-value="dateGrain">{{ dateGrain | capitalize }}</md-option>
+        <md-select md-container-class="transaction-tools-select" class="transaction-tools-select" md-on-close="$ctrl.granularityDropdownSelect()" ng-model="$ctrl.selectedGranularity">
+          <md-option ng-repeat="dateGrain in $ctrl.granularityOptions" ng-value="dateGrain">{{ dateGrain }}</md-option>
         </md-select>
       </md-input-container>
     </div>
     <div flex="45" flex-offset="5" layout="row">
       <md-input-container flex>
         <label>Show data for </label>
-        <md-select md-on-close="$ctrl.dateRangeDropdownSelect()" ng-model="$ctrl.selectedDateRange" ng-model-options="{ trackBy: '$value.value' }">
-          <md-option ng-value="dateRange" ng-repeat="dateRange in $ctrl.dateRangeOptions" style="text-transform: capitalize;">{{ dateRange.name }}</md-option>
+        <md-select md-container-class="transaction-tools-select" class="transaction-tools-select" md-on-close="$ctrl.dateRangeDropdownSelect()" ng-model="$ctrl.selectedDateRange" ng-model-options="{ trackBy: '$value.value' }">
+          <md-option ng-value="dateRange" ng-repeat="dateRange in $ctrl.dateRangeOptions">{{ dateRange.name }}</md-option>
         </md-select>
       </md-input-container>
     </div>
