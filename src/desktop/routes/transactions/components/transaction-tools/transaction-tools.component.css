@@ -10,6 +10,7 @@ $toolbar-font-size: 16px;
   top: 5px; /* fix vertical alignment in toolbar */
 }
 
-.transaction-tools-select ._md-text{
+.transaction-tools-select > md-select-menu,
+.transaction-tools-select > md-select-value {
   text-transform: capitalize;
 }
