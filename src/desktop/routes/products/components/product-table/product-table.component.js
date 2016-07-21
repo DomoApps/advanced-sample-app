@@ -6,6 +6,7 @@ module.exports = ngModule => {
     controller: productTableCtrl,
     bindings: {
       // Inputs should use < and @ bindings.
+      headings: '<',
       products: '<'
       // Outputs should use & bindings.
     }
@@ -14,47 +15,10 @@ module.exports = ngModule => {
   function productTableCtrl() {
     const ctrl = this;
 
-    ctrl.$onInit = $onInit;
     ctrl.orderBy = orderBy;
+
     ctrl.orderByProperty = 'inStock';
     ctrl.reverseOrder = false;
-
-    ctrl.headings = [
-      [
-        {
-          width: 25,
-          title: 'In Stock',
-          key: 'inStock'
-        },
-        {
-          width: 75,
-          title: 'Name',
-          key: 'name'
-        }
-      ],
-      [
-        {
-          width: 33,
-          title: 'Price',
-          key: 'price'
-        },
-        {
-          width: 33,
-          title: 'Category',
-          key: 'category'
-        },
-        {
-          width: 33,
-          title: 'Quantity',
-          key: 'quantity'
-        }
-      ]
-    ];
-
-    function $onInit() {
-      // Called on each controller after all the controllers have been constructed and had their bindings initialized
-      // Use this for initialization code.
-    }
 
     /**
      * function called on click. Checks to see if we have already sorted by this

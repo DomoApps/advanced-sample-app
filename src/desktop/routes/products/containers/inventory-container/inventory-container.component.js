@@ -10,7 +10,13 @@ module.exports = ngModule => {
     }
   });
 
-  function inventoryContainerCtrl($q, productsFactory, globalFiltersFactory, SAMPLE_APP) {
+  function inventoryContainerCtrl(
+    $q,
+    productsFactory,
+    productTableHeader,
+    globalFiltersFactory,
+    SAMPLE_APP
+  ) {
     const ctrl = this;
     // private
     let _products = [];
@@ -18,13 +24,16 @@ module.exports = ngModule => {
 
     ctrl.onSearchbarUpdate = onSearchbarUpdate;
     ctrl.filterByName = filterByName;
-    ctrl.filteredProducts = [];
+
     ctrl.filteredCategories = [];
+    ctrl.filteredProducts = [];
+    ctrl.headerInfo = productTableHeader;
+    ctrl.loading = true;
     ctrl.searchBarItems = [];
     ctrl.searchText = '';
-    ctrl.loading = true;
 
     _getToolbarItems(globalFiltersFactory.getFilter());
+
     const productsPromise = _getProducts(globalFiltersFactory.getFilter());
     const categoriesPromise = _getCategories();
     $q.all([productsPromise, categoriesPromise]).then(() => {
@@ -35,6 +44,7 @@ module.exports = ngModule => {
     });
 
     globalFiltersFactory.onFilterChange(_handleGlobalCategoryChange);
+
 
     /**
      * refilters the products based on search text
@@ -129,7 +139,7 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  inventoryContainerCtrl.$inject = ['$q', 'productsFactory', 'globalFiltersFactory', 'SAMPLE_APP'];
+  inventoryContainerCtrl.$inject = ['$q', 'productsFactory', 'productTableHeader', 'globalFiltersFactory', 'SAMPLE_APP'];
 
   if (ON_TEST) {
     require('./inventory-container.component.spec.js')(ngModule);
