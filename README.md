@@ -5,7 +5,9 @@
 ![App Thumbnail](domo/thumbnail.png)
 
 ## What is the Sample App?
-This app was created to demonstrate how to use the Domo Apps [Starter Kit](https://github.com/DomoApps/starter-kit) and how commonly requested functionality is implemented in a Domo App
+This app was created to demonstrate how to use the Domo Apps [Starter Kit](https://github.com/DomoApps/starter-kit) and how commonly requested functionality is implemented in a Domo App.
+
+The app demonstrates simple data formatting, filtering, and display. An "inventory" of products is displayed as well as summaries of transactions. The "Transactions" page demonstrates the use of widgets. Domo Widgets are reusable components that render [d3 charts](https://d3js.org).
 
 Because this app is not attached to an instance of Domo, DataSource requests are mocked in the products and transaction analytics factories. Comments are included to explain how production DataSource requests are made. See the [Domo Developer Guide](https://developer.domo.com/docs/dev-studio/dev-studio-data) for more information on DataSource requests.
 
@@ -18,44 +20,18 @@ Because this app is not attached to an instance of Domo, DataSource requests are
 ## Uploading to Domo
 1. Login to Domo `$ domo login`
 2. Publish sample app `$ npm run upload`
-3. Update the `{ id: ... }` value in `domo/manifest.json` with your new app id
+3. Update the `{ id: ... }` value in `domo/manifest.json` with your new app ID
 
-## All npm Commands
-- `$ npm start` to run webpack-dev-server
-- `$ npm test` to run unit tests
-- `$ npm run tdd` to continuously run tests
-- `$ npm run eslint` to lint code
-- `$ npm run build` to build (and minify)
-- `$ npm version (patch|minor|major)` to create git release
-- `$ npm run upload` to upload new version to domo. aka `domo publish`
-- `$ npm run update-tools` to pull in improvements to the dev tools
+For more information on available commands and usage, see the documentation for the Domo Apps [Starter Kit](https://github.com/DomoApps/starter-kit).
 
+## Compatiblity
+#### Tested and working
+- Chrome (OSX)
+- Safari (OSX)
 
-## Technologies
-- [webpack](http://webpack.github.io/)
-- [ES2015 via Babel](https://babeljs.io/docs/learn-es2015/)
-- [postcss & precss](https://github.com/jonathantneal/precss)
-- [angular 1.x](https://angularjs.org/)
-
-## Features
-- Code Linting
-  + [eslint]() - For JavaScript
-- Dev Server with auto-reload
-  + [webpack-dev-server](http://webpack.github.io/docs/webpack-dev-server.html)
-  + Proxy for data service
-- Changelog Generation
-  + [conventional-changelog](https://github.com/ajoslin/conventional-changelog)
-- Minification
-  + [UglifyJS2](https://github.com/mishoo/UglifyJS2)
-- Git Release Automation
-- [.editorconfig](http://editorconfig.org/)
-- Plop
-  + $ plop [type e.g. directive, factory, filter, route]
-  + [da-plop](https://git.empdev.domo.com/AppTeam6/da-plop)
-- Unit Testing Framework
-  + [karma](http://karma-runner.github.io/): Test Runner
-  + [mocha](https://mochajs.org/)
-  + [chai](http://chaijs.com/)
+#### Known Issues
+- Windows
+  Sticky table header does not align with table body
 
 ## Folder Structure
 ```text
