@@ -23,7 +23,7 @@
   "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
     "@domoinc/ca-icon-trends-with-text": "git+ssh://git@git.empdev.domo.com:AppTeam6-Widgets/CAIconTrendsWithText.git",
-    "@domoinc/da-plop": "^2.0.1",
+    "@domoinc/da-plop": "^3.0.0",
     "@domoinc/multi-line-chart": "git+ssh://git@git.empdev.domo.com:AppTeam6-Widgets/MultiLineChart.git",
     "angular-animate": "^1.5.7",
     "angular-aria": "^1.5.7",
@@ -98,6 +98,7 @@
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
+    "enquire.js": "^2.1.1",
     "ryuu.js": "^2.5.4"
   },
   "config": {

@@ -10,7 +10,7 @@ const getConfig = require('./other/webpack.config.es6');
  */
 module.exports = getConfig({
   includeDesktopView: true,
-  includeMobileView: false,
+  includeResponsiveView: false,
   externals: {
     // Include your app's extra externals here
   },
