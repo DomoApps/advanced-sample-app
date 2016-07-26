@@ -21,7 +21,8 @@ const ngModule = angular.module('da.desktop', ngDependencies)
   .constant('_', require('lodash'))
   .constant('SAMPLE_APP', {
     E_CAT_FILTER_CHANGE: 'filters:change',  // event string for category filter change
-    DEFAULT_CATEGORY: 'All Categories'
+    DEFAULT_CATEGORY: 'All Categories',
+    MOCK_REQUESTS: true                     // swap out real DataSource requests with JSON
   });
 
 attachAll(require.context('./components', true, /\.(component|directive)\.js$/))(ngModule);
