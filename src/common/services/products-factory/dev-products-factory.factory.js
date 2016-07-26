@@ -45,12 +45,11 @@ module.exports = ngModule => {
      */
     function getProductCategories() {
       return getProducts().then(productsArray => {
-        return productsArray.reduce((productCategories, product) => {
-          if (productCategories.indexOf(product.category) === -1) {
-            productCategories.push(product.category);
-          }
-          return productCategories;
-        }, []);
+        const categories = {};
+        productsArray.forEach(product => {
+          categories[product.category] = true;
+        });
+        return Object.keys(categories);
       });
     }
 
