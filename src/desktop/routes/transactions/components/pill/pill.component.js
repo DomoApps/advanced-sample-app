@@ -1,10 +1,9 @@
 module.exports = ngModule => {
-  require('./pill.component.css');
   const d3 = require('d3');
   require('@domoinc/ca-icon-trends-with-text');
 
   ngModule.component('pill', {
-    template: require('./pill.component.html'),
+    template: '<svg><svg>',
     controller: pillCtrl,
     bindings: {
       // Inputs should use < and @ bindings.

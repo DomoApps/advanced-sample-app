@@ -11,4 +11,7 @@ div.pills  {
   svg:hover {
     opacity: 1;
   }
+  pill:focus {
+    outline: none;
+  }
 }
