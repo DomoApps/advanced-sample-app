@@ -1,5 +1,5 @@
 module.exports = ngModule => {
-  function devTransactionsAnalyticsFactory($q, SAMPLE_APP) {
+  function devTransactionsAnalyticsFactory($q, SAMPLE_APP, $timeout) {
     // moment library for date formatting
     // needs to be instantiated with moment().format()
     const moment = require('moment');
@@ -41,12 +41,14 @@ module.exports = ngModule => {
         }
         return true;
       });
-      return $q.resolve(totals.reduce((accumulated, currentRow) => {
-        accumulated.transactionCount++;
-        accumulated.productsSold += currentRow.quantity;
-        accumulated.income += currentRow.total;
-        return accumulated;
-      }, { transactionCount: 0, productsSold: 0, income: 0 }));
+      return $timeout(() => {
+        return totals.reduce((accumulated, currentRow) => {
+          accumulated.transactionCount++;
+          accumulated.productsSold += currentRow.quantity;
+          accumulated.income += currentRow.total;
+          return accumulated;
+        }, { transactionCount: 0, productsSold: 0, income: 0 });
+      }, 1000);
     }
 
     /**
@@ -59,26 +61,28 @@ module.exports = ngModule => {
     function getTransactionsPerX(categoryFilter, optDateGrain, optDateRange) {
       // because this is a sample app we will modify the JSON ourselves
       // readability was chosen over performance
-      return $q(resolve => {
-        let transactions = sampleTransactions;
-        const dateGrain = (typeof optDateGrain !== 'undefined' ? optDateGrain : 'month');
-        transactions = _applyCategoryFilter(transactions, categoryFilter);
-        transactions = transactions.map(transaction => {
-          // clone object so we don't mutate our sampleTransactions and convert string dates to moments
-          return Object.assign({}, transaction, { date: moment(transaction.date) });
+      return $timeout(() => {
+        return $q(resolve => {
+          let transactions = sampleTransactions;
+          const dateGrain = (typeof optDateGrain !== 'undefined' ? optDateGrain : 'month');
+          transactions = _applyCategoryFilter(transactions, categoryFilter);
+          transactions = transactions.map(transaction => {
+            // clone object so we don't mutate our sampleTransactions and convert string dates to moments
+            return Object.assign({}, transaction, { date: moment(transaction.date) });
+          });
+          if (typeof optDateRange !== 'undefined') {
+            transactions = _applyDateRangeFilter(transactions, optDateRange);
+          }
+          transactions.sort((a, b) => {
+            return a.date - b.date;
+          });
+          transactions = _applyDateGrainFilter(transactions, dateGrain);
+          transactions = transactions.map(transaction => {
+            transaction.date = transaction.date.format('YYYY-MM-DD');
+            return transaction;
+          });
+          resolve(transactions);
         });
-        if (typeof optDateRange !== 'undefined') {
-          transactions = _applyDateRangeFilter(transactions, optDateRange);
-        }
-        transactions.sort((a, b) => {
-          return a.date - b.date;
-        });
-        transactions = _applyDateGrainFilter(transactions, dateGrain);
-        transactions = transactions.map(transaction => {
-          transaction.date = transaction.date.format('YYYY-MM-DD');
-          return transaction;
-        });
-        resolve(transactions);
       });
     }
 
@@ -136,7 +140,7 @@ module.exports = ngModule => {
     }
   }
 
-  devTransactionsAnalyticsFactory.$inject = ['$q', 'SAMPLE_APP'];
+  devTransactionsAnalyticsFactory.$inject = ['$q', 'SAMPLE_APP', '$timeout'];
 
   ngModule.factory('devTransactionsAnalyticsFactory', devTransactionsAnalyticsFactory);
 };
