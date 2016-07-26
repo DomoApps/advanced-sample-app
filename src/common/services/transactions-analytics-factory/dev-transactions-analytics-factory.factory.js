@@ -83,7 +83,7 @@ module.exports = ngModule => {
           });
           resolve(transactions);
         });
-      });
+      }, 1000);
     }
 
     function _applyDateGrainFilter(query, dateGrain) {
