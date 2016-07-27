@@ -36,6 +36,6 @@ module.exports = ngModule => {
   ngModule.factory('transactionPillDataFactory', transactionPillDataFactory);
 
   if (ON_TEST) {
-    require('./transaction-pill-data-factory.factory.spec.js')(ngModule);
+    require('./transaction-pill-data.factory.spec.js')(ngModule);
   }
 };

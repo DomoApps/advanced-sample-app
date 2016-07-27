@@ -4,6 +4,6 @@ module.exports = ngModule => {
   ngModule.value('granularityItems', granularities);
 
   if (ON_TEST) {
-    require('./granularity-items.factory.spec.js')(ngModule);
+    require('./granularity-items.value.spec.js')(ngModule);
   }
 };

@@ -34,6 +34,6 @@ module.exports = ngModule => {
   ngModule.value('productTableHeader', headerInfo);
 
   if (ON_TEST) {
-    require('./product-table-header.factory.spec.js')(ngModule);
+    require('./product-table-header.value.spec.js')(ngModule);
   }
 };

@@ -16,13 +16,38 @@ module.exports = ngModule => {
         $provide.factory('globalFiltersFactory', () => ({ getFilter: () => {}, onFilterChange: () => {} }));
       });
       window.module(($provide) => {
-        $provide.factory('transactionsAnalyticsFactory', () => ({}));
+        $provide.factory('transactionsAnalyticsFactory', () => {
+          function getTotals() {
+            return {
+              income: 0,
+              productsSold: 0,
+              transactions: 0
+            };
+          }
+          function getTransactionsPerX() {
+            return [];
+          }
+
+          return {
+            getTotals,
+            getTransactionsPerX
+          };
+        });
       });
       window.module(($provide) => {
         $provide.factory('$mdColors', () => ({ getThemeColor: () => {} }));
       });
       window.module(($provide) => {
         $provide.factory('summaryFilter', () => ({}));
+      });
+      window.module(($provide) => {
+        $provide.factory('transactionPillDataFactory', () => ({ getPillData: () => [] }));
+      });
+      window.module(($provide) => {
+        $provide.value('dateRangeItems', []);
+      });
+      window.module(($provide) => {
+        $provide.value('granularityItems', []);
       });
     });
 
