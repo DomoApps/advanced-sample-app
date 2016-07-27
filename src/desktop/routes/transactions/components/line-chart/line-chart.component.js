@@ -1,10 +1,9 @@
 module.exports = ngModule => {
-  require('./line-chart.component.css');
   const d3 = require('d3');
   require('@domoinc/multi-line-chart');
 
   ngModule.component('lineChart', {
-    template: require('./line-chart.component.html'),
+    template: '<svg></svg>',
     controller: lineChartCtrl,
     bindings: {
       // Inputs should use < and @ bindings.
