@@ -1,5 +1,9 @@
 @import '../../../../../common/styles/variables.css';
 
+.product-table-container {
+  overflow: scroll;
+}
+
 table.product-table {
   border-collapse: collapse;
   text-align: left;
