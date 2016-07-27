@@ -17,6 +17,6 @@ module.exports = ngModule => {
   ngModule.value('dateRangeItems', ranges);
 
   if (ON_TEST) {
-    require('./date-range-items.factory.spec.js')(ngModule);
+    require('./date-range-items.value.spec.js')(ngModule);
   }
 };

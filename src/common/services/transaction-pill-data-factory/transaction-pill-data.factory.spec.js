@@ -4,9 +4,20 @@ module.exports = ngModule => {
 
     beforeEach(window.module(ngModule.name));
 
-    beforeEach(inject(_transactionPillDataFactory_ => {
-      transactionPillDataFactory = _transactionPillDataFactory_;
-    }));
+    beforeEach(() => {
+      window.module(($provide) => {
+        $provide.factory('$mdColors', () => {
+          return {
+            getThemeColor: () => {
+              return '#fff';
+            }
+          };
+        });
+      });
+      inject(_transactionPillDataFactory_ => {
+        transactionPillDataFactory = _transactionPillDataFactory_;
+      });
+    });
 
     it('should test properly', () => {
       expect(transactionPillDataFactory).to.not.equal(undefined);

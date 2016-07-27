@@ -21,6 +21,9 @@ module.exports = ngModule => {
       window.module(($provide) => {
         $provide.factory('SAMPLE_APP', () => ({}));
       });
+      window.module(($provide) => {
+        $provide.value('productTableHeader', []);
+      });
     });
 
     beforeEach(inject(($rootScope, _$componentController_) => {
