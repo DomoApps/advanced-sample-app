@@ -1,7 +1,7 @@
 {
-  "name": "tutorial-app",
+  "name": "sample-app",
   "version": "0.0.1",
-  "description": "The implementation of the tutorial",
+  "description": "A sample app created with starter-kit",
   "scripts": {
     "setup": "node other/setup.js",
     "start": "NODE_ENV=development node server.js",
@@ -19,7 +19,7 @@
     "update-tools": "node other/update.js"
   },
   "author": "AppTeam6 <Squad.AppTeam6@domo.com>",
-  "repository": "git@git.empdev.domo.com:Justin-Pumford/TutorialApp.git",
+  "repository": "https://github.com/DomoApps/sample-app.git",
   "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
     "@domoinc/ca-icon-trends-with-text": "git+ssh://git@git.empdev.domo.com:AppTeam6-Widgets/CAIconTrendsWithText.git",
