@@ -2,7 +2,7 @@
   <md-sidenav md-component-id="filters" class="md-sidenav-left">
     <div layout="column" flex>
       <md-input-container>
-        <md-select placehold="Category" md-on-close="$ctrl.onCategorySelect()" ng-model="$ctrl.categoryFilter">
+        <md-select placeholder="Category" md-on-close="$ctrl.onCategorySelect()" ng-model="$ctrl.categoryFilter">
           <md-option ng-repeat="category in $ctrl.categoryFilters" value="{{ category }}">
             {{ category }}
           </md-option>
