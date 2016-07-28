@@ -29,27 +29,27 @@
       "fields": [
         {
           "alias": "date",
-          "columnName": "Transaction Date"
+          "columnName": "date"
         },
         {
           "alias": "category",
-          "columnName": "Product Category"
+          "columnName": "category"
         },
         {
           "alias": "name",
-          "columnName": "Product Name"
+          "columnName": "name"
         },
         {
           "alias": "price",
-          "columnName": "Price"
+          "columnName": "price"
         },
         {
           "alias": "quantity",
-          "columnName": "Product Quantity"
+          "columnName": "quantity"
         },
         {
           "alias": "total",
-          "columnName": "Transaction Total"
+          "columnName": "total"
         }
       ]
     }
