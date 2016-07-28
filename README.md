@@ -24,6 +24,13 @@ Because this app is not attached to an instance of Domo, DataSource requests are
 
 For more information on available commands and usage, see the documentation for the Domo Apps [Starter Kit](https://github.com/DomoApps/starter-kit).
 
+## DataSources
+The app is configured by default to mock any DataSource requests with JSON files. In order to change this functionality to use "live" data:
+1. Create DataSources in Domo using the `products-factory/sample-products.json` and `transactions-analytics-factory/sample-transactions.json` files in `src/common/services`.
+2. Navigate to the two DataSources and copy the `id`s from the URLs (https://company.domo.com/json/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX/overview)
+3. Add the `id`s to `manifest.json`
+4. In `src/desktop/index.js` change the value of `MOCK_REQUESTS` to `false`
+
 ## Compatiblity
 #### Tested and working
 - Chrome (OSX)
