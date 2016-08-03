@@ -1,6 +1,6 @@
 module.exports = ngModule => {
   function devProductsFactory(SAMPLE_APP, $timeout) {
-    const sampleProducts = require('./sample-products.json');
+    const sampleProducts = require('../../../../data/sample-products.json');
     // Private variables
     const _productsPromises = {};
     // Public API here
