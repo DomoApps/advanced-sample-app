@@ -5,7 +5,7 @@ module.exports = ngModule => {
     const moment = require('moment');
     moment().format();
 
-    const sampleTransactions = require('./sample-transactions.json');
+    const sampleTransactions = require('../../../../data/sample-transactions.json');
 
     // Public API here
     const service = {
