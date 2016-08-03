@@ -11,25 +11,32 @@ The app demonstrates simple data formatting, filtering, and display. An "invento
 
 Because this app is not attached to an instance of Domo, DataSource requests are mocked in the products and transaction analytics factories. Comments are included to explain how production DataSource requests are made. See the [Domo Developer Guide](https://developer.domo.com/docs/dev-studio/dev-studio-data) for more information on DataSource requests.
 
-## Getting Started
-1. Clone this repo
-    `$ git clone {URL}`
-2. Install dependencies `$ npm install`
-3. Run local server `$ npm start`
+## How Do I Use the Sample App?
 
-## Uploading to Domo
+### 1. Set Up Your Project
+1. Clone this repo
+    `$ git clone https://github.com/DomoApps/sample-app.git`
+2. Install dependencies `$ npm install`
+
+### 2. Development
+`$ npm start` will run a development server that reloads on file changes
+
+### 3. Publishing to Domo
 1. Login to Domo `$ domo login`
-2. Publish sample app `$ npm run upload`
+2. Publish the app `$ npm run upload`
 3. Update the `{ id: ... }` value in `domo/manifest.json` with your new app ID
 
-For more information on available commands and usage, see the documentation for the Domo Apps [Starter Kit](https://github.com/DomoApps/starter-kit).
-
-## DataSources
+### DataSources
 The app is configured by default to mock any DataSource requests with JSON files. In order to change this functionality to use "live" data:
-1. Create DataSources in Domo using the `products-factory/sample-products.json` and `transactions-analytics-factory/sample-transactions.json` files in `src/common/services`.
-2. Navigate to the two DataSources and copy the `id`s from the URLs (https://company.domo.com/json/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX/overview)
-3. Add the `id`s to `manifest.json`
+
+1. Follow instructions on [Domo University](https://knowledge.domo.com/?cid=connectordataset#Adding_a_DataSet_using_a_connector) to create two Excel DataSources. Both Excel files are located in the `/data` folder
+2. Navigate to the two DataSources in Domo and copy the `ID`s from the URL (https://{COMPANY}.domo.com/excel/{ID}/overview)
+3. Replace the existing `ID`s in `manifest.json` with the new ones from step 2
 4. In `src/desktop/index.js` change the value of `MOCK_REQUESTS` to `false`
+5. Run `npm run upload`
+6. Create a new card using the new design by following the steps on the [Developer Portal](https://developer.domo.com/docs/dev-studio/dev-studio-publish#Create%20an%20App%20Instance)
+
+For more information on available commands and usage, see the documentation for the Domo Apps [Starter Kit](https://github.com/DomoApps/starter-kit).
 
 ## Compatiblity
 #### Tested and working
@@ -38,7 +45,7 @@ The app is configured by default to mock any DataSource requests with JSON files
 
 #### Known Issues
 - Windows
-  Sticky table header does not align with table body
+  - Sticky table header does not align with table body
 
 ## Folder Structure
 ```text
