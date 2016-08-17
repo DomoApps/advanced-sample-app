@@ -22,9 +22,9 @@
   "repository": "https://github.com/DomoApps/sample-app.git",
   "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
-    "@domoinc/ca-icon-trends-with-text": "git+ssh://git@git.empdev.domo.com:AppTeam6-Widgets/CAIconTrendsWithText.git",
+    "@domoinc/ca-icon-trends-with-text": "^6.0.6",
     "@domoinc/da-plop": "^3.0.0",
-    "@domoinc/multi-line-chart": "git+ssh://git@git.empdev.domo.com:AppTeam6-Widgets/MultiLineChart.git",
+    "@domoinc/multi-line-chart": "^4.0.11",
     "@domoinc/query": "^1.0.3",
     "angular-animate": "^1.5.7",
     "angular-aria": "^1.5.7",
