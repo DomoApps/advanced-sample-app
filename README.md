@@ -1,17 +1,17 @@
 
-# Domo Apps Sample App
+# Advanced Sample App
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 ![App Thumbnail](domo/thumbnail.png)
 
-## What is the Sample App?
-This app was created to demonstrate how to use the Domo Apps [Starter Kit](https://github.com/DomoApps/starter-kit) and how commonly requested functionality is implemented in a Domo App.
+## What is the Inventory Manager App?
+This app was created to demonstrate how to use the Advanced Domo Apps [Starter Kit](https://github.com/DomoApps/starter-kit) and how commonly requested functionality is implemented in a robust Domo App.
 
-The app demonstrates simple data formatting, filtering, and display. An "inventory" of products is displayed as well as summaries of transactions. The "Transactions" page demonstrates the use of widgets. Domo Widgets are reusable components that render [d3 charts](https://d3js.org).
+The app demonstrates data formatting, filtering, and display. An "inventory" of products is displayed as well as summaries of transactions. The "Transactions" page demonstrates the use of widgets. Domo Widgets are reusable components that render [d3 charts](https://d3js.org).
 
 Because this app is not attached to an instance of Domo, DataSource requests are mocked in the products and transaction analytics factories. Comments are included to explain how production DataSource requests are made. See the [Domo Developer Guide](https://developer.domo.com/docs/dev-studio/dev-studio-data) for more information on DataSource requests.
 
-## How Do I Use the Sample App?
+## How Do I Use the Inventory Manager App?
 
 ### 1. Set Up Your Project
 1. Clone this repo
