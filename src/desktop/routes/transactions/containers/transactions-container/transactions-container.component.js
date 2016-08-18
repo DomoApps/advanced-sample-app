@@ -50,11 +50,11 @@ module.exports = ngModule => {
 
     function _refreshData() {
       ctrl.loading = true;
-      const dateRangeFilter = (typeof ctrl.dateRangeDropdownSelectedItem !== 'undefined' ?
-          ctrl.dateRangeDropdownSelectedItem.value : undefined);
+      const dateRangeFilter = (typeof ctrl.dateRangeDropdownSelectedOption !== 'undefined' ?
+          ctrl.dateRangeDropdownSelectedOption.value : undefined);
       const totalsPromise = transactionsAnalyticsFactory.getTotals(_categoryFilter, dateRangeFilter);
       const chartDataPromise = transactionsAnalyticsFactory
-        .getTransactionsPerX(_categoryFilter, ctrl.granularityDropdownSelectedItem, dateRangeFilter);
+        .getTransactionsPerX(_categoryFilter, ctrl.granularityDropdownSelectedOption, dateRangeFilter);
       return $q.all([totalsPromise, chartDataPromise]).then(data => {
         ctrl.pillData[0].chart = _formatDataForLineChart('Income', data[1], 'total');
         ctrl.pillData[1].chart = _formatDataForLineChart('Products Sold', data[1], 'quantity');
