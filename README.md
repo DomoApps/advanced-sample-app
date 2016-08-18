@@ -5,11 +5,11 @@
 ![App Thumbnail](domo/thumbnail.png)
 
 ## What is the Advanced Sample App?
-This app was created to demonstrate how to use Domo's App [Starter Kit](https://github.com/DomoApps/starter-kit) and how commonly requested functionality is implemented in a robust Custom App.
+This app was created to demonstrate how to use Domo's App [Starter Kit](https://github.com/DomoApps/starter-kit) and how commonly requested functionality is implemented in a robust custom app design.
 
 The app demonstrates data formatting, filtering, and display. An "inventory" of products is displayed as well as summaries of transactions. The "Transactions" page demonstrates the use of widgets. Domo Widgets are reusable components that render [d3 charts](https://d3js.org).
 
-Because this app is not attached to an instance of Domo, DataSource requests are mocked in the products and transaction analytics factories. Comments are included to explain how production DataSource requests are made. See the [Domo Developer Guide](https://developer.domo.com/docs/dev-studio/dev-studio-data) for more information on DataSource requests.
+Because this app design is not attached to an instance of Domo, dataset requests are mocked in the products and transaction analytics factories. Comments are included to explain how production dataset requests are made. See the [Domo Developer Guide](https://developer.domo.com/docs/dev-studio/dev-studio-data) for more information on dataset requests.
 
 ## How Do I Use the Advanced Sample App?
 
@@ -23,20 +23,20 @@ Because this app is not attached to an instance of Domo, DataSource requests are
 
 ### 3. Publishing to Domo
 1. Login to Domo `$ domo login`
-2. Publish the app `$ npm run upload`
-3. Update the `{ id: ... }` value in `domo/manifest.json` with your new app ID
+2. Publish the app design `$ npm run upload`
+3. Update the `{ id: ... }` value in `domo/manifest.json` with your new app design ID
 
-### DataSources
-The app is configured by default to mock any DataSource requests with JSON files. In order to change this functionality to use "live" data:
+### Datasets
+The app is configured by default to mock any dataset requests with JSON files. In order to change this functionality to use "live" data:
 
-1. Follow instructions on [Domo University](https://knowledge.domo.com/?cid=connectordataset#Adding_a_DataSet_using_a_connector) to create two Excel DataSources. Both Excel files are located in the `/data` folder
-2. Navigate to the two DataSources in Domo and copy the `ID`s from the URL (https://{COMPANY}.domo.com/excel/{ID}/overview)
+1. Follow instructions on [Domo University](https://knowledge.domo.com/?cid=connectordataset#Adding_a_DataSet_using_a_connector) to create two Excel datasets. Both Excel files are located in the `/data` folder
+2. Navigate to the two datasets in Domo and copy the `ID`s from the URL (https://{COMPANY}.domo.com/excel/{ID}/overview)
 3. Replace the existing `ID`s in `manifest.json` with the new ones from step 2
 4. In `src/desktop/index.js` change the value of `MOCK_REQUESTS` to `false`
 5. Run `npm run upload`
-6. Create a new card using the new design by following the steps on the [Developer Portal](https://developer.domo.com/docs/dev-studio/dev-studio-publish#Create%20an%20App%20Instance)
+6. Create a new card using the new custom app design by following the steps on the [Developer Portal](https://developer.domo.com/docs/dev-studio/dev-studio-publish#Create%20an%20App%20Instance)
 
-For more information on available commands and usage, see the documentation for the Domo Apps [Starter Kit](https://github.com/DomoApps/starter-kit).
+For more information on available commands and usage, see the documentation for Domo's App [Starter Kit](https://github.com/DomoApps/starter-kit).
 
 ## Compatiblity
 #### Tested and working
