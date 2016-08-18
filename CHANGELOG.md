@@ -1,3 +1,9 @@
+<a name="0.1.1"></a>
+## [0.1.0](https://github.com/DomoApps/sample-app/compare/v0.1.0...v0.1.1) (2016-08-18)
+
+### Bugfixes
+* **Transactions Container**: fix a merge issue that broke the date range and date grain selects
+
 <a name="0.1.0"></a>
 ## [0.1.0](https://github.com/DomoApps/sample-app/compare/v0.0.1...v0.1.0) (2016-08-03)
 
