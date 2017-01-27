@@ -80,7 +80,7 @@ For more information on available commands and usage, see the documentation for 
 |    |    |        |
 |    |    |        └── index.js // define module and route
 |    |    |
-|    |    ├── responsive.cofig.js // responsive app top level configuration
+|    |    ├── responsive.config.js // responsive app top level configuration
 |    |    ├── responsive.init.js // top level initialization code
 |    |    ├── responsive.html // html entry (layout html goes here)
 |    |    ├── responsive.css // common css for responsive
