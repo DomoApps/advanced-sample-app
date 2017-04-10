@@ -1,6 +1,7 @@
 module.exports = config;
 
-function config($urlRouterProvider, $mdThemingProvider, $mdIconProvider) {
+function config($ngReduxProvider, $urlRouterProvider, $mdThemingProvider, $mdIconProvider) {
+  $ngReduxProvider.createStoreWith(require('../common/store/reducers'));
   $urlRouterProvider.otherwise('/');
   const customPrimary = {
     '50': '#ffffff', // white background color for toolbar
@@ -45,4 +46,4 @@ function config($urlRouterProvider, $mdThemingProvider, $mdIconProvider) {
   $mdIconProvider.defaultFontSet('iconbits');
 }
 
-config.$inject = ['$urlRouterProvider', '$mdThemingProvider', '$mdIconProvider'];
+config.$inject = ['$ngReduxProvider', '$urlRouterProvider', '$mdThemingProvider', '$mdIconProvider'];

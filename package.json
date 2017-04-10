@@ -1,6 +1,6 @@
 {
   "name": "sample-app",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A sample app created with starter-kit",
   "scripts": {
     "setup": "node other/setup.js",
@@ -15,7 +15,8 @@
     "version": "npm run build && npm run changelog && git add -A CHANGELOG.md",
     "postversion": "git push && git push --tags",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -w -r 0",
-    "upload": "npm run build && cd dist/ && domo publish && cd ..",
+    "clean": "rm -rf node_modules && npm install",
+    "upload": "npm run clean && npm run build && cd dist/ && domo publish && cp manifest.json ../domo/ && cd ..",
     "update-tools": "node other/update.js"
   },
   "author": "AppTeam6 <Squad.AppTeam6@domo.com>",
@@ -23,20 +24,19 @@
   "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
     "@domoinc/ca-icon-trends-with-text": "^6.0.6",
-    "@domoinc/da-plop": "^3.0.0",
+    "@domoinc/da-plop": "^4.1.0",
     "@domoinc/multi-line-chart": "^4.0.11",
     "@domoinc/query": "^1.0.3",
-    "angular-animate": "^1.5.7",
     "angular-aria": "^1.5.7",
     "angular-material": "^1.1.0-rc.5",
+    "angular-mocks": "^1.5.8",
     "autoprefixer": "^6.1.2",
     "babel-core": "^6.3.17",
     "babel-loader": "^6.2.0",
     "babel-plugin-add-module-exports": "^0.1.1",
     "babel-plugin-closure-elimination": "0.0.2",
     "babel-plugin-transform-runtime": "^6.3.13",
-    "babel-preset-es2015-loose": "^6.1.3",
-    "babel-preset-stage-1": "^6.3.13",
+    "babel-preset-es2015": "^6.1.3",
     "babel-register": "^6.3.13",
     "babel-runtime": "^6.3.13",
     "body-parser": "^1.15.1",
@@ -72,6 +72,7 @@
     "karma-phantomjs-launcher": "^1.0.0",
     "karma-safari-launcher": "^0.1.1",
     "karma-sinon": "^1.0.4",
+    "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.7.0",
     "lcov-filter": "0.1.1",
     "lodash.kebabcase": "^3.1.1",
@@ -99,12 +100,21 @@
   },
   "dependencies": {
     "enquire.js": "^2.1.1",
+    "ng-redux": "^3.3.3",
     "ryuu.js": "2.5.4"
+  },
+  "cdnDependencies": {
+    "d3": "https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.10/d3.min.js",
+    "jquery": "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js",
+    "lodash": "https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js",
+    "angular": "https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.3/angular.min.js",
+    "angular-animate": "https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.3/angular-animate.min.js",
+    "angular-ui-router": "https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"
   },
   "config": {
     "AppTeam6": {
-      "framework": "da-webpack",
-      "frameworkVersion": "0.0.5",
+      "framework": "starter-kit",
+      "frameworkVersion": "0.0.8",
       "features": []
     },
     "commitizen": {

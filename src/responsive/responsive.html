@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head lang="en">
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,21 +8,19 @@
   <title>{%= o.htmlWebpackPlugin.options.title %}</title>
 
   <!-- Disable tap highlight on IE -->
-  <meta name="msapplication-tap-highlight" content="no">
-
-  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.10/d3.min.js" charset="utf-8"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.3/angular.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.3/angular-animate.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.min.js"></script>
+  <meta name="msapplication-tap-highlight" content="no"> {% for (var dependency in o.htmlWebpackPlugin.options.pkg.cdnDependencies) { %}
+  <script src="{%= o.htmlWebpackPlugin.options.pkg.cdnDependencies[dependency] %}"></script>
+  {% } %}
 </head>
-<body ng-cloak ng-app="da.responsive">
+
+<body ng-cloak ng-app="da.responsive" ng-strict-di>
   <div id="appContainer">
     <h1>Responsive</h1>
     <div ui-view></div>
   </div>
-  {% if (o.htmlWebpackPlugin.options.dev) { %}<script src="/webpack-dev-server.js"></script>{% } %}
+  {% if (o.htmlWebpackPlugin.options.dev) { %}
+  <script src="/webpack-dev-server.js"></script>{% } %}
   <!-- {%= o.htmlWebpackPlugin.options.pkg.name + ' v' + o.htmlWebpackPlugin.options.pkg.version + ' built on ' + new Date() %} -->
 </body>
+
 </html>

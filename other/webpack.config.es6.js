@@ -40,7 +40,6 @@ const pkg = require('../package.json');
 const bannerText = fs.readFileSync(path.resolve(__dirname, '../BANNER.txt')).toString();
 
 const config = {
-  cache: false,
   context: path.resolve(__dirname, '../src'),
 
   // We will add entry points based on the platform configs.
@@ -104,7 +103,14 @@ const config = {
     new webpack.DefinePlugin({
       ON_DEV: ON_DEV,
       ON_TEST: ON_TEST,
-      ON_PROD: ON_PROD
+      ON_PROD: ON_PROD,
+      'process.env': {
+        'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+      }
+    }),
+    new webpack.DefinePlugin({
+      VERSION: JSON.stringify(pkg.version),
+      APP_NAME: JSON.stringify(pkg.name)
     })
   ],
 
@@ -124,7 +130,7 @@ const config = {
         loader: 'babel',
         query: {
           cacheDirectory: true,
-          presets: ['es2015-loose', 'stage-1'],
+          presets: ['es2015'],
           plugins: ['transform-runtime', 'add-module-exports']
         }
       },
@@ -167,7 +173,8 @@ const config = {
         mergeRules: false,
         zindex: false,
         reduceIdents: false,
-        mergeIdents: false
+        mergeIdents: false,
+        safe: true
       }));
     } else {
       // use the message reported when on development
@@ -181,7 +188,7 @@ const config = {
     formatter: require('eslint-friendly-formatter'),
   },
 
-  devtool: 'source-map',
+  devtool: ON_PROD ? 'source-map' : 'cheap-module-eval-source-map',
 
   devServer: {
     contentBase: 'dist/',
@@ -258,6 +265,8 @@ if (INCLUDE_MULTIPLE_VIEWS) {
         title: 'Switcher',
         dev: ON_DEV,
         pkg: pkg,
+        inject: 'body',
+        template: 'index.html',
         chunks: ['switcher']
       }),
       new HtmlWebpackPlugin({
